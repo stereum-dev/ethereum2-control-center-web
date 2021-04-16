@@ -1,0 +1,13 @@
+---
+
+- name: Test playbook  
+  gather_facts: false
+  hosts: all
+  tasks:
+    - name: just display
+      shell: uptime
+      register: hostname
+    - debug:
+        var: hostname
+    - debug:
+        var: foo
