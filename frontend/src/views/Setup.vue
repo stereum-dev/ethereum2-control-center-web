@@ -1,5 +1,5 @@
 <template>
-  <div class="setup">    
+  <div class="setup">
     <setup-wizard :model="model" />
   </div>
 </template>
@@ -13,14 +13,14 @@ export default {
   components: {
     SetupWizard,
   },
-  data () {
+  data() {
     return {
       model: {
-        network: 'pyrmont',
-        client: 'lighthouse',
-        installationFolder: '/opt/stereum',
+        network: "pyrmont",
+        client: "lighthouse",
+        installationFolder: "/opt/stereum",
       },
-    }
-  }  
+    };
+  },
 };
 </script>

@@ -9,23 +9,31 @@
     <data>
       <table class="text-left table">
         <tr>
-          <td class="table-label">Network:</td> 
+          <td class="table-label">Network:</td>
           <td class="table-data">{{ model.network }}</td>
         </tr>
         <tr>
-          <td class="table-label">Client:</td> 
+          <td class="table-label">Client:</td>
           <td class="table-data">{{ model.client }}</td>
         </tr>
         <tr>
-          <td class="table-label">Installation Folder:</td> 
+          <td class="table-label">Installation Folder:</td>
           <td class="table-data">{{ model.installationFolder }}</td>
         </tr>
       </table>
 
       <div v-if="running">
-        <b-progress :value="progress" variant="info" :max="max" show-progress animated>
+        <b-progress
+          :value="progress"
+          variant="info"
+          :max="max"
+          show-progress
+          animated
+        >
           <b-progress-bar :value="progress">
-            <span>Progress: <strong>{{ progress.toFixed(0) }}%</strong></span>
+            <span
+              >Progress: <strong>{{ progress.toFixed(0) }}%</strong></span
+            >
           </b-progress-bar>
         </b-progress>
       </div>
@@ -34,25 +42,21 @@
 </template>
 
 <script>
-
 export default {
   name: "VerificationTab",
-  components: {    
-  },
-  props: {    
+  components: {},
+  props: {
     model: Object,
     running: Boolean,
     progress: Number,
   },
-  data () {
+  data() {
     return {
-      max: 100,      
-    }
+      max: 100,
+    };
   },
-  methods: {    
-  }
+  methods: {},
 };
 </script>
 
-<style scoped>  
-</style>
+<style scoped></style>

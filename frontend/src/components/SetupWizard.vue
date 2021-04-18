@@ -1,26 +1,26 @@
 <template>
   <div>
-    <b-card            
+    <b-card
       img-src="https://picsum.photos/600/50/?grayscale"
       img-alt="Image"
       img-top
       tag="article"
-      style="max-width: 20rem;"
-      class="mb-2 main-card"      
+      style="max-width: 20rem"
+      class="mb-2 main-card"
     >
       <b-card-body>
         <div>
-          <form-wizard          
+          <form-wizard
             shape="square"
             color="#336666"
-            title='Guided Beacon Installer'
-            subtitle='Setup your Beacon'
-            finishButtonText='Start Installation'
+            title="Guided Beacon Installer"
+            subtitle="Setup your Beacon"
+            finishButtonText="Start Installation"
             @on-complete="onComplete"
             :hide-buttons="installationRunning"
-          >          
-            <tab-content title="Welcome" icon="faw fas fa-door-open">                        
-              <welcome-tab></welcome-tab>            
+          >
+            <tab-content title="Welcome" icon="faw fas fa-door-open">
+              <welcome-tab></welcome-tab>
             </tab-content>
             <tab-content title="Network" icon="faw fas fa-network-wired">
               <network-tab :model="model"></network-tab>
@@ -28,29 +28,38 @@
             <tab-content title="Client" icon="faw fas fa-cogs">
               <client-tab :model="model"></client-tab>
             </tab-content>
-            <tab-content title="Path" icon="faw far fa-folder-open" :before-change="()=>validateInstallationFolder()">
+            <tab-content
+              title="Path"
+              icon="faw far fa-folder-open"
+              :before-change="() => validateInstallationFolder()"
+            >
               <installation-folder-tab :model="model"></installation-folder-tab>
-            </tab-content>          
+            </tab-content>
             <tab-content title="Verify" icon="faw fas fa-check-double">
-              <verification-tab :model="model" :progress="installationProgress" :running="installationRunning"></verification-tab>
-            </tab-content>          
+              <verification-tab
+                :model="model"
+                :progress="installationProgress"
+                :running="installationRunning"
+              ></verification-tab>
+            </tab-content>
           </form-wizard>
-        </div>        
-      </b-card-body>      
+        </div>
+      </b-card-body>
     </b-card>
   </div>
 </template>
 
 <script>
 //local registration
-import {FormWizard, TabContent} from 'vue-form-wizard'
-import 'vue-form-wizard/dist/vue-form-wizard.min.css'
-import '@fortawesome/fontawesome-free/css/all.css'
-import WelcomeTab from '@/components/wizard/WelcomeTab.vue'
-import NetworkTab from '@/components/wizard/NetworkTab.vue'
-import ClientTab from '@/components/wizard/ClientTab.vue'
-import InstallationFolderTab from '@/components/wizard/InstallationFolderTab.vue'
-import VerificationTab from '@/components/wizard/VerificationTab.vue'
+import { FormWizard, TabContent } from "vue-form-wizard";
+import "vue-form-wizard/dist/vue-form-wizard.min.css";
+import "@fortawesome/fontawesome-free/css/all.css";
+import WelcomeTab from "@/components/wizard/WelcomeTab.vue";
+import NetworkTab from "@/components/wizard/NetworkTab.vue";
+import ClientTab from "@/components/wizard/ClientTab.vue";
+import InstallationFolderTab from "@/components/wizard/InstallationFolderTab.vue";
+import VerificationTab from "@/components/wizard/VerificationTab.vue";
+import axios from "axios";
 
 export default {
   name: "SetupWizard",
@@ -61,49 +70,70 @@ export default {
     NetworkTab,
     ClientTab,
     InstallationFolderTab,
-    VerificationTab,    
+    VerificationTab,
   },
-  data () {
-    return {     
-      installationRunning: false, 
+  data() {
+    return {
+      response: "",
+      installationRunning: false,
       installationProgress: 0,
-    }
+    };
   },
-  props: {    
-    model: Object
+  props: {
+    model: Object,
   },
   methods: {
-    validateInstallationFolder() {      
-      return this.model.installationFolder && this.model.installationFolder.startsWith('/');
-    },    
-    onComplete: function() {      
-      this.installationRunning = true;      
-      this.installationProgress=0;
-      
+    validateInstallationFolder() {
+      return (
+        this.model.installationFolder &&
+        this.model.installationFolder.startsWith("/")
+      );
+    },
+    onComplete: function () {
+      this.installationRunning = true;
+      this.installationProgress = 0;
+
       let handle = null;
       const f = () => {
-        this.installationProgress+=1;        
-        if (this.installationProgress == 100) {          
+        this.installationProgress += 1;
+        if (this.installationProgress >= 100 || !this.installationRunning) {
           clearInterval(handle);
-          this.installationRunning = false;      
-          this.installationProgress= 0;
+          this.installationProgress = 0;
         }
       };
-      handle = setInterval(f, 500)
-    },    
-  },  
+      handle = setInterval(f, 500);
+
+      axios
+        .post("/api/setup/start", this.model)
+        .then((response) => {
+          this.$toasted.show(
+            "Installation done successfully, have fun with Stereum"
+          );
+          this.logs = response.data;
+          this.installationProgress = 100;
+        })
+        .catch((error) => {
+          this.$toasted.error(
+            "Unfortunately an error has occured during the installtion"
+          );
+          console.error(error);
+          this.installationProgress = 0;
+          this.installationRunning = false;
+        });
+    },
+  },
 };
 </script>
 
 <style scoped>
-  .main-card {
-    margin-top: 5%;
-    margin-left: 10%;
-    margin-right: 10%;
-    min-width: 80%;
-  }
+.main-card {
+  margin-top: 5%;
+  margin-left: 10%;
+  margin-right: 10%;
+  min-width: 80%;
+}
 
-  .main-card img {
-    max-height: 50px;
-  }
+.main-card img {
+  max-height: 50px;
+}
 </style>
