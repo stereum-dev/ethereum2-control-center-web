@@ -3,7 +3,8 @@ pipeline {
     stages {
         stage('Build') {
             // Build image, output is stereum/installer-build
-            steps {                                
+            steps {   
+                checkout scm                             
                 sh 'docker build -f Dockerfile -t stereum/control-center-web:${RELEASE}-${BUILD_NUMBER} .'
             }
         }        
