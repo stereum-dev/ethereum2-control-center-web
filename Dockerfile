@@ -10,7 +10,7 @@ FROM python:3.9-slim-buster
 WORKDIR /opt/app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
-COPY main.py .
+COPY main.py inventory.yaml playbook.yaml .
 WORKDIR /opt/app/public
 COPY --from=frontend-builder /tmp/build/dist .
 WORKDIR /opt/app

@@ -103,8 +103,14 @@ export default {
       };
       handle = setInterval(f, 500);
 
+      // write variables for the ansible call
+      const extraVars = [];
+      extraVars.push({ name: "network", value: this.model.network });
+      extraVars.push({ name: "client", value: this.model.client });
+      extraVars.push({ name: "installationFolder", value: this.model.installationFolder });
+
       axios
-        .post("/api/setup/start", this.model)
+        .post("/api/setup/start", { extra_vars: extraVars })
         .then((response) => {
           this.$toasted.show(
             "Installation done successfully, have fun with Stereum"

@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from typing import List
 import json
 
+from fastapi.logger import logger
 from ansible.module_utils.common.collections import ImmutableDict
 from collections import namedtuple
 from ansible.parsing.dataloader import DataLoader
@@ -16,8 +17,12 @@ from ansible import context
 from fastapi.encoders import jsonable_encoder
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from logging.config import dictConfig
 
-app = FastAPI()
+import logging
+logger = logging.getLogger("uvicorn.error")
+
+app = FastAPI(debug = True)
 
 class TR():
     def __init__(self, state, msg):        
@@ -39,11 +44,11 @@ class RestCallback(CallbackBase):
         super(RestCallback, self).__init__()        
         self.task_results = []
 
-    def v2_runner_on_ok(self, result, **kwargs):        
+    def v2_runner_on_ok(self, result, **kwargs):                
         self.task_results.append(TR(0, result._result))
 
-    def v2_runner_on_failed(self, host, result, ignore_errors=False):
-        self.task_results.append(TR(1, result._task))
+    def v2_runner_on_failed(self, result, ignore_errors=False):    
+        self.task_results.append(TR(1, result._result))
 
 class EV(BaseModel):
     name: str = 'name'
@@ -67,23 +72,26 @@ async def health():
 def invalid_api():
     return None
 
-@app.post("/api/startsetup")
+@app.post("/api/setup/start")
 async def launch(item: PB):
+    logger.debug('/api/setup/start got payload: %s' %item)    
     extra_vars = {}
-    for ev in item.extra_vars:        
+    for ev in item.extra_vars:                
         extra_vars[ev.name] = ev.value
+    logger.info('/api/setup/start got extra vars: %s' %extra_vars)
     inventory_file = os.path.join(os.getcwd(), item.inventory)
+    logger.info('/api/setup/start inventory file: %s' %inventory_file)
     playbook_file = os.path.join(os.getcwd(), item.playbook)
+    logger.info('/api/setup/start playbook file: %s' %playbook_file)
 
     loader = DataLoader()    
     inventory = InventoryManager(loader=loader, sources=[inventory_file])
     variable_manager = VariableManager(loader=loader, inventory=inventory)        
-    variable_manager._extra_vars = extra_vars
-    print(extra_vars)
+    variable_manager._extra_vars = extra_vars    
     passwords={}    
     context.CLIARGS = ImmutableDict(
         connection='local', 
-        module_path=['/to/mymodules', '/usr/share/ansible'], 
+        module_path=['/usr/share/ansible',], 
         forks=10, 
         become=None,                                    
         become_method=None, 
@@ -102,9 +110,13 @@ async def launch(item: PB):
     callback = RestCallback()
     playbook._tqm._stdout_callback = callback
     return_code = playbook.run()
-
+    
+    logger.info('Got RC %s' %return_code)
+    er = ER(return_code, callback.task_results)
+    for task in er.tasks:
+        logger.info('Got Task-Message: %s:%s ' %(task.status, task.message))            
     json_compatible_item_data = jsonable_encoder(ER(return_code, callback.task_results))
-    return JSONResponse(content=json_compatible_item_data)
+    return JSONResponse(content=json_compatible_item_data)    
 
 templates = Jinja2Templates(directory="public")
 @app.get("/")
