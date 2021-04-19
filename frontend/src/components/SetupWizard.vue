@@ -112,16 +112,18 @@ export default {
       axios
         .post("/api/setup/start", { extra_vars: extraVars })
         .then((response) => {
-          this.$toasted.show(
+          this.$toasted.success(
             "Installation done successfully, have fun with Stereum"
-          );
-          this.logs = response.data;
+          ,{ duration: 5000 });
+          console.log(response.data);
+          this.logs = response.data;          
           this.installationProgress = 100;
+          this.installationRunning = false;
         })
         .catch((error) => {
           this.$toasted.error(
             "Unfortunately an error has occured during the installtion"
-          );
+          ,{ duration: 5000 });
           console.error(error);
           this.installationProgress = 0;
           this.installationRunning = false;
