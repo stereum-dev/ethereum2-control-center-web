@@ -19,13 +19,20 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from logging.config import dictConfig
 
+import pickle
 import logging
 logger = logging.getLogger("uvicorn.error")
 
 app = FastAPI(debug = True)
 
+global return_code
+return_code = 0
+global task_results
+task_results = []
+
 class TR():
-    def __init__(self, state, msg):        
+    def __init__(self, state, name, msg):        
+        self.name = name
         self.status = state
         self.message = msg
 
@@ -35,7 +42,7 @@ class ER():
 
     def __init__(self, state, tasks):        
         self.status = state
-        self.tasks = tasks
+        self.tasks = tasks        
 
 class RestCallback(CallbackBase):
     """Callback for Task output creation"""
@@ -43,12 +50,22 @@ class RestCallback(CallbackBase):
     def __init__(self):
         super(RestCallback, self).__init__()        
         self.task_results = []
+        task_results = self.task_results
+        self.current_task_name = None
 
-    def v2_runner_on_ok(self, result, **kwargs):                
-        self.task_results.append(TR(0, result._result))
+    def v2_runner_on_ok(self, result, **kwargs):
+        self.task_results.append(TR(0, self.current_task_name, result._result))                
+        logger.info('runner_ok')
+        pickle.dump( self.task_results, open( "state.p", "wb" ) ) 
 
-    def v2_runner_on_failed(self, result, ignore_errors=False):    
-        self.task_results.append(TR(1, result._result))
+    def v2_runner_on_failed(self, result, ignore_errors=False):            
+        self.task_results.append(TR(1, self.current_task_name, result._result))        
+        logger.info('runner_failed')         
+        pickle.dump( self.task_results, open( "state.p", "wb" ) ) 
+
+    def playbook_on_task_start(self, name, is_conditional):
+        logger.info('runner_task_start %s' %(name))
+        self.current_task_name = name
 
 class EV(BaseModel):
     name: str = 'name'
@@ -59,21 +76,20 @@ class PB(BaseModel):
     inventory: str = 'inventory.yaml'
     extra_vars: List[EV] = []
 
-#@app.get("/")
-#async def root():
-#    response = RedirectResponse(url='/public/index.html')
-#    return response
-
 @app.get("/health")
 async def health():
     return {"status": "OK"}
 
-@app.get("/api/.*", status_code=404, include_in_schema=False)
-def invalid_api():
-    return None
+@app.get("/api/setup/status")
+async def status():
+    logger.debug('/api/setup/status called')  
+    task_state = pickle.load( open( "state.p", "rb" ) )    
+    json_compatible_item_data = jsonable_encoder(ER(-1, task_state))
+    return JSONResponse(content=json_compatible_item_data)    
 
 @app.post("/api/setup/start")
 async def launch(item: PB):
+    task_results = []
     logger.debug('/api/setup/start got payload: %s' %item)    
     extra_vars = {}
     for ev in item.extra_vars:                
@@ -109,14 +125,18 @@ async def launch(item: PB):
 
     callback = RestCallback()
     playbook._tqm._stdout_callback = callback
-    return_code = playbook.run()
+    return_code = playbook.run()    
     
     logger.info('Got RC %s' %return_code)
     er = ER(return_code, callback.task_results)
-    for task in er.tasks:
-        logger.info('Got Task-Message: %s:%s ' %(task.status, task.message))            
+    #for task in er.tasks:
+    #    logger.info('Got Task-Message: %s:%s ' %(task.status, task.message))            
     json_compatible_item_data = jsonable_encoder(ER(return_code, callback.task_results))
     return JSONResponse(content=json_compatible_item_data)    
+
+@app.get("/api/.*", status_code=404, include_in_schema=False)
+def invalid_api():
+    return None
 
 templates = Jinja2Templates(directory="public")
 @app.get("/")

@@ -22,8 +22,9 @@
         </tr>
       </table>
 
-      <div v-if="running">
-        <b-progress
+      <div v-if="running || done">
+        <b-progress 
+          v-if="running"
           :value="progress"
           variant="info"
           :max="max"
@@ -36,19 +37,29 @@
             >
           </b-progress-bar>
         </b-progress>
+        <strong class="text-left">Logs:</strong>
+        <ul class="list-group list-unstyled">
+          <task-status-entry class="list-group-item text-left" v-bind:key="index" v-for="(status, index) in logs" :model="status"></task-status-entry>
+        </ul>
       </div>
     </data>
   </div>
 </template>
 
 <script>
+import TaskStatusEntry from '@/components/wizard/TaskStatusEntry.vue';
+
 export default {
   name: "VerificationTab",
-  components: {},
+  components: {
+    TaskStatusEntry,
+  },
   props: {
     model: Object,
     running: Boolean,
+    done: Boolean,
     progress: Number,
+    logs: Array,
   },
   data() {
     return {

@@ -14,4 +14,4 @@ COPY main.py inventory.yaml playbook.yaml /opt/app/
 WORKDIR /opt/app/public
 COPY --from=frontend-builder /tmp/build/dist .
 WORKDIR /opt/app
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--workers", "3" ]

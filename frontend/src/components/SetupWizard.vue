@@ -37,9 +37,11 @@
             </tab-content>
             <tab-content title="Verify" icon="faw fas fa-check-double">
               <verification-tab
+                :logs="logs.tasks"
                 :model="model"
                 :progress="installationProgress"
-                :running="installationRunning"
+                :running="installationRunning"                
+                :done="installationDone"                
               ></verification-tab>
             </tab-content>
           </form-wizard>
@@ -75,7 +77,11 @@ export default {
   data() {
     return {
       response: "",
+      logs: {        
+        tasks: [],
+      },
       installationRunning: false,
+      installationDone: false,
       installationProgress: 0,
     };
   },
@@ -107,26 +113,48 @@ export default {
       const extraVars = [];
       extraVars.push({ name: "network", value: this.model.network });
       extraVars.push({ name: "client", value: this.model.client });
-      extraVars.push({ name: "installationFolder", value: this.model.installationFolder });
+      extraVars.push({
+        name: "installationFolder",
+        value: this.model.installationFolder,
+      });
+      
+      const fetchStatus = () => {
+        axios
+          .get("/api/setup/status")
+          .then((response) => {            
+            console.log(response.data)
+            this.logs = response.data;            
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
 
+      this.installationDone = false;
+      let logWatchHandle = setInterval(fetchStatus, 5000);
       axios
         .post("/api/setup/start", { extra_vars: extraVars })
         .then((response) => {
           this.$toasted.success(
-            "Installation done successfully, have fun with Stereum"
-          ,{ duration: 5000 });
-          console.log(response.data);
-          this.logs = response.data;          
+            "Installation done successfully, have fun with Stereum",
+            { duration: 5000 }
+          );          
+          this.logs = response.data;
           this.installationProgress = 100;
           this.installationRunning = false;
+          this.installationDone = true;
+          clearInterval(logWatchHandle);
         })
         .catch((error) => {
           this.$toasted.error(
-            "Unfortunately an error has occured during the installtion"
-          ,{ duration: 5000 });
+            "Unfortunately an error has occured during the installtion",
+            { duration: 5000 }
+          );
           console.error(error);
           this.installationProgress = 0;
           this.installationRunning = false;
+          this.installationDone = true;
+          clearInterval(logWatchHandle);
         });
     },
   },

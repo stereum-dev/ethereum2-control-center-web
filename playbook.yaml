@@ -3,10 +3,19 @@
 - name: Test playbook  
   gather_facts: false
   hosts: all
-  tasks:      
-    - debug:
-        var: inventory_hostname
-    - set_fact:
-        foo: bar
-    - debug:
+  tasks:
+    - name: 'debug {{ inventory_hostname }}'
+      debug:
+        var: inventory_hostname    
+    - name: 'Wait 10 sec'
+      pause:
+        seconds: 10
+    - name: 'set fact for $foo'
+      set_fact:
+        foo: bar    
+    - name: 'print variable $foo'      
+      debug:
         var: foo
+    - name: 'do another pause'
+      pause:
+        seconds: 10
