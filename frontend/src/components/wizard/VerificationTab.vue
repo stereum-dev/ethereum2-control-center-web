@@ -13,8 +13,12 @@
           <td class="table-data">{{ model.network }}</td>
         </tr>
         <tr>
-          <td class="table-label">Client:</td>
+          <td class="table-label">Setup:</td>
           <td class="table-data">{{ model.client }}</td>
+        </tr>
+        <tr>
+          <td class="table-label">Customization:</td>
+          <td class="table-data">{{ model.override }}</td>
         </tr>
         <tr>
           <td class="table-label">Installation Folder:</td>

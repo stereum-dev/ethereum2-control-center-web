@@ -19,14 +19,17 @@
             @on-complete="onComplete"
             :hide-buttons="installationRunning"
           >
-            <tab-content title="Welcome" icon="faw fas fa-door-open">
+            <tab-content title="Welcome" icon="faw fas fa-compass">
               <welcome-tab></welcome-tab>
             </tab-content>
             <tab-content title="Network" icon="faw fas fa-network-wired">
               <network-tab :model="model"></network-tab>
             </tab-content>
-            <tab-content title="Client" icon="faw fas fa-cogs">
-              <client-tab :model="model"></client-tab>
+            <tab-content title="Setup" icon="faw fas fa-cogs">
+              <setup-tab :model="model"></setup-tab>
+            </tab-content>
+            <tab-content title="Customize" icon="faw fas fa-wrench">
+              <customize-tab :model="model"></customize-tab>
             </tab-content>
             <tab-content
               title="Path"
@@ -58,7 +61,8 @@ import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import "@fortawesome/fontawesome-free/css/all.css";
 import WelcomeTab from "@/components/wizard/WelcomeTab.vue";
 import NetworkTab from "@/components/wizard/NetworkTab.vue";
-import ClientTab from "@/components/wizard/ClientTab.vue";
+import SetupTab from "@/components/wizard/SetupTab.vue";
+import CustomizeTab from "@/components/wizard/CustomizeTab.vue";
 import InstallationFolderTab from "@/components/wizard/InstallationFolderTab.vue";
 import VerificationTab from "@/components/wizard/VerificationTab.vue";
 import axios from "axios";
@@ -70,7 +74,8 @@ export default {
     TabContent,
     WelcomeTab,
     NetworkTab,
-    ClientTab,
+    SetupTab,
+    CustomizeTab,
     InstallationFolderTab,
     VerificationTab,
   },

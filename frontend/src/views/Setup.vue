@@ -17,8 +17,10 @@ export default {
     return {
       model: {
         network: "pyrmont",
-        client: "lighthouse",
+        client: "allbeacons",
         installationFolder: "/opt/stereum",
+        override: "default",
+
       },
     };
   },
