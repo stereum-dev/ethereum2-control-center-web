@@ -42,9 +42,6 @@ export default {
   },
   watch: {
     'model.client': function(n, o) {
-      console.log("old: " + o);
-      console.log("new: " + n);
-
       this.overrides.splice(0, this.overrides.length);
 
       this.addDefaultChoice(this.overrides);

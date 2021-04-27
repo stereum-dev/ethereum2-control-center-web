@@ -31,6 +31,9 @@
             <tab-content title="Customize" icon="faw fas fa-wrench">
               <customize-tab :model="model"></customize-tab>
             </tab-content>
+            <tab-content title="Ethereum 1 Nodes" icon="faw fas fa-database">
+              <ethereum-1-nodes-tab :model="model"></ethereum-1-nodes-tab>
+            </tab-content>
             <tab-content
               title="Path"
               icon="faw far fa-folder-open"
@@ -63,6 +66,7 @@ import WelcomeTab from "@/components/wizard/WelcomeTab.vue";
 import NetworkTab from "@/components/wizard/NetworkTab.vue";
 import SetupTab from "@/components/wizard/SetupTab.vue";
 import CustomizeTab from "@/components/wizard/CustomizeTab.vue";
+import Ethereum1NodesTab from "@/components/wizard/Ethereum1NodesTab.vue";
 import InstallationFolderTab from "@/components/wizard/InstallationFolderTab.vue";
 import VerificationTab from "@/components/wizard/VerificationTab.vue";
 import axios from "axios";
@@ -76,6 +80,7 @@ export default {
     NetworkTab,
     SetupTab,
     CustomizeTab,
+    Ethereum1NodesTab,
     InstallationFolderTab,
     VerificationTab,
   },

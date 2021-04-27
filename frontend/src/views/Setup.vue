@@ -20,7 +20,7 @@ export default {
         client: "allbeacons",
         installationFolder: "/opt/stereum",
         override: "default",
-
+        eth1nodes: [],
       },
     };
   },

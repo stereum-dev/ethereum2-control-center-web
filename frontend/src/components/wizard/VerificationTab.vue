@@ -21,6 +21,13 @@
           <td class="table-data">{{ model.override }}</td>
         </tr>
         <tr>
+          <td class="table-label">Ethereum 1 nodes:</td>
+          <td class="table-data">
+            <b-table striped hover :items="model.eth1nodes">
+            </b-table>
+          </td>
+        </tr>
+        <tr>
           <td class="table-label">Installation Folder:</td>
           <td class="table-data">{{ model.installationFolder }}</td>
         </tr>
