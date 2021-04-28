@@ -154,9 +154,9 @@ export default {
       const fetchStatus = () => {
         axios
           .get("/api/setup/status")
-          .then((response) => {            
+          .then((response) => {
             console.log(response.data)
-            this.logs = response.data;            
+            this.logs = response.data;
           })
           .catch((error) => {
             console.error(error);
@@ -171,7 +171,7 @@ export default {
           this.$toasted.success(
             "Installation done successfully, have fun with Stereum",
             { duration: 5000 }
-          );          
+          );
           this.logs = response.data;
           this.installationProgress = 100;
           this.installationRunning = false;
