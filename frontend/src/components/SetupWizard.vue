@@ -19,14 +19,23 @@
             @on-complete="onComplete"
             :hide-buttons="installationRunning"
           >
-            <tab-content title="Welcome" icon="faw fas fa-door-open">
+            <tab-content title="Welcome" icon="faw fas fa-compass">
               <welcome-tab></welcome-tab>
             </tab-content>
             <tab-content title="Network" icon="faw fas fa-network-wired">
               <network-tab :model="model"></network-tab>
             </tab-content>
-            <tab-content title="Client" icon="faw fas fa-cogs">
-              <client-tab :model="model"></client-tab>
+            <tab-content title="Setup" icon="faw fas fa-cogs">
+              <setup-tab :model="model"></setup-tab>
+            </tab-content>
+            <tab-content title="Customize" icon="faw fas fa-wrench">
+              <customize-tab :model="model"></customize-tab>
+            </tab-content>
+            <tab-content title="Ethereum 1 Nodes" icon="faw fas fa-database">
+              <ethereum-1-nodes-tab :model="model"></ethereum-1-nodes-tab>
+            </tab-content>
+            <tab-content title="Updates" icon="faw fas fa-sync">
+              <updates-tab :model="model"></updates-tab>
             </tab-content>
             <tab-content
               title="Path"
@@ -58,7 +67,10 @@ import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import "@fortawesome/fontawesome-free/css/all.css";
 import WelcomeTab from "@/components/wizard/WelcomeTab.vue";
 import NetworkTab from "@/components/wizard/NetworkTab.vue";
-import ClientTab from "@/components/wizard/ClientTab.vue";
+import SetupTab from "@/components/wizard/SetupTab.vue";
+import CustomizeTab from "@/components/wizard/CustomizeTab.vue";
+import Ethereum1NodesTab from "@/components/wizard/Ethereum1NodesTab.vue";
+import UpdatesTab from "@/components/wizard/UpdatesTab.vue";
 import InstallationFolderTab from "@/components/wizard/InstallationFolderTab.vue";
 import VerificationTab from "@/components/wizard/VerificationTab.vue";
 import axios from "axios";
@@ -70,7 +82,10 @@ export default {
     TabContent,
     WelcomeTab,
     NetworkTab,
-    ClientTab,
+    SetupTab,
+    CustomizeTab,
+    Ethereum1NodesTab,
+    UpdatesTab,
     InstallationFolderTab,
     VerificationTab,
   },
@@ -109,21 +124,39 @@ export default {
       };
       handle = setInterval(f, 500);
 
+      let unattended_updates_check = this.model.updates.unattended.indexOf('check');
+      let unattended_updates_install = this.model.updates.unattended.indexOf('install');
+
+
       // write variables for the ansible call
       const extraVars = [];
       extraVars.push({ name: "network", value: this.model.network });
-      extraVars.push({ name: "client", value: this.model.client });
+      extraVars.push({ name: "setup", value: this.model.client });
+      extraVars.push({ name: "setup_override", value: this.model.overrides });
+      extraVars.push({ name: "eth1_node", value: this.model.eth1nodes });
       extraVars.push({
-        name: "installationFolder",
+        name: "",
+        value: {
+          update: {
+            lane: this.model.updates.lane,
+            unattended: {
+              check: unattended_updates_check,
+              install: unattended_updates_install
+            }
+          }
+        }
+      });
+      extraVars.push({
+        name: "install_path",
         value: this.model.installationFolder,
       });
       
       const fetchStatus = () => {
         axios
           .get("/api/setup/status")
-          .then((response) => {            
+          .then((response) => {
             console.log(response.data)
-            this.logs = response.data;            
+            this.logs = response.data;
           })
           .catch((error) => {
             console.error(error);
@@ -138,7 +171,7 @@ export default {
           this.$toasted.success(
             "Installation done successfully, have fun with Stereum",
             { duration: 5000 }
-          );          
+          );
           this.logs = response.data;
           this.installationProgress = 100;
           this.installationRunning = false;

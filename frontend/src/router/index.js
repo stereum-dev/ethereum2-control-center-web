@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Setup from "../views/Setup.vue";
+import ControlCenter from "../views/ControlCenter.vue";
 
 Vue.use(VueRouter);
 
@@ -9,6 +10,11 @@ const routes = [
     path: "/",
     name: "setup",
     component: Setup,
+  },
+  {
+    path: "/control-center",
+    name: "control-center",
+    component: ControlCenter,
   },
 ];
 

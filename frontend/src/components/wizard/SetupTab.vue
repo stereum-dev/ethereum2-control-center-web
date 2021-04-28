@@ -23,6 +23,11 @@ export default {
       true: true,
       clients: [
         {
+          id: "allbeacons",
+          text: "All beacons: lighthouse, lodestar, nimbus, prysm, teku and no validators",
+          disabled: false,
+        },
+        {
           id: "lighthouse",
           text: "Lighthouse by Sigma Prime",
           disabled: false,

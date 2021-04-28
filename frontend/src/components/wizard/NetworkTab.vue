@@ -23,7 +23,8 @@ export default {
       true: true,
       networks: [
         { id: "mainnet", text: "Mainnet", disabled: false },
-        { id: "pyrmont", text: "Pyrmont testnet", disabled: false },
+        { id: "pyrmont", text: "Pyrmont - oldest testnet", disabled: false },
+        { id: "prater", text: "Prater - newest testnet", disabled: false },
       ],
     };
   },

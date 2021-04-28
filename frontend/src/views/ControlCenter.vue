@@ -1,17 +1,17 @@
 <template>
-  <div class="setup">
-    <setup-wizard :model="model" />
+  <div class="control-center">
+    <control-center-overview :model="model" />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import SetupWizard from "@/components/SetupWizard.vue";
+import ControlCenterOverview from "@/components/ControlCenterOverview.vue";
 
 export default {
-  name: "Setup",
+  name: "ControlCenter",
   components: {
-    SetupWizard,
+    ControlCenterOverview,
   },
   data() {
     return {
