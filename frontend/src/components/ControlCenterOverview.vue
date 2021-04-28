@@ -41,7 +41,7 @@
       <home />
     </div>
     <div v-if="this.content === 'updates'">
-      <updates />
+      <updates :ethereum2config="this.ethereum2config"/>
     </div>
   </div>
 </template>
@@ -67,6 +67,7 @@ export default {
     };
   },
   props: {
+    ethereum2config: Object,
   },
   methods: {
     showHome() {

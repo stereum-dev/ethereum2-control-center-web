@@ -1,6 +1,6 @@
 <template>
   <div class="control-center">
-    <control-center-overview :model="model" />
+    <control-center-overview :ethereum2config="this.ethereum2config" />
   </div>
 </template>
 
@@ -15,13 +15,13 @@ export default {
   },
   data() {
     return {
-      model: {
+      ethereum2config: {
         network: "pyrmont",
-        client: "allbeacons",
+        client: "lighthouse",
         installationFolder: "/opt/stereum",
         override: "default",
-        eth1nodes: [],
-        updates: {},
+        eth1nodes: ["http://geth:8545", "https://goerli.infura.io/foo/bar"],
+        updates: {lane: "rc", unattended: ["install"]},
       },
     };
   },

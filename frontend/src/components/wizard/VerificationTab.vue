@@ -30,7 +30,7 @@
         <tr>
           <td class="table-label">Updates:</td>
           <td class="table-data">
-            <div v-if="model.updates.unattended === null || model.updates.unattended.indexOf('check') > -1">
+            <div v-if="!(typeof model.updates.unattended === 'undefined') && model.updates.unattended.indexOf('check') > -1">
               Check for updates automatically: <strong>Yes</strong>
               <br/>Unattended update installation: <strong v-if="model.updates.unattended.indexOf('install') > -1">Yes</strong><strong v-else>No</strong>
               <br/>Lane: <strong>{{ model.updates.lane }}</strong>
