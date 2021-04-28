@@ -124,12 +124,30 @@ export default {
       };
       handle = setInterval(f, 500);
 
+      let unattended_updates_check = this.model.updates.unattended.indexOf('check');
+      let unattended_updates_install = this.model.updates.unattended.indexOf('install');
+
+
       // write variables for the ansible call
       const extraVars = [];
       extraVars.push({ name: "network", value: this.model.network });
-      extraVars.push({ name: "client", value: this.model.client });
+      extraVars.push({ name: "setup", value: this.model.client });
+      extraVars.push({ name: "setup_override", value: this.model.overrides });
+      extraVars.push({ name: "eth1_node", value: this.model.eth1nodes });
       extraVars.push({
-        name: "installationFolder",
+        name: "",
+        value: {
+          update: {
+            lane: this.model.updates.lane,
+            unattended: {
+              check: unattended_updates_check,
+              install: unattended_updates_install
+            }
+          }
+        }
+      });
+      extraVars.push({
+        name: "install_path",
         value: this.model.installationFolder,
       });
       
