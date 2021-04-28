@@ -21,6 +21,7 @@ export default {
         installationFolder: "/opt/stereum",
         override: "default",
         eth1nodes: [],
+        updates: {},
       },
     };
   },

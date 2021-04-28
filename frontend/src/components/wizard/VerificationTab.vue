@@ -28,6 +28,19 @@
           </td>
         </tr>
         <tr>
+          <td class="table-label">Updates:</td>
+          <td class="table-data">
+            <div v-if="model.updates.unattended === null || model.updates.unattended.indexOf('check') > -1">
+              Check for updates automatically: <strong>Yes</strong>
+              <br/>Unattended update installation: <strong v-if="model.updates.unattended.indexOf('install') > -1">Yes</strong><strong v-else>No</strong>
+              <br/>Lane: <strong>{{ model.updates.lane }}</strong>
+            </div>
+            <div v-else>
+              Check for updates: <strong>No</strong>
+            </div>
+          </td>
+        </tr>
+        <tr>
           <td class="table-label">Installation Folder:</td>
           <td class="table-data">{{ model.installationFolder }}</td>
         </tr>
