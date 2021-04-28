@@ -1,12 +1,13 @@
 <template>
   <div>
     <b-navbar toggleable="lg" type="dark" variant="info">
-      <b-navbar-brand href="#">NavBar</b-navbar-brand>
+      <b-navbar-brand @click="showHome()">Stereum</b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
+          <b-nav-item @click="showUpdates()">Updates</b-nav-item>
           <b-nav-item href="#">Link</b-nav-item>
           <b-nav-item href="#" disabled>Disabled</b-nav-item>
         </b-navbar-nav>
@@ -36,6 +37,12 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
+    <div v-if="this.content === 'home'">
+      <home />
+    </div>
+    <div v-if="this.content === 'updates'">
+      <updates />
+    </div>
   </div>
 </template>
 
@@ -44,19 +51,30 @@
 import { FormWizard, TabContent } from "vue-form-wizard";
 import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import "@fortawesome/fontawesome-free/css/all.css";
+import Home from "@/components/cc/home/Home.vue";
+import Updates from './cc/updates/Updates.vue';
 import axios from "axios";
 
 export default {
   name: "ControlCenterOverview",
   components: {
+    Home,
+    Updates,
   },
   data() {
     return {
+      content: "home",
     };
   },
   props: {
   },
   methods: {
+    showHome() {
+      this.content = "home";
+    },
+    showUpdates() {
+      this.content = "updates";
+    }
   },
 };
 </script>
