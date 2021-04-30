@@ -1,18 +1,21 @@
 <template>
     <div class="text-left">
-        <b-form>
-        <b-form-group>
-            <b-form-checkbox-group
-                v-model="update.unattended">
-            <b-form-checkbox value="check">Check for updates automatically</b-form-checkbox>
-            <b-form-checkbox value="install" :disabled="this.update.unattended.indexOf('check') < 0">Install updates automatically</b-form-checkbox>
-            </b-form-checkbox-group>
-        </b-form-group>
+        <h3>Configure unattended updates</h3>
+        <div class="mt-3">
+          <b-form>
+          <b-form-group>
+              <b-form-checkbox-group
+                  v-model="update.unattended">
+              <b-form-checkbox value="check">Check for updates automatically</b-form-checkbox>
+              <b-form-checkbox value="install" :disabled="this.update.unattended.indexOf('check') < 0">Install updates automatically</b-form-checkbox>
+              </b-form-checkbox-group>
+          </b-form-group>
 
-        <b-form-group label="Update lane:" label-for="lane">
-            <b-form-select id="lane" v-model="update.lane" :options="lanes" :disabled="this.update.unattended.indexOf('check') < 0"></b-form-select>
-        </b-form-group>
-        </b-form>
+          <b-form-group label="Update lane:" label-for="lane">
+              <b-form-select id="lane" v-model="update.lane" :options="lanes" :disabled="this.update.unattended.indexOf('check') < 0"></b-form-select>
+          </b-form-group>
+          </b-form>
+        </div>
     </div>
 </template>
 
