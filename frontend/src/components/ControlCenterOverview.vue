@@ -7,6 +7,7 @@
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
+          <b-nav-item @click="showServices()">Services</b-nav-item>
           <b-nav-item @click="showUpdates()">Updates</b-nav-item>
           <b-nav-item href="#">Link</b-nav-item>
           <b-nav-item href="#" disabled>Disabled</b-nav-item>
@@ -22,6 +23,9 @@
     <div v-if="this.content === 'home'">
       <home />
     </div>
+    <div v-if="this.content === 'services'">
+      <services-overview :ethereum2config="this.ethereum2config"/>
+    </div>
     <div v-if="this.content === 'updates'">
       <updates-overview :ethereum2config="this.ethereum2config"/>
     </div>
@@ -34,12 +38,14 @@ import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import "@fortawesome/fontawesome-free/css/all.css";
 import Home from "@/components/cc/home/Home.vue";
 import UpdatesOverview from './cc/updates/UpdatesOverview.vue';
+import ServicesOverview from './cc/updates/ServicesOverview.vue';
 
 export default {
   name: "ControlCenterOverview",
   components: {
     Home,
     UpdatesOverview,
+    ServicesOverview
   },
   data() {
     return {
@@ -52,6 +58,9 @@ export default {
   methods: {
     showHome() {
       this.content = "home";
+    },
+    showServices() {
+      this.content = "services";
     },
     showUpdates() {
       this.content = "updates";

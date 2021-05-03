@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import TaskStatusEntry from '@/components/wizard/TaskStatusEntry.vue';
+import TaskStatusEntry from '@/components/commons/TaskStatusEntry.vue';
 
 export default {
   name: "VerificationTab",
