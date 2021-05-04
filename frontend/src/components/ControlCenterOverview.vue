@@ -11,6 +11,11 @@
           <b-nav-item @click="showUpdates()">Updates</b-nav-item>
           <b-nav-item href="#">Link</b-nav-item>
           <b-nav-item href="#" disabled>Disabled</b-nav-item>
+          <b-nav-item-dropdown text="Validator(s)">
+            <b-dropdown-item @click="showImportValidator()">Import Account</b-dropdown-item>
+            <b-dropdown-item @click="showListValidator()">List Account</b-dropdown-item>
+            <b-dropdown-item @click="showExitValidator()">Exit Account</b-dropdown-item>
+          </b-nav-item-dropdown>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -29,6 +34,15 @@
     <div v-if="this.content === 'updates'">
       <updates-overview :ethereum2config="this.ethereum2config"/>
     </div>
+    <div v-if="this.content === 'importValidator'">
+      <import-validator />
+    </div>
+    <div v-if="this.content === 'listValidator'">
+      <list-validator />
+    </div>
+    <div v-if="this.content === 'exitValidator'">
+      <exit-validator />
+    </div>
   </div>
 </template>
 
@@ -39,13 +53,19 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import Home from "@/components/cc/home/Home.vue";
 import UpdatesOverview from './cc/updates/UpdatesOverview.vue';
 import ServicesOverview from './cc/updates/ServicesOverview.vue';
+import ImportValidator from './cc/validator/ImportValidator.vue';
+import ListValidator from './cc/validator/ListValidator.vue';
+import ExitValidator from './cc/validator/ExitValidator.vue';
 
 export default {
   name: "ControlCenterOverview",
   components: {
     Home,
     UpdatesOverview,
-    ServicesOverview
+    ServicesOverview,
+    ImportValidator,
+    ListValidator,
+    ExitValidator,
   },
   data() {
     return {
@@ -64,6 +84,15 @@ export default {
     },
     showUpdates() {
       this.content = "updates";
+    }
+    showImportValidator() {
+      this.content = "importValidator";
+    },
+    showListValidator() {
+      this.content = "listValidator";
+    },
+    showExitValidator() {
+      this.content = "exitValidator";
     }
   },
 };
