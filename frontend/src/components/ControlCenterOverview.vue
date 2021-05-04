@@ -84,7 +84,7 @@ export default {
     },
     showUpdates() {
       this.content = "updates";
-    }
+    },
     showImportValidator() {
       this.content = "importValidator";
     },
