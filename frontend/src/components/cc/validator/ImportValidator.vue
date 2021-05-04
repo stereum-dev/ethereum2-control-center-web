@@ -37,7 +37,6 @@ export default {
     return {
       files: [],
       password: '',
-      keyfiles: '',
     };
   },
   methods: {
