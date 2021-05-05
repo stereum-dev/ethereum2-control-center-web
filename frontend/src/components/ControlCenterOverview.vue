@@ -52,7 +52,7 @@ import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import "@fortawesome/fontawesome-free/css/all.css";
 import Home from "@/components/cc/home/Home.vue";
 import UpdatesOverview from './cc/updates/UpdatesOverview.vue';
-import ServicesOverview from './cc/updates/ServicesOverview.vue';
+import ServicesOverview from './cc/ServicesOverview.vue';
 import ImportValidator from './cc/validator/ImportValidator.vue';
 import ListValidator from './cc/validator/ListValidator.vue';
 import ExitValidator from './cc/validator/ExitValidator.vue';

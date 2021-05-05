@@ -31,22 +31,22 @@
         </template>
         
         <template #cell(state)="row">
-          <b-icon-exclamation-diamond
+          <b-icon icon="exclamation-diamond"
             variant="danger"
             font-scale="2"
-            v-b-icon-exclamation-diamond.hover
+            v-b-tooltip.hover
             title="Stopped"
             v-if="row.item.State === 'Exited'" />
-          <b-icon-emoji-smile
+          <b-icon icon="emoji-smile"
             variant="success"
             font-scale="2"
-            v-b-icon-emoji-smile.hover
+            v-b-tooltip.hover
             title="Running"
             v-else-if="row.item.State === 'Started'" />
-          <b-icon-question-diamond
+          <b-icon icon="question-diamond"
             variant="warning"
             font-scale="2"
-            v-icon-question-diamond.hover
+            v-b-tooltip.hover
             title="unknown state"
             v-else />
         </template>
@@ -97,6 +97,12 @@
 
       </b-table>
     </div>
+    <b-modal ref="service-logs-modal" title="Service Logs - " size="xl" hide-footer>
+      <template #modal-title>
+        Service Logs - <strong>{{ logs_service }}</strong>
+      </template>
+      <samp style="white-space: pre-line;">{{ logs }}</samp>
+    </b-modal>
   </div>
 </template>
 
@@ -107,6 +113,8 @@ export default {
   },
   data() {
     return {
+      logs: "this is a log\nand this is another line of a log\n\nmore log you know...",
+      logs_service: "",
       fields: [
         {key: 'ste', sortable: false, label: '' },
         {key: 'name', sortable: false, label: "Service" },
@@ -300,7 +308,16 @@ export default {
 
     },
     showServiceLogs(row) {
+      if (row.item.Labels == undefined || row.item.Labels['com.docker.compose.service'] == undefined) {
+        this.logs_service = row.item.Names;
+      } else {
+        this.logs_service = row.item.Labels['com.docker.compose.service'];
+      }
 
+      // todo: fill log var:
+      // this.logs = call_ansible(row.item.Id);
+
+      this.$refs['service-logs-modal'].show();
     },
   }
 };
