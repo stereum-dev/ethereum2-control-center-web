@@ -23,21 +23,26 @@
         <tr>
           <td class="table-label">Ethereum 1 nodes:</td>
           <td class="table-data">
-            <b-table striped hover :items="model.eth1nodes">
-            </b-table>
+            <b-table striped hover :items="model.eth1nodes"> </b-table>
           </td>
         </tr>
         <tr>
           <td class="table-label">Updates:</td>
           <td class="table-data">
-            <div v-if="!(typeof model.updates.unattended === 'undefined') && model.updates.unattended.indexOf('check') > -1">
+            <div
+              v-if="
+                !(typeof model.updates.unattended === 'undefined') &&
+                model.updates.unattended.indexOf('check') > -1
+              "
+            >
               Check for updates automatically: <strong>Yes</strong>
-              <br/>Unattended update installation: <strong v-if="model.updates.unattended.indexOf('install') > -1">Yes</strong><strong v-else>No</strong>
-              <br/>Lane: <strong>{{ model.updates.lane }}</strong>
+              <br />Unattended update installation:
+              <strong v-if="model.updates.unattended.indexOf('install') > -1"
+                >Yes</strong
+              ><strong v-else>No</strong> <br />Lane:
+              <strong>{{ model.updates.lane }}</strong>
             </div>
-            <div v-else>
-              Check for updates: <strong>No</strong>
-            </div>
+            <div v-else>Check for updates: <strong>No</strong></div>
           </td>
         </tr>
         <tr>
@@ -47,7 +52,7 @@
       </table>
 
       <div v-if="running || done">
-        <b-progress 
+        <b-progress
           v-if="running"
           :value="progress"
           variant="info"
@@ -63,7 +68,12 @@
         </b-progress>
         <strong class="text-left">Logs:</strong>
         <ul class="list-group list-unstyled">
-          <task-status-entry class="list-group-item text-left" v-bind:key="index" v-for="(status, index) in logs" :model="status"></task-status-entry>
+          <task-status-entry
+            class="list-group-item text-left"
+            v-bind:key="index"
+            v-for="(status, index) in logs"
+            :model="status"
+          ></task-status-entry>
         </ul>
       </div>
     </data>
@@ -71,7 +81,7 @@
 </template>
 
 <script>
-import TaskStatusEntry from '@/components/commons/TaskStatusEntry.vue';
+import TaskStatusEntry from "@/components/commons/TaskStatusEntry.vue";
 
 export default {
   name: "VerificationTab",

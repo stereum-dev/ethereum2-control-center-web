@@ -12,16 +12,32 @@
           <b-nav-item href="#">Link</b-nav-item>
           <b-nav-item href="#" disabled>Disabled</b-nav-item>
           <b-nav-item-dropdown text="Validator(s)">
-            <b-dropdown-item @click="showImportValidator()">Import Account</b-dropdown-item>
-            <b-dropdown-item @click="showListValidator()">List Account</b-dropdown-item>
-            <b-dropdown-item @click="showExitValidator()">Exit Account</b-dropdown-item>
+            <b-dropdown-item @click="showImportValidator()"
+              >Import Account</b-dropdown-item
+            >
+            <b-dropdown-item @click="showListValidator()"
+              >List Account</b-dropdown-item
+            >
+            <b-dropdown-item @click="showExitValidator()"
+              >Exit Account</b-dropdown-item
+            >
           </b-nav-item-dropdown>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
-          <b-nav-item v-if="this.ethereum2config.updates.available.length < 1" href="#" disabled>No updates available</b-nav-item>
-          <b-nav-item v-if="this.ethereum2config.updates.available.length > 0" @click="showUpdates()">Update {{ this.ethereum2config.updates.available }} available!</b-nav-item>
+          <b-nav-item
+            v-if="this.ethereum2config.updates.available.length < 1"
+            href="#"
+            disabled
+            >No updates available</b-nav-item
+          >
+          <b-nav-item
+            v-if="this.ethereum2config.updates.available.length > 0"
+            @click="showUpdates()"
+            >Update
+            {{ this.ethereum2config.updates.available }} available!</b-nav-item
+          >
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
@@ -29,10 +45,10 @@
       <home />
     </div>
     <div v-if="this.content === 'services'">
-      <services-overview :ethereum2config="this.ethereum2config"/>
+      <services-overview :ethereum2config="this.ethereum2config" />
     </div>
     <div v-if="this.content === 'updates'">
-      <updates-overview :ethereum2config="this.ethereum2config"/>
+      <updates-overview :ethereum2config="this.ethereum2config" />
     </div>
     <div v-if="this.content === 'importValidator'">
       <import-validator />
@@ -51,11 +67,11 @@
 import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import "@fortawesome/fontawesome-free/css/all.css";
 import Home from "@/components/cc/home/Home.vue";
-import UpdatesOverview from './cc/updates/UpdatesOverview.vue';
-import ServicesOverview from './cc/ServicesOverview.vue';
-import ImportValidator from './cc/validator/ImportValidator.vue';
-import ListValidator from './cc/validator/ListValidator.vue';
-import ExitValidator from './cc/validator/ExitValidator.vue';
+import UpdatesOverview from "./cc/updates/UpdatesOverview.vue";
+import ServicesOverview from "./cc/ServicesOverview.vue";
+import ImportValidator from "./cc/validator/ImportValidator.vue";
+import ListValidator from "./cc/validator/ListValidator.vue";
+import ExitValidator from "./cc/validator/ExitValidator.vue";
 
 export default {
   name: "ControlCenterOverview",
@@ -93,10 +109,9 @@ export default {
     },
     showExitValidator() {
       this.content = "exitValidator";
-    }
+    },
   },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

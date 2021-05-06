@@ -24,7 +24,8 @@ export default {
       clients: [
         {
           id: "allbeacons",
-          text: "All beacons: lighthouse, lodestar, nimbus, prysm, teku and no validators",
+          text:
+            "All beacons: lighthouse, lodestar, nimbus, prysm, teku and no validators",
           disabled: false,
         },
         {

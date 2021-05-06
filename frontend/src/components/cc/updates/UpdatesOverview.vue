@@ -11,10 +11,7 @@
           <div class="row">
             <div>
               <p class="text-center">
-                <b-button 
-                  variant="primary">
-                  Save
-                </b-button>
+                <b-button variant="primary"> Save </b-button>
               </p>
             </div>
           </div>
@@ -28,8 +25,8 @@
 </template>
 
 <script>
-import UpdatesConfiguration from '../../commons/UpdatesConfiguration.vue';
-import ManualUpdate from './ManualUpdate.vue';
+import UpdatesConfiguration from "../../commons/UpdatesConfiguration.vue";
+import ManualUpdate from "./ManualUpdate.vue";
 
 export default {
   name: "UpdatesOverview",
@@ -38,8 +35,7 @@ export default {
     ManualUpdate,
   },
   data() {
-    return {
-    };
+    return {};
   },
   props: {
     ethereum2config: Object,

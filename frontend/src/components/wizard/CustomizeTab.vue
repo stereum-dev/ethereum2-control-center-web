@@ -30,7 +30,11 @@ export default {
   },
   methods: {
     addDefaultChoice(choices) {
-      this.addChoice(choices, "default", "No changes to the chosen setup apply");
+      this.addChoice(
+        choices,
+        "default",
+        "No changes to the chosen setup apply"
+      );
     },
     addChoice(choices, id, text) {
       choices.push({
@@ -38,28 +42,60 @@ export default {
         text: text,
         disabled: false,
       });
-    }
+    },
   },
   watch: {
-    'model.client': function(n, o) {
+    "model.client": function (n) {
       this.overrides.splice(0, this.overrides.length);
 
       this.addDefaultChoice(this.overrides);
 
       if (n === "lighthouse") {
-        this.addChoice(this.overrides, "no-geth", "Configuration without geth, using an external Ethereum 1 node (like infura.io)");
+        this.addChoice(
+          this.overrides,
+          "no-geth",
+          "Configuration without geth, using an external Ethereum 1 node (like infura.io)"
+        );
       } else if (n === "lodestar") {
-        this.addChoice(this.overrides, "no-geth", "Configuration without geth, using an external Ethereum 1 node (like infura.io)");
+        this.addChoice(
+          this.overrides,
+          "no-geth",
+          "Configuration without geth, using an external Ethereum 1 node (like infura.io)"
+        );
       } else if (n === "multiclient") {
-        this.addChoice(this.overrides, "limit-resources", "Default configuration with resource limits per container");
+        this.addChoice(
+          this.overrides,
+          "limit-resources",
+          "Default configuration with resource limits per container"
+        );
       } else if (n === "nimbus") {
-        this.addChoice(this.overrides, "no-geth", "Configuration without geth, using an external Ethereum 1 node (like infura.io)");
+        this.addChoice(
+          this.overrides,
+          "no-geth",
+          "Configuration without geth, using an external Ethereum 1 node (like infura.io)"
+        );
       } else if (n === "prysm") {
-        this.addChoice(this.overrides, "beacon-validator", "Beacon and validator only, no monitoring except Prysm Web UI");
-        this.addChoice(this.overrides, "geth-cache-2k", "Default configuration with geth cache 2000");
-        this.addChoice(this.overrides, "time-mount", "Default configuration with forced time sync of containers with host os (linux only)");
+        this.addChoice(
+          this.overrides,
+          "beacon-validator",
+          "Beacon and validator only, no monitoring except Prysm Web UI"
+        );
+        this.addChoice(
+          this.overrides,
+          "geth-cache-2k",
+          "Default configuration with geth cache 2000"
+        );
+        this.addChoice(
+          this.overrides,
+          "time-mount",
+          "Default configuration with forced time sync of containers with host os (linux only)"
+        );
       } else if (n === "teku") {
-        this.addChoice(this.overrides, "no-geth", "Configuration without geth, using an external Ethereum 1 node (like infura.io)");
+        this.addChoice(
+          this.overrides,
+          "no-geth",
+          "Configuration without geth, using an external Ethereum 1 node (like infura.io)"
+        );
       }
     },
   },

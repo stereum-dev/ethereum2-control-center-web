@@ -5,15 +5,14 @@
 </template>
 
 <script>
-import UpdatesConfiguration from '../commons/UpdatesConfiguration.vue';
+import UpdatesConfiguration from "../commons/UpdatesConfiguration.vue";
 export default {
   name: "Ethereum1NodesTab",
   components: {
     UpdatesConfiguration,
   },
   data() {
-    return {
-    }
+    return {};
   },
   props: {
     model: Object,

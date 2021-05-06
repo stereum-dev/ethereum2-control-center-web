@@ -49,8 +49,8 @@
                 :logs="logs.tasks"
                 :model="model"
                 :progress="installationProgress"
-                :running="installationRunning"                
-                :done="installationDone"                
+                :running="installationRunning"
+                :done="installationDone"
               ></verification-tab>
             </tab-content>
           </form-wizard>
@@ -92,7 +92,7 @@ export default {
   data() {
     return {
       response: "",
-      logs: {        
+      logs: {
         tasks: [],
       },
       installationRunning: false,
@@ -124,9 +124,12 @@ export default {
       };
       handle = setInterval(f, 500);
 
-      let unattended_updates_check = this.model.updates.unattended.indexOf('check');
-      let unattended_updates_install = this.model.updates.unattended.indexOf('install');
-
+      let unattended_updates_check = this.model.updates.unattended.indexOf(
+        "check"
+      );
+      let unattended_updates_install = this.model.updates.unattended.indexOf(
+        "install"
+      );
 
       // write variables for the ansible call
       const extraVars = [];
@@ -141,27 +144,27 @@ export default {
             lane: this.model.updates.lane,
             unattended: {
               check: unattended_updates_check,
-              install: unattended_updates_install
-            }
-          }
-        }
+              install: unattended_updates_install,
+            },
+          },
+        },
       });
       extraVars.push({
         name: "install_path",
         value: this.model.installationFolder,
       });
-      
+
       const fetchStatus = () => {
         axios
           .get("/api/setup/status")
           .then((response) => {
-            console.log(response.data)
+            console.log(response.data);
             this.logs = response.data;
           })
           .catch((error) => {
             console.error(error);
           });
-      }
+      };
 
       this.installationDone = false;
       let logWatchHandle = setInterval(fetchStatus, 5000);
