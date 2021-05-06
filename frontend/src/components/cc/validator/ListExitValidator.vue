@@ -5,7 +5,7 @@
     </div>
     <div class="row">
 
-      <b-table striped hover :items="services" :fields="fields">
+      <b-table striped hover :items="validators" :fields="fields">
 
         <template #cell(ste)="row">
           <b-icon-question
@@ -101,7 +101,7 @@ export default {
         {key: 'state', sortable: false, label: "State" },
         {key: 'actions', sortable: false}
       ],
-      services: [
+      validators: [
                   {
                     "Id": "8dfafdbc3a40",
                     "Names": [
