@@ -11,15 +11,12 @@
           <b-nav-item @click="showUpdates()">Updates</b-nav-item>
           <b-nav-item href="#">Link</b-nav-item>
           <b-nav-item href="#" disabled>Disabled</b-nav-item>
-          <b-nav-item-dropdown text="Validator(s)">
+          <b-nav-item-dropdown text="Validators">
             <b-dropdown-item @click="showImportValidator()"
               >Import Account</b-dropdown-item
             >
-            <b-dropdown-item @click="showListValidator()"
-              >List Account</b-dropdown-item
-            >
-            <b-dropdown-item @click="showExitValidator()"
-              >Exit Account</b-dropdown-item
+            <b-dropdown-item @click="showListExitValidator()"
+              >List & Exit Account</b-dropdown-item
             >
           </b-nav-item-dropdown>
         </b-navbar-nav>
@@ -53,11 +50,8 @@
     <div v-if="this.content === 'importValidator'">
       <import-validator />
     </div>
-    <div v-if="this.content === 'listValidator'">
-      <list-validator />
-    </div>
-    <div v-if="this.content === 'exitValidator'">
-      <exit-validator />
+    <div v-if="this.content === 'listExitValidator'">
+      <list-exit-validator />
     </div>
   </div>
 </template>
@@ -70,8 +64,7 @@ import Home from "@/components/cc/home/Home.vue";
 import UpdatesOverview from "./cc/updates/UpdatesOverview.vue";
 import ServicesOverview from "./cc/ServicesOverview.vue";
 import ImportValidator from "./cc/validator/ImportValidator.vue";
-import ListValidator from "./cc/validator/ListValidator.vue";
-import ExitValidator from "./cc/validator/ExitValidator.vue";
+import ListExitValidator from "./cc/validator/ListExitValidator.vue";
 
 export default {
   name: "ControlCenterOverview",
@@ -80,8 +73,7 @@ export default {
     UpdatesOverview,
     ServicesOverview,
     ImportValidator,
-    ListValidator,
-    ExitValidator,
+    ListExitValidator,
   },
   data() {
     return {
@@ -104,11 +96,8 @@ export default {
     showImportValidator() {
       this.content = "importValidator";
     },
-    showListValidator() {
-      this.content = "listValidator";
-    },
-    showExitValidator() {
-      this.content = "exitValidator";
+    showListExitValidator() {
+      this.content = "listExitValidator";
     },
   },
 };
