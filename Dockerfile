@@ -7,6 +7,7 @@ RUN npm i
 RUN npm run build
 
 FROM python:3.9-slim-buster
+RUN apt-get update && apt-get install -y openssh-client && rm -rf /var/lib/apt/lists/*
 WORKDIR /opt/app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
