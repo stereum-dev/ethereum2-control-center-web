@@ -79,6 +79,16 @@
             <b-icon icon="link" aria-hidden="true"></b-icon>
           </b-button>
 
+          <b-button
+            size="sm"
+            @click="removeValidator(row)"
+            variant="secondary"
+            class="mb-2 mr-sm-2 mb-sm-0"
+            v-b-door-open.hover
+            title="remove validator">
+            <b-icon icon="dash-circle" aria-hidden="true"></b-icon>
+          </b-button>
+
 
         </template>
 
@@ -285,6 +295,8 @@ export default {
       window.open("https://beaconcha.in/", "_blank");
     },
     exitValidator() {
+    },
+    removeValidator() {
     },
   }
 };
