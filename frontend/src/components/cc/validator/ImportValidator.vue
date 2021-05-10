@@ -16,6 +16,7 @@
           type="file"
           name="file-input"
           multiple="true"
+          accept="application/JSON"
           @change="handleFileInput"
           title="Put your key files here!"
         />
