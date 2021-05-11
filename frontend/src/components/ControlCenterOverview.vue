@@ -1,7 +1,9 @@
 <template>
   <div>
-    <b-navbar toggleable="lg" type="dark" variant="info">
-      <b-navbar-brand @click="showHome()">Stereum</b-navbar-brand>
+    <b-navbar toggleable="lg" style="background-color: #336666">
+      <b-navbar-brand @click="showHome()">
+        <b-img src="/public/stereum_logo.png" width="30" height="30" class="d-inline-block align-top" /> Stereum
+      </b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -9,9 +11,10 @@
         <b-navbar-nav>
           <b-nav-item @click="showServices()">Services</b-nav-item>
           <b-nav-item @click="showUpdates()">Updates</b-nav-item>
-          <b-nav-item href="#">Link</b-nav-item>
-          <b-nav-item href="#" disabled>Disabled</b-nav-item>
-          <b-nav-item-dropdown text="Validators">
+          <b-nav-item-dropdown no-caret>
+            <template #button-content>
+              <span class="text-white">Validator Keys</span>
+            </template>
             <b-dropdown-item @click="showImportValidator()"
               >Import Account</b-dropdown-item
             >
@@ -53,6 +56,12 @@
     <div v-if="this.content === 'listExitValidator'">
       <list-exit-validator />
     </div>
+    <vue-fab mainBtnColor="#336666" icon="help_outline">
+      <!-- Icons from here: https://fonts.google.com/icons -->
+      <fab-item @clickItem="clickHelpItem" :idx="0" title="Email" icon="email" titleBgColor="#336666" titleColor="#FFFFFF" color="#336666" />
+      <fab-item @clickItem="clickHelpItem" :idx="1" title="Website" icon="language" titleBgColor="#336666" titleColor="#FFFFFF" color="#336666" />
+      <fab-item @clickItem="clickHelpItem" :idx="2" title="Discord" icon="question_answer" titleBgColor="#336666" titleColor="#FFFFFF" color="#336666" />
+    </vue-fab>
   </div>
 </template>
 
@@ -99,8 +108,31 @@ export default {
     showListExitValidator() {
       this.content = "listExitValidator";
     },
+
+    clickHelpItem: function (item) {
+      if (item.idx == 2) {
+        window.open("https://discord.gg/8Znj8K6GjN", "_blank");
+      } else if (item.idx == 1) {
+        window.open("https://stereum.net", "_blank");
+      } else if (item.idx == 0) {
+        window.location.href = "mailto:stereum@stereum.net";
+      }
+    },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.nav-link {
+  color: white !important;
+}
+.text-white {
+  color: rgba(255, 255, 255, 1);
+}
+.navbar-brand {
+  color: white !important;
+}
+.fab-main-container {
+  right: 5% !important;
+}
+</style>
