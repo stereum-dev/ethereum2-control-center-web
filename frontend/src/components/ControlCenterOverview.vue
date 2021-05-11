@@ -62,6 +62,12 @@
     <div v-if="this.content === 'exitValidator'">
       <exit-validator />
     </div>
+    <vue-fab mainBtnColor="#336666" icon="help_outline">
+      <!-- Icons from here: https://fonts.google.com/icons -->
+      <fab-item @clickItem="clickHelpItem" :idx="0" title="Email" icon="email" titleBgColor="#336666" titleColor="#FFFFFF" color="#336666" />
+      <fab-item @clickItem="clickHelpItem" :idx="1" title="Website" icon="language" titleBgColor="#336666" titleColor="#FFFFFF" color="#336666" />
+      <fab-item @clickItem="clickHelpItem" :idx="2" title="Discord" icon="question_answer" titleBgColor="#336666" titleColor="#FFFFFF" color="#336666" />
+    </vue-fab>
   </div>
 </template>
 
@@ -113,6 +119,16 @@ export default {
     showExitValidator() {
       this.content = "exitValidator";
     },
+
+    clickHelpItem: function (item) {
+      if (item.idx == 2) {
+        window.open("https://discord.gg/8Znj8K6GjN", "_blank");
+      } else if (item.idx == 1) {
+        window.open("https://stereum.net", "_blank");
+      } else if (item.idx == 0) {
+        window.location.href = "mailto:stereum@stereum.net";
+      }
+    },
   },
 };
 </script>
@@ -126,5 +142,8 @@ export default {
 }
 .navbar-brand {
   color: white !important;
+}
+.fab-main-container {
+  right: 5% !important;
 }
 </style>
