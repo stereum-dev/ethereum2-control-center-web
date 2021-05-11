@@ -18,11 +18,8 @@
             <b-dropdown-item @click="showImportValidator()"
               >Import Account</b-dropdown-item
             >
-            <b-dropdown-item @click="showListValidator()"
-              >List Account</b-dropdown-item
-            >
-            <b-dropdown-item @click="showExitValidator()"
-              >Exit Account</b-dropdown-item
+            <b-dropdown-item @click="showListExitValidator()"
+              >List & Exit Account</b-dropdown-item
             >
           </b-nav-item-dropdown>
         </b-navbar-nav>
@@ -56,11 +53,8 @@
     <div v-if="this.content === 'importValidator'">
       <import-validator />
     </div>
-    <div v-if="this.content === 'listValidator'">
-      <list-validator />
-    </div>
-    <div v-if="this.content === 'exitValidator'">
-      <exit-validator />
+    <div v-if="this.content === 'listExitValidator'">
+      <list-exit-validator />
     </div>
     <vue-fab mainBtnColor="#336666" icon="help_outline">
       <!-- Icons from here: https://fonts.google.com/icons -->
@@ -79,8 +73,7 @@ import Home from "@/components/cc/home/Home.vue";
 import UpdatesOverview from "./cc/updates/UpdatesOverview.vue";
 import ServicesOverview from "./cc/ServicesOverview.vue";
 import ImportValidator from "./cc/validator/ImportValidator.vue";
-import ListValidator from "./cc/validator/ListValidator.vue";
-import ExitValidator from "./cc/validator/ExitValidator.vue";
+import ListExitValidator from "./cc/validator/ListExitValidator.vue";
 
 export default {
   name: "ControlCenterOverview",
@@ -89,8 +82,7 @@ export default {
     UpdatesOverview,
     ServicesOverview,
     ImportValidator,
-    ListValidator,
-    ExitValidator,
+    ListExitValidator,
   },
   data() {
     return {
@@ -113,11 +105,8 @@ export default {
     showImportValidator() {
       this.content = "importValidator";
     },
-    showListValidator() {
-      this.content = "listValidator";
-    },
-    showExitValidator() {
-      this.content = "exitValidator";
+    showListExitValidator() {
+      this.content = "listExitValidator";
     },
 
     clickHelpItem: function (item) {
