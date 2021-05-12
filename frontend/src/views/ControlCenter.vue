@@ -22,6 +22,7 @@ export default {
         override: "default",
         eth1nodes: ["http://geth:8545", "https://goerli.infura.io/foo/bar"],
         e2dc_graffiti: "stereum.net",
+        e2dc_api_bind_address: "127.0.0.1",
         updates: { available: "", lane: "rc", unattended: ["check"] },
       },
     };

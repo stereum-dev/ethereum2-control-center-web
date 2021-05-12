@@ -58,10 +58,13 @@
       <list-exit-validator />
     </div>
     <div v-if="this.content === 'miscellaneous'">
-      <miscellaneous-overview :ethereum2config="this.ethereum2config" :showGraffiti="showGraffiti" />
+      <miscellaneous-overview :ethereum2config="this.ethereum2config" :showGraffiti="showGraffiti" :showApiBindAddress="showApiBindAddress" />
     </div>
     <div v-if="this.content === 'graffiti'">
       <graffiti :ethereum2config="this.ethereum2config" />
+    </div>
+    <div v-if="this.content === 'apiBindAddress'">
+      <api-bind-address :ethereum2config="this.ethereum2config" />
     </div>
     
     <vue-fab mainBtnColor="#336666" icon="help_outline">
@@ -84,6 +87,7 @@ import ImportValidator from "./cc/validator/ImportValidator.vue";
 import ListExitValidator from "./cc/validator/ListExitValidator.vue";
 import MiscellaneousOverview from './cc/miscellaneous/MiscellaneousOverview.vue';
 import Graffiti from './cc/miscellaneous/Graffiti.vue';
+import ApiBindAddress from './cc/miscellaneous/ApiBindAddress.vue';
 
 export default {
   name: "ControlCenterOverview",
@@ -95,6 +99,7 @@ export default {
     ListExitValidator,
     MiscellaneousOverview,
     Graffiti,
+    ApiBindAddress,
   },
   data() {
     return {
@@ -125,6 +130,9 @@ export default {
     },
     showGraffiti() {
       this.content = "graffiti";
+    },
+    showApiBindAddress() {
+      this.content = "apiBindAddress";
     },
 
     clickHelpItem: function (item) {

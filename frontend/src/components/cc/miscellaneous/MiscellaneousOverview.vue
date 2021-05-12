@@ -18,7 +18,7 @@
           If you want to use your beacon client(s) or monitoring to be accessible outside of your server, configure on which IP the services should listen on.
         </b-card-text>
 
-        <b-button href="#" variant="primary">Set API Bind Address</b-button>
+        <b-button @click="this.showApiBindAddress" variant="primary">Set API Bind Address</b-button>
       </b-card>
       <b-card
         title="Geth Prune"
@@ -63,6 +63,7 @@ export default {
   props: {
     ethereum2config: Object,
     showGraffiti: Function,
+    showApiBindAddress: Function,
   },
   methods: {
   },
