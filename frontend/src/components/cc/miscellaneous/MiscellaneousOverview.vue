@@ -8,7 +8,7 @@
           Set a mark on the beacon chain by choosing your own graffiti. This text will be included in every block your validator keys are propsing and visible for everybody!
         </b-card-text>
 
-        <b-button href="#" variant="primary">Set Graffiti</b-button>
+        <b-button @click="this.showGraffiti" variant="primary">Set Graffiti</b-button>
       </b-card>
       <b-card
         title="API Bind Address"
@@ -62,6 +62,9 @@ export default {
   },
   props: {
     ethereum2config: Object,
+    showGraffiti: Function,
+  },
+  methods: {
   },
 };
 </script>

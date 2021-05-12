@@ -58,8 +58,12 @@
       <list-exit-validator />
     </div>
     <div v-if="this.content === 'miscellaneous'">
-      <miscellaneous-overview :ethereum2config="this.ethereum2config" />
+      <miscellaneous-overview :ethereum2config="this.ethereum2config" :showGraffiti="showGraffiti" />
     </div>
+    <div v-if="this.content === 'graffiti'">
+      <graffiti :ethereum2config="this.ethereum2config" />
+    </div>
+    
     <vue-fab mainBtnColor="#336666" icon="help_outline">
       <!-- Icons from here: https://fonts.google.com/icons -->
       <fab-item @clickItem="clickHelpItem" :idx="0" title="Email" icon="email" titleBgColor="#336666" titleColor="#FFFFFF" color="#336666" />
@@ -79,6 +83,7 @@ import ServicesOverview from "./cc/ServicesOverview.vue";
 import ImportValidator from "./cc/validator/ImportValidator.vue";
 import ListExitValidator from "./cc/validator/ListExitValidator.vue";
 import MiscellaneousOverview from './cc/miscellaneous/MiscellaneousOverview.vue';
+import Graffiti from './cc/miscellaneous/Graffiti.vue';
 
 export default {
   name: "ControlCenterOverview",
@@ -89,6 +94,7 @@ export default {
     ImportValidator,
     ListExitValidator,
     MiscellaneousOverview,
+    Graffiti,
   },
   data() {
     return {
@@ -116,6 +122,9 @@ export default {
     },
     showMiscellaneous() {
       this.content = "miscellaneous";
+    },
+    showGraffiti() {
+      this.content = "graffiti";
     },
 
     clickHelpItem: function (item) {

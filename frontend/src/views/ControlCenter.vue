@@ -21,6 +21,7 @@ export default {
         installationFolder: "/opt/stereum",
         override: "default",
         eth1nodes: ["http://geth:8545", "https://goerli.infura.io/foo/bar"],
+        e2dc_graffiti: "stereum.net",
         updates: { available: "", lane: "rc", unattended: ["check"] },
       },
     };
