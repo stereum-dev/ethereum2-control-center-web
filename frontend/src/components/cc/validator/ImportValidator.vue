@@ -10,7 +10,6 @@
         @dragleave="fileDragOut"
         @dragover="fileDragIn"
         @drop="handleFileDrop"
-        @click="uniqFiles"
         v-bind:style="{ 'background-color': color }"
       >
         <input
@@ -91,9 +90,6 @@
   </div>
 </template>
 
-<script src="https://unpkg.com/vue"></script>
-<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.5/lodash.min.js"></script>
-
 <script>
 export default {
   name: "ImportValidator",
@@ -101,7 +97,6 @@ export default {
   data() {
     return {
       files: [],
-      filesuniq: [],
       color: "#87cefa",
       password: "",
     };
