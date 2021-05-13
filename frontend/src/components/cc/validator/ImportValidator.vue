@@ -10,6 +10,7 @@
         @dragleave="fileDragOut"
         @dragover="fileDragIn"
         @drop="handleFileDrop"
+        @click="uniqFiles"
         v-bind:style="{ 'background-color': color }"
       >
         <input
@@ -90,6 +91,9 @@
   </div>
 </template>
 
+<script src="https://unpkg.com/vue"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.5/lodash.min.js"></script>
+
 <script>
 export default {
   name: "ImportValidator",
@@ -97,6 +101,7 @@ export default {
   data() {
     return {
       files: [],
+      filesuniq: [],
       color: "#87cefa",
       password: "",
     };
@@ -104,21 +109,66 @@ export default {
   props: {
     ethereum2config: Object,
   },
+  computed: {
+    // "no duplicate data filter" not used
+    uniqFiles() {
+      let uniqfiles = {};
+      return this.files.filter((f) => {
+        if (!(f.name in uniqfiles)) {
+          uniqfiles[f.name] = true;
+          return true;
+        }
+        else {
+          return false;
+        }
+      });
+    },
+  },
   methods: {
     handleFileDrop(e) {
       let droppedFiles = e.dataTransfer.files;
-      if (!droppedFiles) return;
-      [...droppedFiles].forEach((f) => {
-        this.files.push(f);
-      });
+      if (!droppedFiles) return; 
+      if (this.files.length == 0) {
+        [...droppedFiles].forEach((df) => {
+          this.files.push(df);
+        });
+      }
+      else {
+        [...droppedFiles].forEach((df) => {
+          let exists = false;
+          [...this.files].forEach((f) => {
+            if (df.name == f.name) {
+              exists = true; 
+            }
+          });
+          if (exists == false) {
+            this.files.push(df);
+          }
+        });
+      }
     },
     handleFileInput(e) {
       let files = e.target.files;
       files = e.target.files;
       if (!files) return;
-      [...files].forEach((f) => {
-        this.files.push(f);
-      });
+      if (this.files.length == 0) {
+        [...files].forEach((f) => {
+          this.files.push(f);
+        });
+      }
+      else {
+        [...files].forEach((f) => {
+          let exists = false;
+          [...this.files].forEach((fi) => {
+            if (f.name == fi.name) {
+              exists = true;
+            }
+          });
+          if (exists == false) {
+            this.files.push(f);
+          }
+        });
+      }
     },
     removeFile(fileKey) {
       this.files.splice(fileKey, 1);
