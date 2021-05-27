@@ -1,5 +1,5 @@
 import os
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse, RedirectResponse
 from pydantic import BaseModel
 from typing import List
@@ -82,57 +82,65 @@ async def health():
 
 @app.get("/api/setup/status")
 async def status():
-    logger.debug('/api/setup/status called')  
-    task_state = pickle.load( open( "state.p", "rb" ) )    
-    json_compatible_item_data = jsonable_encoder(ER(-1, task_state))
-    return JSONResponse(content=json_compatible_item_data)    
+    try:
+        logger.debug('/api/setup/status called')  
+        task_state = pickle.load( open( "state.p", "rb" ) )    
+        json_compatible_item_data = jsonable_encoder(ER(-1, task_state))
+        return JSONResponse(content=json_compatible_item_data)    
+    except Exception as e:
+        raise HTTPException(status_code=409, detail="No action running")
+
 
 @app.post("/api/setup/start")
 async def launch(item: PB):
-    task_results = []
-    logger.debug('/api/setup/start got payload: %s' %item)    
-    extra_vars = {}
-    for ev in item.extra_vars:                
-        extra_vars[ev.name] = ev.value
-    logger.info('/api/setup/start got extra vars: %s' %extra_vars)
-    inventory_file = os.path.join(os.getcwd(), item.inventory)
-    logger.info('/api/setup/start inventory file: %s' %inventory_file)
-    playbook_file = os.path.join(os.getcwd(), item.playbook)
-    logger.info('/api/setup/start playbook file: %s' %playbook_file)
+    try:
+        task_results = []
+        logger.debug('/api/setup/start got payload: %s' %item)    
+        extra_vars = {}
+        for ev in item.extra_vars:                
+            extra_vars[ev.name] = ev.value
+        logger.info('/api/setup/start got extra vars: %s' %extra_vars)
+        inventory_file = os.path.join(os.getcwd(), item.inventory)
+        logger.info('/api/setup/start inventory file: %s' %inventory_file)
+        playbook_file = os.path.join(os.getcwd(), item.playbook)
+        logger.info('/api/setup/start playbook file: %s' %playbook_file)
 
-    loader = DataLoader()    
-    inventory = InventoryManager(loader=loader, sources=[inventory_file])
-    variable_manager = VariableManager(loader=loader, inventory=inventory)        
-    variable_manager._extra_vars = extra_vars    
-    passwords={}    
-    context.CLIARGS = ImmutableDict(
-        connection='local', 
-        module_path=['/usr/share/ansible',], 
-        forks=10, 
-        become=None,                                    
-        become_method=None, 
-        become_user=None, 
-        check=False, 
-        diff=False,
-        syntax=None,
-        start_at_task=None)
-    playbook = PlaybookExecutor(
-        playbooks=[playbook_file],
-        inventory=inventory,
-        variable_manager=variable_manager,
-        loader=loader,        
-        passwords=passwords)
+        loader = DataLoader()    
+        inventory = InventoryManager(loader=loader, sources=[inventory_file])
+        variable_manager = VariableManager(loader=loader, inventory=inventory)        
+        variable_manager._extra_vars = extra_vars    
+        passwords={}    
+        context.CLIARGS = ImmutableDict(
+            connection='local', 
+            module_path=['/usr/share/ansible',], 
+            forks=10, 
+            become=None,                                    
+            become_method=None, 
+            become_user=None, 
+            check=False, 
+            diff=False,
+            syntax=None,
+            start_at_task=None)
+        playbook = PlaybookExecutor(
+            playbooks=[playbook_file],
+            inventory=inventory,
+            variable_manager=variable_manager,
+            loader=loader,        
+            passwords=passwords)
 
-    callback = RestCallback()
-    playbook._tqm._stdout_callback = callback
-    return_code = playbook.run()    
+        callback = RestCallback()
+        playbook._tqm._stdout_callback = callback
+        return_code = playbook.run()    
     
-    logger.info('Got RC %s' %return_code)
-    er = ER(return_code, callback.task_results)
-    #for task in er.tasks:
-    #    logger.info('Got Task-Message: %s:%s ' %(task.status, task.message))            
-    json_compatible_item_data = jsonable_encoder(ER(return_code, callback.task_results))
-    return JSONResponse(content=json_compatible_item_data)    
+        logger.info('Got RC %s' %return_code)
+        er = ER(return_code, callback.task_results)
+        #for task in er.tasks:
+        #    logger.info('Got Task-Message: %s:%s ' %(task.status, task.message))            
+        json_compatible_item_data = jsonable_encoder(ER(return_code, callback.task_results))
+        return JSONResponse(content=json_compatible_item_data)    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get("/api/.*", status_code=404, include_in_schema=False)
 def invalid_api():
