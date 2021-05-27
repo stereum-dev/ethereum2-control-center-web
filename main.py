@@ -100,9 +100,9 @@ async def launch(item: PB):
         for ev in item.extra_vars:                
             extra_vars[ev.name] = ev.value
         logger.info('/api/setup/start got extra vars: %s' %extra_vars)
-        inventory_file = os.path.join(os.getcwd(), item.inventory)
+        inventory_file = os.path.join(os.getcwd(), 'stereum-release', item.inventory)
         logger.info('/api/setup/start inventory file: %s' %inventory_file)
-        playbook_file = os.path.join(os.getcwd(), item.playbook)
+        playbook_file = os.path.join(os.getcwd(), 'stereum-release', item.playbook)
         logger.info('/api/setup/start playbook file: %s' %playbook_file)
 
         loader = DataLoader()    

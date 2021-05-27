@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y openssh-client && rm -rf /var/lib/apt/l
 WORKDIR /opt/app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
-COPY main.py inventory.yaml playbook.yaml /opt/app/
+COPY main.py inventory.yaml playbook.yaml /opt/app/stereum-release/
 WORKDIR /opt/app/public
 COPY --from=frontend-builder /tmp/build/dist .
 WORKDIR /opt/app
