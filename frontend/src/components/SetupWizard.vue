@@ -132,27 +132,30 @@ export default {
       );
 
       // write variables for the ansible call
-      const extraVars = [];
-      extraVars.push({ name: "network", value: this.model.network });
-      extraVars.push({ name: "setup", value: this.model.client });
-      extraVars.push({ name: "setup_override", value: this.model.overrides });
-      extraVars.push({ name: "eth1_node", value: this.model.eth1nodes });
-      extraVars.push({
-        name: "",
-        value: {
-          update: {
+      const extraVars = {
+        network: this.model.network,
+        setup: this.model.client,
+        setup_override: this.model.overrides,
+        eth1_nodes: this.model.eth1nodes,
+        update: {
             lane: this.model.updates.lane,
             unattended: {
               check: unattended_updates_check,
               install: unattended_updates_install,
             },
-          },
         },
-      });
-      extraVars.push({
-        name: "install_path",
-        value: this.model.installationFolder,
-      });
+        install_path: this.model.installationFolder,
+        "stereum_version_tag": window.STEREUM_VERSION_TAG,
+      };
+
+      const payload = {
+        inventory: 'inventory.yaml',
+        playbook: 'playbook.yaml',
+        extra_vars: extraVars,
+        extraVars: extraVars,
+      }
+
+      this.installationDone = false;
 
       const fetchStatus = () => {
         axios
@@ -165,11 +168,10 @@ export default {
             console.error(error);
           });
       };
-
-      this.installationDone = false;
       let logWatchHandle = setInterval(fetchStatus, 5000);
+      
       axios
-        .post("/api/setup/start", { extra_vars: extraVars })
+        .post("/api/setup/start", payload )
         .then((response) => {
           this.$toasted.success(
             "Installation done successfully, have fun with Stereum",

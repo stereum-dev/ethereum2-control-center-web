@@ -8,8 +8,11 @@
     <link rel="icon" href="<%= BASE_URL %>favicon.png">
     <title><%= htmlWebpackPlugin.options.title %></title>
     <base href="/public">
+    <script>
+      window.STEREUM_VERSION_TAG = '%%STEREUM_VERSION_TAG%%';
+    </script>
   </head>
-  <body>
+  <body>    
     <noscript>
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>

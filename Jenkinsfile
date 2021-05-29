@@ -5,6 +5,7 @@ pipeline {
             // Build image, output is stereum/installer-build
             steps {   
                 checkout scm                                                         
+                sh 'sed s/%%STEREUM_VERSION_TAG%%/${RELEASE}/ -i frontend/public/index.html'                
                 sh 'docker build -f Dockerfile -t stereum/control-center-web:${RELEASE} .'                
             }
         }        
