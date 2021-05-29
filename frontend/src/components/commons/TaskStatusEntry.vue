@@ -1,13 +1,13 @@
 <template>
-  <li>
-    <span
-      class="dot"
-      :class="model.status == 0 ? 'dot-success' : 'dot-danger'"
-    ></span>
-    <span class="taskname">{{ model.name }}</span>
+  <li @click="showDetails">    
+    <i :class="model.status == 0 ? 'fas success fa-check ' : 'fa danger fa-exclamation-triangle'"></i>
+    <span class="taskname">{{ model.name || 'Unnamed Task' }}</span>
     <span v-if="model.status > 0" class="taskerror">
-      <data>{{ model }}</data>
+      <span>: {{ model.message.msg }} (click for details)</span>            
     </span>
+    <div v-if="details">
+      <data>{{ model.message }}</data>
+    </div>
   </li>
 </template>
 
@@ -18,38 +18,35 @@ export default {
   props: {
     model: Object,
   },
+  data() {
+    return {
+      details: false,
+    };
+  },
+  methods: {
+    showDetails() {
+      this.details = !this.details;
+    }
+  }
 };
 </script>
 
 <style scoped>
+
+ .list-group-item {
+   padding: 1px;
+   border: 0px;
+ }
+
+ .success {
+   color: #28a745;
+ }
+
+ .danger {
+   color: #dc3545;
+ }
+
 .taskname {
   margin-left: 10px;
-}
-.dot {
-  display: inline-block;
-  border-radius: 50%;
-  width: 50%;
-  background-color: #eee;
-  height: 15px;
-  width: 15px;
-  margin: 0 2px;
-}
-.dot.dot-success {
-  background-color: #449d44;
-}
-.dot.dot-warning {
-  background-color: #f0ad4e;
-}
-.dot.dot-danger {
-  background-color: #d9534f;
-}
-.dot.dot-sm {
-  height: 10px;
-  width: 10px;
-}
-.dot.dot-lg {
-  margin: 0 4px;
-  height: 20px;
-  width: 20px;
 }
 </style>

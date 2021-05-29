@@ -17,7 +17,7 @@
             subtitle="Setup your Beacon"
             finishButtonText="Start Installation"
             @on-complete="onComplete"
-            :hide-buttons="installationRunning"
+            :hide-buttons="installationRunning || installationSuccess"
           >
             <tab-content title="Welcome" icon="faw fas fa-compass">
               <welcome-tab></welcome-tab>
@@ -50,6 +50,7 @@
                 :model="model"
                 :progress="installationProgress"
                 :running="installationRunning"
+                :success="installationSuccess"
                 :done="installationDone"
               ></verification-tab>
             </tab-content>
@@ -98,6 +99,7 @@ export default {
       installationRunning: false,
       installationDone: false,
       installationProgress: 0,
+      installationSuccess: undefined,
     };
   },
   props: {
@@ -113,17 +115,7 @@ export default {
     onComplete: function () {
       this.installationRunning = true;
       this.installationProgress = 0;
-
-      let handle = null;
-      const f = () => {
-        this.installationProgress += 1;
-        if (this.installationProgress >= 100 || !this.installationRunning) {
-          clearInterval(handle);
-          this.installationProgress = 0;
-        }
-      };
-      handle = setInterval(f, 500);
-
+      
       let unattended_updates_check = this.model.updates.unattended.indexOf(
         "check"
       );
@@ -163,24 +155,28 @@ export default {
           .then((response) => {
             console.log(response.data);
             this.logs = response.data;
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      };
+            this.installationProgress = response.data.tasks.length;
+          });        
+      };      
       let logWatchHandle = setInterval(fetchStatus, 5000);
       
       axios
         .post("/api/setup/start", payload )
         .then((response) => {
-          this.$toasted.success(
-            "Installation done successfully, have fun with Stereum",
-            { duration: 5000 }
-          );
-          this.logs = response.data;
-          this.installationProgress = 100;
+          console.log(response.data);          
+          if (response.data.status > 0) {
+            this.$toasted.error("Unfortunately the installtion seems to have failed", { duration: 5000 });
+            this.installationProgress = 0;
+            this.installationSuccess = false;
+          } 
+          if (response.data.status == 0) {
+            this.$toasted.success("Installation done successfully, have fun using Stereum", { duration: 5000 });
+            this.installationProgress = 100;
+            this.installationSuccess = true;
+          }          
           this.installationRunning = false;
           this.installationDone = true;
+          fetchStatus(); // do a final status fetch
           clearInterval(logWatchHandle);
         })
         .catch((error) => {
