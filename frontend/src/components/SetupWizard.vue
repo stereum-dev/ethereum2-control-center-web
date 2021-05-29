@@ -135,7 +135,7 @@ export default {
       const extraVars = {
         network: this.model.network,
         setup: this.model.client,
-        setup_override: this.model.overrides,
+        setup_override: this.model.overrides || 'default',
         eth1_nodes: this.model.eth1nodes,
         update: {
             lane: this.model.updates.lane,
