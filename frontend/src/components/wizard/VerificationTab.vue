@@ -2,7 +2,7 @@
   <div>
     <span v-if="!running">
       Please check the entered information and start the installation
-    </span>    
+    </span>
     <data>
       <div v-if="!running || done">
         <table class="text-left table">
@@ -53,14 +53,16 @@
       <div v-if="running || done">
         <div v-if="running">
           <div class="alert alert-primary" role="alert">
-            <b>Installation in Progress, please be patient</b>&nbsp;<i class="fas fa-cog fa-spin"></i>  
+            <b>Installation in Progress, please be patient</b>&nbsp;<i
+              class="fas fa-cog fa-spin"
+            ></i>
             <div>
-              <b-progress          
-              :value="progress"
-              variant="info"
-              :max="max"
-              show-progress
-              animated
+              <b-progress
+                :value="progress"
+                variant="info"
+                :max="max"
+                show-progress
+                animated
               >
                 <b-progress-bar :value="progress">
                   <span
@@ -69,9 +71,9 @@
                 </b-progress-bar>
               </b-progress>
             </div>
-          </div>                      
+          </div>
         </div>
-        
+
         <div v-if="success === true">
           <div class="alert alert-success" role="alert">
             Installation Successful! You are good to go!
@@ -79,10 +81,11 @@
         </div>
         <div v-if="success === false">
           <div class="alert alert-danger" role="alert">
-            Unfortunately the Installation failed, please consult logs for details
+            Unfortunately the Installation failed, please consult logs for
+            details
           </div>
         </div>
-        
+
         <ul class="list-group list-unstyled">
           <task-status-entry
             class="list-group-item text-left"
@@ -122,10 +125,9 @@ export default {
 </script>
 
 <style scoped>
-  .alert-primary {
-    color: #fff;
-    background-color: rgb(51, 102, 102);
-    border-color: rgb(51, 102, 102);
-  }
-  
+.alert-primary {
+  color: #fff;
+  background-color: rgb(51, 102, 102);
+  border-color: rgb(51, 102, 102);
+}
 </style>

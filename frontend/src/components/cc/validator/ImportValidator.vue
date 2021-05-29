@@ -112,8 +112,7 @@ export default {
         if (!(f.name in uniqfiles)) {
           uniqfiles[f.name] = true;
           return true;
-        }
-        else {
+        } else {
           return false;
         }
       });
@@ -122,18 +121,17 @@ export default {
   methods: {
     handleFileDrop(e) {
       let droppedFiles = e.dataTransfer.files;
-      if (!droppedFiles) return; 
+      if (!droppedFiles) return;
       if (this.files.length == 0) {
         [...droppedFiles].forEach((df) => {
           this.files.push(df);
         });
-      }
-      else {
+      } else {
         [...droppedFiles].forEach((df) => {
           let exists = false;
           [...this.files].forEach((f) => {
             if (df.name == f.name) {
-              exists = true; 
+              exists = true;
             }
           });
           if (exists == false) {
@@ -150,8 +148,7 @@ export default {
         [...files].forEach((f) => {
           this.files.push(f);
         });
-      }
-      else {
+      } else {
         [...files].forEach((f) => {
           let exists = false;
           [...this.files].forEach((fi) => {

@@ -2,7 +2,13 @@
   <div>
     <b-navbar toggleable="lg" style="background-color: #336666">
       <b-navbar-brand @click="showHome()">
-        <b-img src="/public/stereum_logo.png" width="30" height="30" class="d-inline-block align-top" /> Stereum
+        <b-img
+          src="/public/stereum_logo.png"
+          width="30"
+          height="30"
+          class="d-inline-block align-top"
+        />
+        Stereum
       </b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -58,7 +64,11 @@
       <list-exit-validator />
     </div>
     <div v-if="this.content === 'miscellaneous'">
-      <miscellaneous-overview :ethereum2config="this.ethereum2config" :showGraffiti="showGraffiti" :showApiBindAddress="showApiBindAddress" />
+      <miscellaneous-overview
+        :ethereum2config="this.ethereum2config"
+        :showGraffiti="showGraffiti"
+        :showApiBindAddress="showApiBindAddress"
+      />
     </div>
     <div v-if="this.content === 'graffiti'">
       <graffiti :ethereum2config="this.ethereum2config" />
@@ -66,12 +76,36 @@
     <div v-if="this.content === 'apiBindAddress'">
       <api-bind-address :ethereum2config="this.ethereum2config" />
     </div>
-    
+
     <vue-fab mainBtnColor="#336666" icon="help_outline">
       <!-- Icons from here: https://fonts.google.com/icons -->
-      <fab-item @clickItem="clickHelpItem" :idx="0" title="Email" icon="email" titleBgColor="#336666" titleColor="#FFFFFF" color="#336666" />
-      <fab-item @clickItem="clickHelpItem" :idx="1" title="Website" icon="language" titleBgColor="#336666" titleColor="#FFFFFF" color="#336666" />
-      <fab-item @clickItem="clickHelpItem" :idx="2" title="Discord" icon="question_answer" titleBgColor="#336666" titleColor="#FFFFFF" color="#336666" />
+      <fab-item
+        @clickItem="clickHelpItem"
+        :idx="0"
+        title="Email"
+        icon="email"
+        titleBgColor="#336666"
+        titleColor="#FFFFFF"
+        color="#336666"
+      />
+      <fab-item
+        @clickItem="clickHelpItem"
+        :idx="1"
+        title="Website"
+        icon="language"
+        titleBgColor="#336666"
+        titleColor="#FFFFFF"
+        color="#336666"
+      />
+      <fab-item
+        @clickItem="clickHelpItem"
+        :idx="2"
+        title="Discord"
+        icon="question_answer"
+        titleBgColor="#336666"
+        titleColor="#FFFFFF"
+        color="#336666"
+      />
     </vue-fab>
   </div>
 </template>
@@ -85,9 +119,9 @@ import UpdatesOverview from "./cc/updates/UpdatesOverview.vue";
 import ServicesOverview from "./cc/ServicesOverview.vue";
 import ImportValidator from "./cc/validator/ImportValidator.vue";
 import ListExitValidator from "./cc/validator/ListExitValidator.vue";
-import MiscellaneousOverview from './cc/miscellaneous/MiscellaneousOverview.vue';
-import Graffiti from './cc/miscellaneous/Graffiti.vue';
-import ApiBindAddress from './cc/miscellaneous/ApiBindAddress.vue';
+import MiscellaneousOverview from "./cc/miscellaneous/MiscellaneousOverview.vue";
+import Graffiti from "./cc/miscellaneous/Graffiti.vue";
+import ApiBindAddress from "./cc/miscellaneous/ApiBindAddress.vue";
 
 export default {
   name: "ControlCenterOverview",

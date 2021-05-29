@@ -17,7 +17,7 @@ import "vue-form-wizard/dist/vue-form-wizard.min.css";
 Vue.use(VueFormWizard);
 Vue.use(Toasted);
 
-import VueFab from 'vue-float-action-button';
+import VueFab from "vue-float-action-button";
 Vue.use(VueFab);
 
 Vue.config.productionTip = false;

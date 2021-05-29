@@ -18,11 +18,9 @@
 </template>
 
 <script>
-
 export default {
   name: "Graffiti",
-  components: {
-  },
+  components: {},
   data() {
     return {
       graffiti: this.ethereum2config.e2dc_graffiti,
@@ -37,6 +35,4 @@ export default {
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

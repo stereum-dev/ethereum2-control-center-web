@@ -18,11 +18,9 @@
 </template>
 
 <script>
-
 export default {
   name: "ApiBindAddress",
-  components: {
-  },
+  components: {},
   data() {
     return {
       apiBindAddress: this.ethereum2config.e2dc_api_bind_address,
@@ -37,6 +35,4 @@ export default {
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

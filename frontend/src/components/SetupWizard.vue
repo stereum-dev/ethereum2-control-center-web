@@ -115,7 +115,7 @@ export default {
     onComplete: function () {
       this.installationRunning = true;
       this.installationProgress = 0;
-      
+
       let unattended_updates_check = this.model.updates.unattended.indexOf(
         "check"
       );
@@ -127,53 +127,57 @@ export default {
       const extraVars = {
         network: this.model.network,
         setup: this.model.client,
-        setup_override: this.model.overrides || 'default',
+        setup_override: this.model.overrides || "default",
         eth1_nodes: this.model.eth1nodes,
         update: {
-            lane: this.model.updates.lane,
-            unattended: {
-              check: unattended_updates_check,
-              install: unattended_updates_install,
-            },
+          lane: this.model.updates.lane,
+          unattended: {
+            check: unattended_updates_check,
+            install: unattended_updates_install,
+          },
         },
         install_path: this.model.installationFolder,
-        "stereum_version_tag": window.STEREUM_VERSION_TAG,
+        stereum_version_tag: window.STEREUM_VERSION_TAG,
       };
 
       const payload = {
-        inventory: 'inventory.yaml',
-        playbook: 'playbook.yaml',
+        inventory: "inventory.yaml",
+        playbook: "playbook.yaml",
         extra_vars: extraVars,
         extraVars: extraVars,
-      }
+      };
 
       this.installationDone = false;
 
       const fetchStatus = () => {
-        axios
-          .get("/api/setup/status")
-          .then((response) => {
-            console.log(response.data);
-            this.logs = response.data;
-            this.installationProgress = response.data.tasks.length;
-          });        
-      };      
+        axios.get("/api/setup/status").then((response) => {
+          console.log(response.data);
+          this.logs = response.data;
+          this.installationProgress = response.data.tasks.length;
+        });
+      };
       let logWatchHandle = setInterval(fetchStatus, 5000);
-      
+
       axios
-        .post("/api/setup/start", payload )
+        .post("/api/setup/start", payload)
         .then((response) => {
-          console.log(response.data);          
+          console.log(response.data);
           if (response.data.status > 0) {
-            this.$toasted.error("Unfortunately the installtion seems to have failed", { duration: 5000 });
+            this.$toasted.error(
+              "Unfortunately the installtion seems to have failed",
+              { duration: 5000 }
+            );
             this.installationProgress = 0;
             this.installationSuccess = false;
-          } 
+          }
           if (response.data.status == 0) {
-            this.$toasted.success("Installation done successfully, have fun using Stereum", { duration: 5000 });
+            this.$toasted.success(
+              "Installation done successfully, have fun using Stereum",
+              { duration: 5000 }
+            );
             this.installationProgress = 100;
             this.installationSuccess = true;
-          }          
+          }
           this.installationRunning = false;
           this.installationDone = true;
           fetchStatus(); // do a final status fetch
