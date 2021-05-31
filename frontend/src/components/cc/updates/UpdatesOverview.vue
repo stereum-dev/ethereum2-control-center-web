@@ -39,6 +39,30 @@ export default {
   },
   props: {
     ethereum2config: Object,
+    processChange: Function,
+  },
+  methods: {
+    saveUpdateConfig() {
+      let unattended_updates_check = this.ethereum2config.updates.unattended.indexOf(
+        "check"
+      );
+      let unattended_updates_install = this.ethereum2config.updates.unattended.indexOf(
+        "install"
+      );
+
+      this.processChange(
+        "configure-autoupdate",
+        {
+          update: {
+            lane: this.ethereum2config.updates.lane,
+            unattended: {
+              check: unattended_updates_check,
+              install: unattended_updates_install,
+            },
+        },
+        }
+      );
+    }
   },
 };
 </script>
