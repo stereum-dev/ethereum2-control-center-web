@@ -55,7 +55,7 @@
       <services-overview :ethereum2config="this.ethereum2config" />
     </div>
     <div v-if="this.content === 'updates'">
-      <updates-overview :ethereum2config="this.ethereum2config" />
+      <updates-overview :ethereum2config="this.ethereum2config" :processChange="processChange" />
     </div>
     <div v-if="this.content === 'importValidator'">
       <import-validator />
@@ -107,6 +107,54 @@
         color="#336666"
       />
     </vue-fab>
+
+    <b-modal
+      ref="control-changes-window"
+      title="Applying"
+      size="m"
+      hide-footer
+    >
+      <div v-if="this.processControl.running">
+        <div class="alert alert-primary" role="alert">
+          <b>Changes in Progress, please be patient</b>&nbsp;<i class="fas fa-cog fa-spin"></i>  
+          <div>
+            <b-progress          
+            :value="this.processControl.progress"
+            variant="info"
+            :max="100"
+            show-progress
+            animated
+            >
+              <b-progress-bar :value="progress">
+                <span
+                  >Progress: <strong>{{ this.processControl.progress.toFixed(0) }}%</strong></span
+                >
+              </b-progress-bar>
+            </b-progress>
+          </div>
+        </div>                      
+      </div>
+      
+      <div v-if="this.processControl.success === true">
+        <div class="alert alert-success" role="alert">
+          Changes Successful!
+        </div>
+      </div>
+      <div v-if="this.processControl.success === false">
+        <div class="alert alert-danger" role="alert">
+          Unfortunately the changes failed, please consult logs for details!
+        </div>
+      </div>
+      
+      <ul class="list-group list-unstyled">
+        <task-status-entry
+          class="list-group-item text-left"
+          v-bind:key="index"
+          v-for="(status, index) in this.processControl.logs.tasks"
+          :model="status"
+        ></task-status-entry>
+      </ul>
+    </b-modal>
   </div>
 </template>
 
@@ -138,6 +186,16 @@ export default {
   data() {
     return {
       content: "home",
+      processStatus: {
+        response: "",
+        logs: {
+          tasks: [],
+        },
+        running: false,
+        done: false,
+        progress: 0,
+        success: undefined,
+      },
     };
   },
   props: {
@@ -176,6 +234,70 @@ export default {
         window.open("https://stereum.net", "_blank");
       } else if (item.idx == 0) {
         window.location.href = "mailto:stereum@stereum.net";
+      }
+    },
+
+    processControl: function (control, data) {
+      this.$refs["control-changes-window"].show();
+
+      if (this.processStatus.running === false) {
+        this.processStatus.running = true;
+        this.processStatus.progress = 0;
+        this.processStatus.done = false;
+
+        const payload = {
+          inventory: 'inventory.yaml',
+          playbook: control + '.yaml',
+          extra_vars: data,
+          extraVars: data,
+        }
+
+        const fetchStatus = () => {
+          axios
+            .get("/api/setup/status")
+            .then((response) => {
+              console.log(response.data);
+              this.logs = response.data;
+              this.installationProgress = response.data.tasks.length;
+            });        
+        };      
+        let logWatchHandle = setInterval(fetchStatus, 1500);
+
+        axios
+          .post("/api/setup/start", payload)
+          .then((response) => {
+            console.log("Response data: " + response.data);
+            if (response.data.status > 0) {
+              this.$toasted.error("Unfortunately the changes seems to have failed", { duration: 5000 });
+              this.processStatus.progress = 0;
+              this.processStatus.success = false;
+            }
+            if (response.data.status == 0) {
+              this.$toasted.success("Changes done successfully!", { duration: 5000 });
+              this.processStatus.progress = 100;
+              this.processStatus.success = true;
+            }
+            this.processStatus.running = false;
+            this.processStatus.done = true;
+            fetchStatus(); // do a final status fetch
+            clearInterval(logWatchHandle);
+          })
+          .catch((error) => {
+            this.$toasted.error(
+              "Unfortunately an error has occured during the changes",
+              { duration: 5000 }
+            );
+            console.error(error);
+            this.processStatus.progress = 0;
+            this.processStatus.running = false;
+            this.processStatus.done = true;
+            clearInterval(logWatchHandle);
+          });
+      } else {
+        this.$toasted.error(
+          "Changes in progress, please try later!",
+          { duration: 5000 }
+        );
       }
     },
   },
