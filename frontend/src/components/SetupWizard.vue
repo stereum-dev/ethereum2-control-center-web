@@ -185,7 +185,7 @@ export default {
         })
         .catch((error) => {
           this.$toasted.error(
-            "Unfortunately an error has occured during the installtion",
+            `Unfortunately an error has occured during the installation: ${error}`,
             { duration: 5000 }
           );
           console.error(error);

@@ -6,8 +6,9 @@ import ControlCenter from "../views/ControlCenter.vue";
 Vue.use(VueRouter);
 
 const routes = [
+  { path: "/", redirect: () => window.ENTRY },
   {
-    path: "/",
+    path: "/setup",
     name: "setup",
     component: Setup,
   },

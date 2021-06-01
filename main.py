@@ -19,6 +19,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from logging.config import dictConfig
+from datetime import datetime
 
 import pickle
 import logging
@@ -91,6 +92,14 @@ async def status():
 @app.post("/api/setup/start")
 async def launch(item: PB):
     try:
+        try:
+            pid = pickle.load( open( "/var/run/stereum.p", "rb" ) )
+            if pid:
+                raise HTTPException(status_code=409, detail="/var/run/stereum.p indicates that an install already in progress")
+        except pickle.PickleError as e:
+            pass
+
+        pickle.dump( datetime.now(), open( "/var/run/stereum.p", "wb" ) )
         logger.debug('/api/setup/start got payload: %s' %item)
         task_results = []
         with open('/tmp/vars.json', 'w', encoding="utf-8") as varfile:
@@ -148,13 +157,38 @@ async def launch(item: PB):
         traceback.print_exc()
         logger.error(e)
         raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        pickle.dump( None, open( "/var/run/stereum.p", "wb" ) )
 
 @app.get("/api/.*", status_code=404, include_in_schema=False)
 def invalid_api():
     return None
 
 templates = Jinja2Templates(directory="public")
+
+# Serve installer
+@app.get("/setup")
+async def serve_setup(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request, "entry": "/setup"})
+@app.get("/public/setup")
+async def serve_setup(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request, "entry": "/setup"})
+
+# Server controlcenter
+@app.get("/control-center")
+async def serve_setup(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request, "entry": "/control-center"})
+@app.get("/public/control-center")
+async def serve_setup(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request, "entry": "/control-center"})
+
+# serve static assets etc, 
+app.mount("/public", StaticFiles(directory=os.path.join(os.getcwd(),"public")), name="public")
+
+# serve default route. if file exists redirect on controlcenter
 @app.get("/")
 async def serve_home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
-app.mount("/public", StaticFiles(directory=os.path.join(os.getcwd(),"public")), name="public")
+    if os.path.exists("/etc/stereum/ethereum2.yaml"):
+        return templates.TemplateResponse("index.html", {"request": request, "entry": "/control-center"})
+    else:
+        return templates.TemplateResponse("index.html", {"request": request, "entry": "/setup"})
