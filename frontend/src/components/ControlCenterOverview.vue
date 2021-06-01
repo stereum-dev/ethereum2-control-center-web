@@ -170,6 +170,7 @@ import ListExitValidator from "./cc/validator/ListExitValidator.vue";
 import MiscellaneousOverview from "./cc/miscellaneous/MiscellaneousOverview.vue";
 import Graffiti from "./cc/miscellaneous/Graffiti.vue";
 import ApiBindAddress from "./cc/miscellaneous/ApiBindAddress.vue";
+import axios from "axios";
 
 export default {
   name: "ControlCenterOverview",
