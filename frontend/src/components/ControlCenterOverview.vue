@@ -259,7 +259,7 @@ export default {
           extraVars: data,
         };
 
-        const fetchStatus = (response) => {
+        const fetchStatus = () => {
           axios.get("/api/setup/status").then((response) => {
             console.log(response.data);
             this.processStatus.logs = response.data;
