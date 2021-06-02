@@ -114,12 +114,12 @@
       size="m"
       hide-footer
     >
-      <div v-if="this.processControl.running">
+      <div v-if="this.processStatus.running">
         <div class="alert alert-primary" role="alert">
           <b>Changes in Progress, please be patient</b>&nbsp;<i class="fas fa-cog fa-spin"></i>  
           <div>
             <b-progress          
-            :value="this.processControl.progress"
+            :value="this.processStatus.progress"
             variant="info"
             :max="100"
             show-progress
@@ -127,7 +127,7 @@
             >
               <b-progress-bar :value="progress">
                 <span
-                  >Progress: <strong>{{ this.processControl.progress.toFixed(0) }}%</strong></span
+                  >Progress: <strong>{{ this.processStatus.progress.toFixed(0) }}%</strong></span
                 >
               </b-progress-bar>
             </b-progress>
@@ -135,12 +135,12 @@
         </div>                      
       </div>
       
-      <div v-if="this.processControl.success === true">
+      <div v-if="this.processStatus.success === true">
         <div class="alert alert-success" role="alert">
           Changes Successful!
         </div>
       </div>
-      <div v-if="this.processControl.success === false">
+      <div v-if="this.processStatus.success === false">
         <div class="alert alert-danger" role="alert">
           Unfortunately the changes failed, please consult logs for details!
         </div>
@@ -150,7 +150,7 @@
         <task-status-entry
           class="list-group-item text-left"
           v-bind:key="index"
-          v-for="(status, index) in this.processControl.logs.tasks"
+          v-for="(status, index) in this.processStatus.logs.tasks"
           :model="status"
         ></task-status-entry>
       </ul>
