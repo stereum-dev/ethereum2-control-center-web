@@ -114,7 +114,7 @@
     <b-modal
       ref="control-changes-window"
       title="Applying"
-      size="m"
+      size="l"
       hide-footer
     >
       <div v-if="this.processStatus.running">
@@ -130,7 +130,7 @@
             show-progress
             animated
             >
-              <b-progress-bar :value="progress">
+              <b-progress-bar :value="this.processStatus.progress">
                 <span
                   >Progress: <strong>{{ this.processStatus.progress.toFixed(0) }}%</strong></span
                 >
@@ -243,7 +243,7 @@ export default {
       }
     },
 
-    processControl: function (control, data) {
+    processChange: function (control, data) {
       this.$refs["control-changes-window"].show();
 
       if (this.processStatus.running === false) {
@@ -262,7 +262,7 @@ export default {
           axios.get("/api/setup/status").then((response) => {
             console.log(response.data);
             this.logs = response.data;
-            this.installationProgress = response.data.tasks.length;
+            this.processStatus.progress = response.data.tasks.length;
           });
         };
         let logWatchHandle = setInterval(fetchStatus, 1500);
@@ -292,10 +292,17 @@ export default {
             clearInterval(logWatchHandle);
           })
           .catch((error) => {
-            this.$toasted.error(
-              "Unfortunately an error has occured during the changes",
-              { duration: 5000 }
-            );
+            if (error.message == 'Request failed with status code 404') {
+              this.$toasted.error(
+                "Backend not reachable (http return code 404).",
+                { duration: 5000 }
+              );
+            } else {
+              this.$toasted.error(
+                "Unfortunately an error has occured during the changes",
+                { duration: 5000 }
+              );
+            }
             console.error(error);
             this.processStatus.progress = 0;
             this.processStatus.running = false;

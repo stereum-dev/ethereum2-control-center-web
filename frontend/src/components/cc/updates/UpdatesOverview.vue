@@ -11,7 +11,7 @@
           <div class="row">
             <div>
               <p class="text-center">
-                <b-button variant="primary"> Save </b-button>
+                <b-button variant="primary" @click="saveUpdateConfig"> Save </b-button>
               </p>
             </div>
           </div>
