@@ -98,6 +98,8 @@ async def launch(item: PB):
                 raise HTTPException(status_code=409, detail="/var/run/stereum.p indicates that an install already in progress")
         except pickle.PickleError as e:
             pass
+        except FileNotFoundError as e:
+            pass        
 
         pickle.dump( datetime.now(), open( "/var/run/stereum.p", "wb" ) )
         logger.debug('/api/setup/start got payload: %s' %item)

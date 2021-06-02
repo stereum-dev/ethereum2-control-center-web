@@ -50,19 +50,16 @@ export default {
         "install"
       );
 
-      this.processChange(
-        "configure-autoupdate",
-        {
-          update: {
-            lane: this.ethereum2config.updates.lane,
-            unattended: {
-              check: unattended_updates_check,
-              install: unattended_updates_install,
-            },
+      this.processChange("configure-autoupdate", {
+        update: {
+          lane: this.ethereum2config.updates.lane,
+          unattended: {
+            check: unattended_updates_check,
+            install: unattended_updates_install,
+          },
         },
-        }
-      );
-    }
+      });
+    },
   },
 };
 </script>

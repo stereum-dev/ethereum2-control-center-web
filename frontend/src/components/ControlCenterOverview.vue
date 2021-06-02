@@ -55,7 +55,10 @@
       <services-overview :ethereum2config="this.ethereum2config" />
     </div>
     <div v-if="this.content === 'updates'">
-      <updates-overview :ethereum2config="this.ethereum2config" :processChange="processChange" />
+      <updates-overview
+        :ethereum2config="this.ethereum2config"
+        :processChange="processChange"
+      />
     </div>
     <div v-if="this.content === 'importValidator'">
       <import-validator />
@@ -116,7 +119,9 @@
     >
       <div v-if="this.processStatus.running">
         <div class="alert alert-primary" role="alert">
-          <b>Changes in Progress, please be patient</b>&nbsp;<i class="fas fa-cog fa-spin"></i>  
+          <b>Changes in Progress, please be patient</b>&nbsp;<i
+            class="fas fa-cog fa-spin"
+          ></i>
           <div>
             <b-progress          
             :value="this.processStatus.progress"
@@ -132,7 +137,7 @@
               </b-progress-bar>
             </b-progress>
           </div>
-        </div>                      
+        </div>
       </div>
       
       <div v-if="this.processStatus.success === true">
@@ -145,7 +150,7 @@
           Unfortunately the changes failed, please consult logs for details!
         </div>
       </div>
-      
+
       <ul class="list-group list-unstyled">
         <task-status-entry
           class="list-group-item text-left"
@@ -247,21 +252,19 @@ export default {
         this.processStatus.done = false;
 
         const payload = {
-          inventory: 'inventory.yaml',
-          playbook: control + '.yaml',
+          inventory: "inventory.yaml",
+          playbook: control + ".yaml",
           extra_vars: data,
           extraVars: data,
-        }
+        };
 
         const fetchStatus = () => {
-          axios
-            .get("/api/setup/status")
-            .then((response) => {
-              console.log(response.data);
-              this.logs = response.data;
-              this.installationProgress = response.data.tasks.length;
-            });        
-        };      
+          axios.get("/api/setup/status").then((response) => {
+            console.log(response.data);
+            this.logs = response.data;
+            this.installationProgress = response.data.tasks.length;
+          });
+        };
         let logWatchHandle = setInterval(fetchStatus, 1500);
 
         axios
@@ -269,12 +272,17 @@ export default {
           .then((response) => {
             console.log("Response data: " + response.data);
             if (response.data.status > 0) {
-              this.$toasted.error("Unfortunately the changes seems to have failed", { duration: 5000 });
+              this.$toasted.error(
+                "Unfortunately the changes seems to have failed",
+                { duration: 5000 }
+              );
               this.processStatus.progress = 0;
               this.processStatus.success = false;
             }
             if (response.data.status == 0) {
-              this.$toasted.success("Changes done successfully!", { duration: 5000 });
+              this.$toasted.success("Changes done successfully!", {
+                duration: 5000,
+              });
               this.processStatus.progress = 100;
               this.processStatus.success = true;
             }
@@ -295,10 +303,9 @@ export default {
             clearInterval(logWatchHandle);
           });
       } else {
-        this.$toasted.error(
-          "Changes in progress, please try later!",
-          { duration: 5000 }
-        );
+        this.$toasted.error("Changes in progress, please try later!", {
+          duration: 5000,
+        });
       }
     },
   },
