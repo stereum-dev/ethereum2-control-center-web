@@ -250,6 +250,7 @@ export default {
         this.processStatus.running = true;
         this.processStatus.progress = 0;
         this.processStatus.done = false;
+        this.processStatus.success = undefined;
 
         const payload = {
           inventory: "inventory.yaml",
@@ -258,10 +259,10 @@ export default {
           extraVars: data,
         };
 
-        const fetchStatus = () => {
+        const fetchStatus = (response) => {
           axios.get("/api/setup/status").then((response) => {
             console.log(response.data);
-            this.logs = response.data;
+            this.processStatus.logs = response.data;
             this.processStatus.progress = response.data.tasks.length;
           });
         };
