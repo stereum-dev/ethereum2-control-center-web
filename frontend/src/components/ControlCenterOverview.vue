@@ -111,37 +111,41 @@
       />
     </vue-fab>
 
-    <b-modal ref="control-changes-window" title="Applying" size="m" hide-footer>
-      <div v-if="this.processControl.running">
+    <b-modal
+      ref="control-changes-window"
+      title="Applying"
+      size="l"
+      hide-footer
+    >
+      <div v-if="this.processStatus.running">
         <div class="alert alert-primary" role="alert">
           <b>Changes in Progress, please be patient</b>&nbsp;<i
             class="fas fa-cog fa-spin"
           ></i>
           <div>
-            <b-progress
-              :value="this.processControl.progress"
-              variant="info"
-              :max="100"
-              show-progress
-              animated
+            <b-progress          
+            :value="this.processStatus.progress"
+            variant="info"
+            :max="100"
+            show-progress
+            animated
             >
-              <b-progress-bar :value="progress">
+              <b-progress-bar :value="this.processStatus.progress">
                 <span
-                  >Progress:
-                  <strong
-                    >{{ this.processControl.progress.toFixed(0) }}%</strong
-                  ></span
+                  >Progress: <strong>{{ this.processStatus.progress.toFixed(0) }}%</strong></span
                 >
               </b-progress-bar>
             </b-progress>
           </div>
         </div>
       </div>
-
-      <div v-if="this.processControl.success === true">
-        <div class="alert alert-success" role="alert">Changes Successful!</div>
+      
+      <div v-if="this.processStatus.success === true">
+        <div class="alert alert-success" role="alert">
+          Changes Successful!
+        </div>
       </div>
-      <div v-if="this.processControl.success === false">
+      <div v-if="this.processStatus.success === false">
         <div class="alert alert-danger" role="alert">
           Unfortunately the changes failed, please consult logs for details!
         </div>
@@ -151,7 +155,7 @@
         <task-status-entry
           class="list-group-item text-left"
           v-bind:key="index"
-          v-for="(status, index) in this.processControl.logs.tasks"
+          v-for="(status, index) in this.processStatus.logs.tasks"
           :model="status"
         ></task-status-entry>
       </ul>
@@ -239,7 +243,7 @@ export default {
       }
     },
 
-    processControl: function (control, data) {
+    processChange: function (control, data) {
       this.$refs["control-changes-window"].show();
 
       if (this.processStatus.running === false) {
@@ -258,7 +262,7 @@ export default {
           axios.get("/api/setup/status").then((response) => {
             console.log(response.data);
             this.logs = response.data;
-            this.installationProgress = response.data.tasks.length;
+            this.processStatus.progress = response.data.tasks.length;
           });
         };
         let logWatchHandle = setInterval(fetchStatus, 1500);
@@ -288,10 +292,17 @@ export default {
             clearInterval(logWatchHandle);
           })
           .catch((error) => {
-            this.$toasted.error(
-              "Unfortunately an error has occured during the changes",
-              { duration: 5000 }
-            );
+            if (error.message == 'Request failed with status code 404') {
+              this.$toasted.error(
+                "Backend not reachable (http return code 404).",
+                { duration: 5000 }
+              );
+            } else {
+              this.$toasted.error(
+                "Unfortunately an error has occured during the changes",
+                { duration: 5000 }
+              );
+            }
             console.error(error);
             this.processStatus.progress = 0;
             this.processStatus.running = false;
