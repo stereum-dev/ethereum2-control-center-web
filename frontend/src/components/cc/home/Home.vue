@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <span> This is the home screen, please make me pretty </span>
+  <div class="wrapper">
+    <div class="homepage"></div>
   </div>
 </template>
 
@@ -17,4 +17,22 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.wrapper{
+   position: absolute;
+   padding-top: 50px;
+   padding-bottom: 20px;
+   width: 100%;
+   height: 94%;
+   text-align: center;
+}
+.homepage{
+   margin: auto;
+   width: 90%;
+   height: 95%;
+   background: url('/public/homepage.gif');
+   background-size: contain;
+   background-repeat: no-repeat;
+   background-position: center center;
+}
+</style>
