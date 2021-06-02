@@ -118,16 +118,16 @@ export default {
 
       let unattended_updates_check = this.model.updates.unattended.indexOf(
         "check"
-      );
+      ) > -1;
       let unattended_updates_install = this.model.updates.unattended.indexOf(
         "install"
-      );
+      ) > -1;
 
       // write variables for the ansible call
       const extraVars = {
         network: this.model.network,
         setup: this.model.client,
-        setup_override: this.model.overrides || "default",
+        setup_override: this.model.override || "default",
         eth1_nodes: this.model.eth1nodes,
         update: {
           lane: this.model.updates.lane,

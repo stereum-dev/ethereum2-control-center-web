@@ -45,10 +45,10 @@ export default {
     saveUpdateConfig() {
       let unattended_updates_check = this.ethereum2config.updates.unattended.indexOf(
         "check"
-      );
+      ) > -1;
       let unattended_updates_install = this.ethereum2config.updates.unattended.indexOf(
         "install"
-      );
+      ) > -1;
 
       this.processChange("configure-autoupdate", {
         update: {
