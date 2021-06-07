@@ -160,6 +160,8 @@
         ></task-status-entry>
       </ul>
     </b-modal>
+
+    <b-overlay :show="processStatus.running" rounded="sm" no-wrap />
   </div>
 </template>
 
@@ -206,6 +208,9 @@ export default {
         success: undefined,
       },
     };
+  },
+  created() {
+    this.refreshConfig(this.showHome);
   },
   props: {
     ethereum2config: Object,
