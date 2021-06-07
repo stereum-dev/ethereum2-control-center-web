@@ -177,6 +177,7 @@ import MiscellaneousOverview from "./cc/miscellaneous/MiscellaneousOverview.vue"
 import Graffiti from "./cc/miscellaneous/Graffiti.vue";
 import ApiBindAddress from "./cc/miscellaneous/ApiBindAddress.vue";
 import axios from "axios";
+import YAML from 'yaml';
 
 export default {
   name: "ControlCenterOverview",
@@ -217,6 +218,11 @@ export default {
       this.content = "services";
     },
     showUpdates() {
+      //this.content = "updates";
+      this.refreshConfig(this.showUpdatesAfterLoad);
+    },
+    showUpdatesAfterLoad() {
+      console.log("callback!");
       this.content = "updates";
     },
     showImportValidator() {
@@ -242,6 +248,93 @@ export default {
         window.open("https://stereum.net", "_blank");
       } else if (item.idx == 0) {
         window.location.href = "mailto:stereum@stereum.net";
+      }
+    },
+
+    refreshConfig: function(callback) {
+      this.readData("read-config", {}, this.refreshConfigModel, callback);
+    },
+
+    refreshConfigModel: function() {
+      // read config to yaml
+      let yaml = YAML.parse(this.processStatus.logs.tasks[1].message.stdout);
+
+      // update model with yaml data
+      this.ethereum2config.updates.available = yaml.update.available || "";
+      this.ethereum2config.updates.lane = yaml.update.lane;
+      this.ethereum2config.updates.unattended = [];
+      if (yaml.update.unattended.check) {
+        this.ethereum2config.updates.unattended.push("check");
+      }
+      if (yaml.update.unattended.install) {
+        this.ethereum2config.updates.unattended.push("install");
+      }
+    },
+
+    readData: function(control, data, ...callbacks) {
+      if (this.processStatus.running === false) {
+        this.processStatus.running = true;
+        this.processStatus.progress = 0;
+        this.processStatus.done = false;
+        this.processStatus.success = undefined;
+        this.processStatus.logs = { tasks: [], };
+
+        const payload = {
+          inventory: "inventory.yaml",
+          playbook: control + ".yaml",
+          extra_vars: data,
+          extraVars: data,
+        };
+
+        const fetchStatus = () => {
+          axios.get("/api/setup/status").then((response) => {
+            console.log(response.data);
+            this.processStatus.logs = response.data;
+            this.processStatus.progress = response.data.tasks.length;
+            callbacks.forEach(cb => cb.apply());
+          });
+        };
+
+        axios
+          .post("/api/setup/start", payload)
+          .then((response) => {
+            console.log("Response data: " + response.data);
+            if (response.data.status > 0) {
+              this.$toasted.error(
+                "Unfortunately the read data seems to have failed",
+                { duration: 5000 }
+              );
+              this.processStatus.progress = 0;
+              this.processStatus.success = false;
+            }
+            if (response.data.status == 0) {
+              this.$toasted.success("date read successful!", {
+                duration: 5000,
+              });
+              this.processStatus.progress = 100;
+              this.processStatus.success = true;
+            }
+            this.processStatus.running = false;
+            this.processStatus.done = true;
+            fetchStatus(); // do a final status fetch
+          })
+          .catch((error) => {
+            if (error.message == 'data read: Request failed with status code 404') {
+              this.$toasted.error(
+                "data read: Backend not reachable (http return code 404).",
+                { duration: 5000 }
+              );
+            } else {
+              this.$toasted.error(
+                "data read:Unfortunately an error has occured during the changes",
+                { duration: 5000 }
+              );
+            }
+            console.error(error);
+            this.processStatus.progress = 0;
+            this.processStatus.running = false;
+            this.processStatus.done = true;
+          });
       }
     },
 
