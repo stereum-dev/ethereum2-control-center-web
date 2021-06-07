@@ -167,6 +167,7 @@
 //local registration
 import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import "@fortawesome/fontawesome-free/css/all.css";
+import TaskStatusEntry from "@/components/commons/TaskStatusEntry.vue";
 import Home from "@/components/cc/home/Home.vue";
 import UpdatesOverview from "./cc/updates/UpdatesOverview.vue";
 import ServicesOverview from "./cc/ServicesOverview.vue";
@@ -180,6 +181,7 @@ import axios from "axios";
 export default {
   name: "ControlCenterOverview",
   components: {
+    TaskStatusEntry,
     Home,
     UpdatesOverview,
     ServicesOverview,
@@ -244,13 +246,12 @@ export default {
     },
 
     processChange: function (control, data) {
-      this.$refs["control-changes-window"].show();
-
       if (this.processStatus.running === false) {
         this.processStatus.running = true;
         this.processStatus.progress = 0;
         this.processStatus.done = false;
         this.processStatus.success = undefined;
+        this.processStatus.logs = { tasks: [], };
 
         const payload = {
           inventory: "inventory.yaml",
@@ -267,6 +268,8 @@ export default {
           });
         };
         let logWatchHandle = setInterval(fetchStatus, 1500);
+
+        this.$refs["control-changes-window"].show();
 
         axios
           .post("/api/setup/start", payload)
