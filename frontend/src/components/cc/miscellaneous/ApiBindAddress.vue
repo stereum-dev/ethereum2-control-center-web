@@ -10,7 +10,7 @@
           <b-form-group>
             <b-form-input v-model="apiBindAddress"></b-form-input>
           </b-form-group>
-          <b-button variant="primary"> Save &amp; Apply </b-button>
+          <b-button variant="primary" @click="saveApiBindAddress"> Save &amp; Apply </b-button>
         </b-form>
       </div>
     </div>
@@ -28,10 +28,18 @@ export default {
   },
   props: {
     ethereum2config: Object,
+    processChange: Function,
   },
   mounted() {
     this.apiBindAddress = this.ethereum2config.e2dc_api_bind_address;
   },
+  methods: {
+    saveApiBindAddress() {
+      this.processChange("set-api-bind-address", {
+        e2dc_api_bind_address_updated: this.apiBindAddress,
+      });
+    },
+  }
 };
 </script>
 
