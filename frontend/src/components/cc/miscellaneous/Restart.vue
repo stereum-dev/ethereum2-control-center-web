@@ -8,7 +8,7 @@
     </div>
     <div class="row">
       <div class="col-12 text-right">
-        <b-button @click="Restart()" variant="primary">Restart</b-button>
+        <b-button @click="restartHost" variant="primary">Restart</b-button>
       </div>
     </div>
   </div>
@@ -24,10 +24,11 @@ export default {
   },
   props: {
     model: Object,
+    processChange: Function,
   },
   methods: {
-    Restart() {
-      // todo
+    restartHost() {
+      this.processChange("restart-host", {});
     },
   },
 };

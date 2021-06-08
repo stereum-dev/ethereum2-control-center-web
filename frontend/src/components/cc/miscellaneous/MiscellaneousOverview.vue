@@ -76,7 +76,7 @@
     </div>
 
     <div v-if="this.content === 'restart'">
-      <Restart />
+      <Restart :processChange="processChange" />
     </div>
 
     <div v-if="this.content === 'port-list'">
