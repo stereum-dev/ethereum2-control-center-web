@@ -52,7 +52,11 @@
       <home />
     </div>
     <div v-if="this.content === 'services'">
-      <services-overview :ethereum2config="this.ethereum2config" />
+      <services-overview
+        :ethereum2config="this.ethereum2config"
+        :processStatus="processStatus"
+        :readData="readData"
+      />
     </div>
     <div v-if="this.content === 'updates'">
       <updates-overview
@@ -61,7 +65,7 @@
       />
     </div>
     <div v-if="this.content === 'importValidator'">
-      <import-validator />
+      <import-validator :processChange="processChange" />
     </div>
     <div v-if="this.content === 'listExitValidator'">
       <list-exit-validator />
@@ -160,6 +164,8 @@
         ></task-status-entry>
       </ul>
     </b-modal>
+
+    <b-overlay :show="processStatus.running" rounded="sm" no-wrap />
   </div>
 </template>
 
@@ -177,6 +183,7 @@ import MiscellaneousOverview from "./cc/miscellaneous/MiscellaneousOverview.vue"
 import Graffiti from "./cc/miscellaneous/Graffiti.vue";
 import ApiBindAddress from "./cc/miscellaneous/ApiBindAddress.vue";
 import axios from "axios";
+import YAML from 'yaml';
 
 export default {
   name: "ControlCenterOverview",
@@ -206,6 +213,9 @@ export default {
       },
     };
   },
+  created() {
+    this.refreshConfig(this.showHome);
+  },
   props: {
     ethereum2config: Object,
   },
@@ -217,6 +227,10 @@ export default {
       this.content = "services";
     },
     showUpdates() {
+      //this.content = "updates";
+      this.refreshConfig(this.showUpdatesAfterLoad);
+    },
+    showUpdatesAfterLoad() {
       this.content = "updates";
     },
     showImportValidator() {
@@ -245,6 +259,93 @@ export default {
       }
     },
 
+    refreshConfig: function(callback) {
+      this.readData("read-config", {}, this.refreshConfigModel, callback);
+    },
+
+    refreshConfigModel: function() {
+      // read config to yaml
+      let yaml = YAML.parse(this.processStatus.logs.tasks[1].message.stdout);
+
+      // update model with yaml data
+      this.ethereum2config.updates.available = yaml.update.available || "";
+      this.ethereum2config.updates.lane = yaml.update.lane;
+      this.ethereum2config.updates.unattended = [];
+      if (yaml.update.unattended.check) {
+        this.ethereum2config.updates.unattended.push("check");
+      }
+      if (yaml.update.unattended.install) {
+        this.ethereum2config.updates.unattended.push("install");
+      }
+    },
+
+    readData: function(control, data, ...callbacks) {
+      if (this.processStatus.running === false) {
+        this.processStatus.running = true;
+        this.processStatus.progress = 0;
+        this.processStatus.done = false;
+        this.processStatus.success = undefined;
+        this.processStatus.logs = { tasks: [], };
+
+        const payload = {
+          inventory: "inventory.yaml",
+          playbook: control + ".yaml",
+          extra_vars: data,
+          extraVars: data,
+        };
+
+        const fetchStatus = () => {
+          axios.get("/api/setup/status").then((response) => {
+            //console.log(response.data);
+            this.processStatus.logs = response.data;
+            this.processStatus.progress = response.data.tasks.length;
+            callbacks.forEach(cb => cb.apply());
+          });
+        };
+
+        axios
+          .post("/api/setup/start", payload)
+          .then((response) => {
+            //console.log("Response data: " + response.data);
+            if (response.data.status > 0) {
+              this.$toasted.error(
+                "Unfortunately the read data seems to have failed",
+                { duration: 5000 }
+              );
+              this.processStatus.progress = 0;
+              this.processStatus.success = false;
+            }
+            if (response.data.status == 0) {
+              this.$toasted.success("date read successful!", {
+                duration: 5000,
+              });
+              this.processStatus.progress = 100;
+              this.processStatus.success = true;
+            }
+            this.processStatus.running = false;
+            this.processStatus.done = true;
+            fetchStatus(); // do a final status fetch
+          })
+          .catch((error) => {
+            if (error.message == 'data read: Request failed with status code 404') {
+              this.$toasted.error(
+                "data read: Backend not reachable (http return code 404).",
+                { duration: 5000 }
+              );
+            } else {
+              this.$toasted.error(
+                "data read:Unfortunately an error has occured during the changes",
+                { duration: 5000 }
+              );
+            }
+            console.error(error);
+            this.processStatus.progress = 0;
+            this.processStatus.running = false;
+            this.processStatus.done = true;
+          });
+      }
+    },
+
     processChange: function (control, data) {
       if (this.processStatus.running === false) {
         this.processStatus.running = true;
@@ -262,7 +363,7 @@ export default {
 
         const fetchStatus = () => {
           axios.get("/api/setup/status").then((response) => {
-            console.log(response.data);
+            //console.log(response.data);
             this.processStatus.logs = response.data;
             this.processStatus.progress = response.data.tasks.length;
           });
@@ -274,7 +375,7 @@ export default {
         axios
           .post("/api/setup/start", payload)
           .then((response) => {
-            console.log("Response data: " + response.data);
+            //console.log("Response data: " + response.data);
             if (response.data.status > 0) {
               this.$toasted.error(
                 "Unfortunately the changes seems to have failed",
