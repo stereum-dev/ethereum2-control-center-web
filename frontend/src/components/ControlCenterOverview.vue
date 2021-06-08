@@ -371,7 +371,7 @@ export default {
         axios
           .post("/api/setup/start", payload)
           .then((response) => {
-            console.log("Response data: " + response.data);
+            //console.log("Response data: " + response.data);
             if (response.data.status > 0) {
               this.$toasted.error(
                 "Unfortunately the changes seems to have failed",
