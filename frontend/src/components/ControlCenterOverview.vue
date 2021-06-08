@@ -75,13 +75,20 @@
         :ethereum2config="this.ethereum2config"
         :showGraffiti="showGraffiti"
         :showApiBindAddress="showApiBindAddress"
+        :processChange="processChange"
       />
     </div>
     <div v-if="this.content === 'graffiti'">
-      <graffiti :ethereum2config="this.ethereum2config" />
+      <graffiti
+        :ethereum2config="this.ethereum2config"
+        :processChange="processChange"
+      />
     </div>
     <div v-if="this.content === 'apiBindAddress'">
-      <api-bind-address :ethereum2config="this.ethereum2config" />
+      <api-bind-address
+        :ethereum2config="this.ethereum2config"
+        :processChange="processChange"
+      />
     </div>
 
     <vue-fab mainBtnColor="#336666" icon="help_outline">
@@ -277,6 +284,10 @@ export default {
       if (yaml.update.unattended.install) {
         this.ethereum2config.updates.unattended.push("install");
       }
+
+      this.ethereum2config.e2dc_graffiti = yaml.e2dc_graffiti;
+
+      this.ethereum2config.e2dc_api_bind_address = yaml.e2dc_api_bind_address;
     },
 
     readData: function(control, data, ...callbacks) {

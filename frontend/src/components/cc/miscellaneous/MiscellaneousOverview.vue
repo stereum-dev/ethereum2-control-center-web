@@ -72,11 +72,11 @@
     </div>
 
     <div v-if="this.content === 'prune-geth'">
-      <PruneGeth />
+      <PruneGeth :processChange="processChange" />
     </div>
 
     <div v-if="this.content === 'restart'">
-      <Restart />
+      <Restart :processChange="processChange" />
     </div>
 
     <div v-if="this.content === 'port-list'">
@@ -109,6 +109,7 @@ export default {
     ethereum2config: Object,
     showGraffiti: Function,
     showApiBindAddress: Function,
+    processChange: Function,
   },
   methods: {
     showOSUpdate() {
