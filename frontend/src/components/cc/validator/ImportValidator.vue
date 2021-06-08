@@ -171,11 +171,11 @@ export default {
     fileDragOut() {
       this.color = "#87cefa";
     },
-    importValidator() {
+    async importValidator() {
       let jsonFiles = [];
       let i = 0;
       for (i = 0; i < this.files.length; i++){
-        let jsonContent = Promise.all([this.readFile(this.files[i])]);
+        let jsonContent = await this.readFile(this.files[i]);
         jsonFiles.push({
           name: this.files[i].name,
           content: jsonContent,
@@ -185,6 +185,11 @@ export default {
       console.log(jsonFiles);
       console.log(jsonFiles[0].content);
       console.log(jsonFiles[0].content.value);
+
+      this.processChange("import-validator-accounts", {
+        validator_password: this.password,
+        validator_keys: jsonFiles,
+      });
     },
 
     readFile: async function(file) {
