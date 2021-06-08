@@ -52,7 +52,7 @@
       <home />
     </div>
     <div v-if="this.content === 'services'">
-      <services-overview :ethereum2config="this.ethereum2config" />
+      <services-overview :ethereum2config="this.ethereum2config" :processStatus="processStatus" :readData="readData" />
     </div>
     <div v-if="this.content === 'updates'">
       <updates-overview
@@ -293,7 +293,7 @@ export default {
 
         const fetchStatus = () => {
           axios.get("/api/setup/status").then((response) => {
-            console.log(response.data);
+            //console.log(response.data);
             this.processStatus.logs = response.data;
             this.processStatus.progress = response.data.tasks.length;
             callbacks.forEach(cb => cb.apply());
@@ -303,7 +303,7 @@ export default {
         axios
           .post("/api/setup/start", payload)
           .then((response) => {
-            console.log("Response data: " + response.data);
+            //console.log("Response data: " + response.data);
             if (response.data.status > 0) {
               this.$toasted.error(
                 "Unfortunately the read data seems to have failed",
