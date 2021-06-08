@@ -93,7 +93,7 @@
         </template>
       </b-table>
     </div>
-    <!--
+
     <b-modal
       ref="service-logs-modal"
       title="Service Logs - "
@@ -103,9 +103,9 @@
       <template #modal-title>
         Service Logs - <strong>{{ logs_service }}</strong>
       </template>
-      <samp style="white-space: pre-line">{{ logs }}</samp>
+      <samp style="white-space: pre-line; font-size: 10px;">{{ logs }}</samp>
     </b-modal>
-    -->
+
   </div>
 </template>
 
@@ -123,6 +123,8 @@ export default {
         { key: "state", sortable: false, label: "State" },
         { key: "actions", sortable: false },
       ],
+      logs: "",
+      logs_service: "",
     };
   },
   created() {
@@ -144,19 +146,8 @@ export default {
       this.readData("stop-service", { stereum_service: row.item}, this.refreshServicesModel);
     },
     showServiceLogs(row) {
-      if (
-        row.item.Labels == undefined ||
-        row.item.Labels["com.docker.compose.service"] == undefined
-      ) {
-        this.logs_service = row.item.Names;
-      } else {
-        this.logs_service = row.item.Labels["com.docker.compose.service"];
-      }
-
-      // todo: fill log var:
-      // this.logs = call_ansible(row.item.Id);
-
-      this.$refs["service-logs-modal"].show();
+      this.logs_service = row.item;
+      this.readData("service-logs", { stereum_service: Object.keys(this.containers[row.item])[0]}, this.refreshLogsModel);
     },
 
     refreshServices: function() {
@@ -166,6 +157,12 @@ export default {
     refreshServicesModel() {
       this.containers = this.processStatus.logs.tasks[1].message.services;
     },
+
+    refreshLogsModel() {
+      this.logs = this.processStatus.logs.tasks[1].message.stdout;
+
+      this.$refs["service-logs-modal"].show();
+    }
   },
 };
 </script>
