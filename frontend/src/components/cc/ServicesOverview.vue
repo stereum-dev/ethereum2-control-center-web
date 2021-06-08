@@ -30,7 +30,7 @@
             font-scale="2"
             v-b-tooltip.hover
             title="Running"
-            v-if="containers[row.item][Object.keys(containers[row.item])[0]].state.running"
+            v-if="Object.entries(containers[row.item]).length > 0 && containers[row.item][Object.keys(containers[row.item])[0]].state.running"
           />
           <b-icon
             icon="exclamation-diamond"
@@ -50,7 +50,7 @@
             class="mb-2 mr-sm-2 mb-sm-0"
             v-b-tooltip.hover
             title="start service"
-            :disabled="containers[row.item][Object.keys(containers[row.item])[0]].state.running"
+            :disabled="Object.entries(containers[row.item]).length > 0 && containers[row.item][Object.keys(containers[row.item])[0]].state.running"
           >
             <b-icon icon="caret-up" aria-hidden="true"></b-icon>
           </b-button>
@@ -62,7 +62,7 @@
             class="mb-2 mr-sm-2 mb-sm-0"
             v-b-tooltip.hover
             title="restart service"
-            :disabled="!containers[row.item][Object.keys(containers[row.item])[0]].state.running"
+            :disabled="Object.entries(containers[row.item]).length == 0 || !containers[row.item][Object.keys(containers[row.item])[0]].state.running"
           >
             <b-icon icon="bootstrap-reboot" aria-hidden="true"></b-icon>
           </b-button>
@@ -74,7 +74,7 @@
             class="mb-2 mr-sm-2 mb-sm-0"
             v-b-tooltip.hover
             title="stop service"
-            :disabled="!containers[row.item][Object.keys(containers[row.item])[0]].state.running"
+            :disabled="Object.entries(containers[row.item]).length == 0 || !containers[row.item][Object.keys(containers[row.item])[0]].state.running"
           >
             <b-icon icon="caret-down" aria-hidden="true"></b-icon>
           </b-button>
