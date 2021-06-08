@@ -281,6 +281,8 @@ export default {
       if (yaml.update.unattended.install) {
         this.ethereum2config.updates.unattended.push("install");
       }
+
+      this.ethereum2config.e2dc_graffiti = yaml.e2dc_graffiti;
     },
 
     readData: function(control, data, ...callbacks) {
