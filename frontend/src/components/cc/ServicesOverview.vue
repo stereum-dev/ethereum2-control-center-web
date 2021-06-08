@@ -134,9 +134,15 @@ export default {
     readData: Function,
   },
   methods: {
-    startService() {},
-    restartService() {},
-    stopService() {},
+    startService(row) {
+      this.readData("start-service", { stereum_service: row.item}, this.refreshServicesModel);
+    },
+    restartService(row) {
+      this.readData("restart-service", { stereum_service: row.item}, this.refreshServicesModel);
+    },
+    stopService(row) {
+      this.readData("stop-service", { stereum_service: row.item}, this.refreshServicesModel);
+    },
     showServiceLogs(row) {
       if (
         row.item.Labels == undefined ||
