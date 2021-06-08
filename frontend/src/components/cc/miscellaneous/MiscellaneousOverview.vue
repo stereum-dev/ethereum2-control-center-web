@@ -72,7 +72,7 @@
     </div>
 
     <div v-if="this.content === 'prune-geth'">
-      <PruneGeth />
+      <PruneGeth :processChange="processChange" />
     </div>
 
     <div v-if="this.content === 'restart'">
