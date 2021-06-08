@@ -49,7 +49,6 @@
                   @click="removeFile(index)"
                   variant="primary"
                   class="mb-2 mr-sm-2 mb-sm-0"
-                  v-b-trash.hover
                   title="remove file"
                 >
                   <b-icon icon="trash" aria-hidden="true"></b-icon>
@@ -77,7 +76,7 @@
 
             <b-button
               variant="primary"
-              @click="importValidator()"
+              @click="importValidator"
               :disabled="files.length === 0 || password.length < 8"
               title="import accounts"
             >
@@ -103,6 +102,7 @@ export default {
   },
   props: {
     ethereum2config: Object,
+    processChange: Function,
   },
   computed: {
     // "no duplicate data filter" not used
@@ -172,7 +172,36 @@ export default {
       this.color = "#87cefa";
     },
     importValidator() {
-      //todo import
+      let jsonFiles = [];
+      let i = 0;
+      for (i = 0; i < this.files.length; i++){
+        let jsonContent = Promise.all([this.readFile(this.files[i])]);
+        jsonFiles.push({
+          name: this.files[i].name,
+          content: jsonContent,
+        });
+      }
+
+      console.log(jsonFiles);
+      console.log(jsonFiles[0].content);
+      console.log(jsonFiles[0].content.value);
+    },
+
+    readFile: async function(file) {
+      return new Promise((resolve, reject) => {
+        let reader = new FileReader();
+        reader.readAsText(file, "UTF-8");
+        reader.onload =  evt => {
+          resolve(evt.target.result);
+        }
+        reader.onerror = evt => {
+          reject(evt);
+        }
+      });
+    },
+
+    sleep(milliseconds) {
+      return new Promise(resolve => setTimeout(resolve, milliseconds));
     },
   },
 };

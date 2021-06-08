@@ -52,7 +52,11 @@
       <home />
     </div>
     <div v-if="this.content === 'services'">
-      <services-overview :ethereum2config="this.ethereum2config" :processStatus="processStatus" :readData="readData" />
+      <services-overview
+        :ethereum2config="this.ethereum2config"
+        :processStatus="processStatus"
+        :readData="readData"
+      />
     </div>
     <div v-if="this.content === 'updates'">
       <updates-overview
@@ -61,7 +65,7 @@
       />
     </div>
     <div v-if="this.content === 'importValidator'">
-      <import-validator />
+      <import-validator :processChange="processChange" />
     </div>
     <div v-if="this.content === 'listExitValidator'">
       <list-exit-validator />
