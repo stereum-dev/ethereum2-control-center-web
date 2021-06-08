@@ -10,7 +10,7 @@
           <b-form-group>
             <b-form-input v-model="graffiti"></b-form-input>
           </b-form-group>
-          <b-button variant="primary"> Save Graffiti </b-button>
+          <b-button variant="primary" @click="saveGraffiti"> Save Graffiti </b-button>
         </b-form>
       </div>
     </div>
@@ -28,9 +28,17 @@ export default {
   },
   props: {
     ethereum2config: Object,
+    processChange: Function,
   },
   mounted() {
     this.graffiti = this.ethereum2config.e2dc_graffiti;
+  },
+  methods: {
+    saveGraffiti() {
+      this.processChange("set-graffiti", {
+        e2dc_graffiti_updated: this.graffiti,
+      });
+    },
   },
 };
 </script>

@@ -75,10 +75,14 @@
         :ethereum2config="this.ethereum2config"
         :showGraffiti="showGraffiti"
         :showApiBindAddress="showApiBindAddress"
+        :processChange="processChange"
       />
     </div>
     <div v-if="this.content === 'graffiti'">
-      <graffiti :ethereum2config="this.ethereum2config" />
+      <graffiti
+        :ethereum2config="this.ethereum2config"
+        :processChange="processChange"
+      />
     </div>
     <div v-if="this.content === 'apiBindAddress'">
       <api-bind-address :ethereum2config="this.ethereum2config" />

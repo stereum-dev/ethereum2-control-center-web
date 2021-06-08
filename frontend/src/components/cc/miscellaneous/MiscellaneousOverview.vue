@@ -109,6 +109,7 @@ export default {
     ethereum2config: Object,
     showGraffiti: Function,
     showApiBindAddress: Function,
+    processChange: Function,
   },
   methods: {
     showOSUpdate() {
