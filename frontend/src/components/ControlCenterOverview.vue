@@ -227,7 +227,6 @@ export default {
       this.refreshConfig(this.showUpdatesAfterLoad);
     },
     showUpdatesAfterLoad() {
-      console.log("callback!");
       this.content = "updates";
     },
     showImportValidator() {
@@ -360,7 +359,7 @@ export default {
 
         const fetchStatus = () => {
           axios.get("/api/setup/status").then((response) => {
-            console.log(response.data);
+            //console.log(response.data);
             this.processStatus.logs = response.data;
             this.processStatus.progress = response.data.tasks.length;
           });

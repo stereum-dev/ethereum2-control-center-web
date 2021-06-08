@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="col-6 pl-5">
-        <manual-update :ethereum2config="this.ethereum2config" />
+        <manual-update :ethereum2config="this.ethereum2config" :checkForUpdates="checkForUpdates" :runUpdate="runUpdate" />
       </div>
     </div>
   </div>
@@ -59,6 +59,14 @@ export default {
           },
         },
       });
+    },
+
+    checkForUpdates() {
+      this.processChange("update-check", {});
+    },
+
+    runUpdate() {
+
     },
   },
 };
