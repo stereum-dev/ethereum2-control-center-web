@@ -98,7 +98,7 @@ export default {
 
       this.items.splice(e.index, 1);
 
-      saveToModel();
+      this.saveToModel();
     },
     moveItemUp(e) {
       if (e.index > 0) {
@@ -114,7 +114,7 @@ export default {
         this.items.splice(new_index, 0, this.items.splice(old_index, 1)[0]);
       }
 
-      saveToModel();
+      this.saveToModel();
     },
     moveItemDown(e) {
       if (e.index + 1 < this.items.length) {
@@ -130,17 +130,17 @@ export default {
         this.items.splice(new_index, 0, this.items.splice(old_index, 1)[0]);
       }
 
-      saveToModel();
+      this.saveToModel();
     },
     addItem() {
       this.items.push({ url: this.newUrl });
 
-      saveToModel();
+      this.saveToModel();
     },
 
     saveToModel() {
       this.model.eth1nodes = this.items.map(item => item.url);
-    }
+    },
   },
   props: {
     model: Object,
