@@ -128,7 +128,9 @@ export default {
         network: this.model.network,
         setup: this.model.client,
         setup_override: this.model.override || "default",
-        eth1_nodes: this.model.eth1nodes,
+        connectivity: {
+          eth1_nodes: this.model.eth1nodes,
+        },
         update: {
           lane: this.model.updates.lane,
           unattended: {
