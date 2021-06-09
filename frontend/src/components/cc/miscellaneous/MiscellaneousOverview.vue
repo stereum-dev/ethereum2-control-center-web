@@ -59,7 +59,7 @@
     </div>
 
     <div v-if="this.content === 'os-update'">
-      <OSUpdate />
+      <OSUpdate :processChange="processChange" />
     </div>
 
     <div v-if="this.content === 'prune-geth'">
