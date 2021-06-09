@@ -46,15 +46,6 @@
 
           <b-button @click="showRestart()" variant="primary">Restart Now</b-button>
         </b-card>
-        <b-card title="Service Port List" style="max-width: 20rem">
-          <b-card-text>
-            This shows you the ports used by your Stereum Ethereum Node Setup.
-            Might come in handy when configuring your firewall and setting up port
-            forwards. This is view-only.
-          </b-card-text>
-
-          <b-button @click="showPortList()" variant="primary">Show Port List</b-button>
-        </b-card>
         <b-card title="OS Update" style="max-width: 20rem;">
           <b-card-text>
             OS Updates will add new features to your device and improve existing ones.
@@ -78,10 +69,6 @@
     <div v-if="this.content === 'restart'">
       <Restart :processChange="processChange" />
     </div>
-
-    <div v-if="this.content === 'port-list'">
-      <PortList />
-    </div>
   </div>
 </template>
 
@@ -90,7 +77,6 @@
 import OSUpdate from "./OSUpdate.vue";
 import PruneGeth from "./PruneGeth.vue";
 import Restart from "./Restart.vue";
-import PortList from "./PortList.vue";
 
 export default {
   name: "MiscellaneousOverview",
@@ -103,7 +89,6 @@ export default {
     OSUpdate,
     PruneGeth,
     Restart,
-    PortList,
   },
   props: {
     ethereum2config: Object,
@@ -120,9 +105,6 @@ export default {
     },
     showRestart() {
       this.content = "restart";
-    },
-    showPortList() {
-      this.content = "port-list";
     },
   },
 };
