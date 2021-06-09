@@ -21,7 +21,12 @@
           <tr>
             <td class="table-label">Ethereum 1 nodes:</td>
             <td class="table-data">
+              <!--
               <b-table striped hover :items="model.eth1nodes"> </b-table>
+              -->
+              <li v-for="eth1node in model.eth1nodes" :key="eth1node">
+                {{ eth1node }}
+              </li>
             </td>
           </tr>
           <tr>
