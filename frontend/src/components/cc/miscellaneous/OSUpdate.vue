@@ -4,11 +4,11 @@
       <h2>Update Operating System</h2>
     </div>
     <div class="col-12 text-left">
-      <span>It is important to keep your device turned on during the update process!</span>
+      <span>It is important to keep your device turned on during the update process! The server will restart if necessary, you might need to restart your launcher.</span>
     </div>
     <div class="row">
       <div class="col-12 text-right">
-        <b-button @click="OSupdate()" variant="primary">Update OS</b-button>
+        <b-button @click="runOsUpdates()" variant="primary">Update OS</b-button>
       </div>
     </div>
   </div>
@@ -23,10 +23,11 @@ export default {
   },
   props: {
     ethereum2config: Object,
+    processChange: Function,
   },
   methods: {
-    OSupdate() {
-      // todo
+    runOsUpdates() {
+      this.processChange("update-host-os", {});
     },
   },
 };
