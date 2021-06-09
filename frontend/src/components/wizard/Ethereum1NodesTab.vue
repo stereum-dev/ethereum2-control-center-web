@@ -65,36 +65,40 @@ export default {
     let defaultItems = [{ url: "http://geth:8545" }];
     this.model.eth1nodes = defaultItems;
 
+    let eth1network = "mainnet";
+    if (this.model.network !== "mainnet") {
+      eth1network = "goerli";
+    }
+
     return {
       items: defaultItems,
       fields: ["url", "actions"],
       newUrl:
         "https://" +
-        this.model.network +
+        eth1network +
         ".infura.io:443/v3/put-your-infura-id-here",
     };
   },
   watch: {
     "model.network": function () {
+      let eth1network = "mainnet";
+      if (this.model.network !== "mainnet") {
+        eth1network = "goerli";
+      }
       this.newUrl =
         "https://" +
-        this.model.network +
+        eth1network +
         ".infura.io:443/v3/put-your-infura-id-here";
     },
   },
   methods: {
-    toggle() {
-      console.log("Toggle button clicked");
-      this.show = !this.show;
-    },
-    dismissed() {
-      console.log("Alert dismissed");
-    },
     removeItem(e) {
       console.log("removeItem: " + JSON.stringify(e));
       console.log("index: " + e.index);
 
       this.items.splice(e.index, 1);
+
+      saveToModel();
     },
     moveItemUp(e) {
       if (e.index > 0) {
@@ -109,6 +113,8 @@ export default {
         }
         this.items.splice(new_index, 0, this.items.splice(old_index, 1)[0]);
       }
+
+      saveToModel();
     },
     moveItemDown(e) {
       if (e.index + 1 < this.items.length) {
@@ -123,10 +129,18 @@ export default {
         }
         this.items.splice(new_index, 0, this.items.splice(old_index, 1)[0]);
       }
+
+      saveToModel();
     },
     addItem() {
       this.items.push({ url: this.newUrl });
+
+      saveToModel();
     },
+
+    saveToModel() {
+      this.model.eth1nodes = this.items.map(item => item.url);
+    }
   },
   props: {
     model: Object,
