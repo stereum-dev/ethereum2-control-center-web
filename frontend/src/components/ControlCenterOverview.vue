@@ -29,6 +29,7 @@
             >
           </b-nav-item-dropdown>
           <b-nav-item @click="showMiscellaneous()">Miscellaneous</b-nav-item>
+          <b-nav-item href="http://localhost:8082" target=”_blank”>Grafana</b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
