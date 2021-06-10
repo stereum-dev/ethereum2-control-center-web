@@ -15,7 +15,7 @@
         </b-card>
         <b-card
           title="API Bind Address"
-          sub-title="Expert Only"
+          sub-title="Expert"
           style="max-width: 20rem"
         >
           <b-card-text>
@@ -26,6 +26,20 @@
 
           <b-button @click="this.showApiBindAddress" variant="primary"
             >Set API Bind Address</b-button
+          >
+        </b-card>
+        <b-card
+          title="Ethereum 1 Connections"
+          style="max-width: 20rem"
+        >
+          <b-card-text>
+            Configure what Ethereum 1 nodes to use by specifying URLs to connect
+            to for your beacon node, e. g. using your local geth as well as a
+            Ethereum 1 service like infura.io for fallback.
+          </b-card-text>
+
+          <b-button @click="this.showEth1Nodes" variant="primary"
+            >Set Ethereum 1 URLs</b-button
           >
         </b-card>
         <b-card title="Geth Prune" style="max-width: 20rem">
@@ -94,6 +108,7 @@ export default {
     ethereum2config: Object,
     showGraffiti: Function,
     showApiBindAddress: Function,
+    showEth1Nodes: Function,
     processChange: Function,
   },
   methods: {

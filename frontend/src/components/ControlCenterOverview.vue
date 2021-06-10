@@ -90,6 +90,7 @@
         :ethereum2config="this.ethereum2config"
         :showGraffiti="showGraffiti"
         :showApiBindAddress="showApiBindAddress"
+        :showEth1Nodes="showEth1Nodes"
         :processChange="processChange"
       />
     </div>
@@ -101,6 +102,12 @@
     </div>
     <div v-if="this.content === 'apiBindAddress'">
       <api-bind-address
+        :ethereum2config="this.ethereum2config"
+        :processChange="processChange"
+      />
+    </div>
+    <div v-if="this.content === 'eth1nodes'">
+      <ethereum-1-nodes
         :ethereum2config="this.ethereum2config"
         :processChange="processChange"
       />
@@ -204,6 +211,7 @@ import ListExitValidator from "./cc/validator/ListExitValidator.vue";
 import MiscellaneousOverview from "./cc/miscellaneous/MiscellaneousOverview.vue";
 import Graffiti from "./cc/miscellaneous/Graffiti.vue";
 import ApiBindAddress from "./cc/miscellaneous/ApiBindAddress.vue";
+import Ethereum1Nodes from "./cc/miscellaneous/Ethereum1Nodes.vue";
 import axios from "axios";
 import YAML from 'yaml';
 
@@ -219,6 +227,7 @@ export default {
     MiscellaneousOverview,
     Graffiti,
     ApiBindAddress,
+    Ethereum1Nodes,
   },
   data() {
     return {
@@ -270,6 +279,9 @@ export default {
     showApiBindAddress() {
       this.content = "apiBindAddress";
     },
+    showEth1Nodes() {
+      this.content = "eth1nodes";
+    },
 
     clickHelpItem: function (item) {
       if (item.idx == 2) {
@@ -306,6 +318,10 @@ export default {
 
       this.ethereum2config.setup = yaml.setup;
       this.ethereum2config.override = yaml.setup_override;
+
+      this.ethereum2config.network = yaml.network;
+
+      this.ethereum2config.eth1nodes = yaml.connectivity.eth1_nodes;
     },
 
     readData: function(control, data, ...callbacks) {
