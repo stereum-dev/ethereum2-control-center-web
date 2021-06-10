@@ -29,6 +29,21 @@
             >
           </b-nav-item-dropdown>
           <b-nav-item @click="showMiscellaneous()">Miscellaneous</b-nav-item>
+
+          <b-nav-item
+            v-if="this.ethereum2config.setup === 'prysm'"
+            href="http://localhost:8083"
+            target=”_blank”
+          >
+            Prysm-UI
+          </b-nav-item>
+          <b-nav-item
+            v-if="this.ethereum2config.override !== 'beacon-validator'"
+            href="http://localhost:8082"
+            target=”_blank”
+          >
+            Grafana
+          </b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -75,6 +90,7 @@
         :ethereum2config="this.ethereum2config"
         :showGraffiti="showGraffiti"
         :showApiBindAddress="showApiBindAddress"
+        :showEth1Nodes="showEth1Nodes"
         :processChange="processChange"
       />
     </div>
@@ -86,6 +102,12 @@
     </div>
     <div v-if="this.content === 'apiBindAddress'">
       <api-bind-address
+        :ethereum2config="this.ethereum2config"
+        :processChange="processChange"
+      />
+    </div>
+    <div v-if="this.content === 'eth1nodes'">
+      <ethereum-1-nodes
         :ethereum2config="this.ethereum2config"
         :processChange="processChange"
       />
@@ -189,6 +211,7 @@ import ListExitValidator from "./cc/validator/ListExitValidator.vue";
 import MiscellaneousOverview from "./cc/miscellaneous/MiscellaneousOverview.vue";
 import Graffiti from "./cc/miscellaneous/Graffiti.vue";
 import ApiBindAddress from "./cc/miscellaneous/ApiBindAddress.vue";
+import Ethereum1Nodes from "./cc/miscellaneous/Ethereum1Nodes.vue";
 import axios from "axios";
 import YAML from 'yaml';
 
@@ -204,6 +227,7 @@ export default {
     MiscellaneousOverview,
     Graffiti,
     ApiBindAddress,
+    Ethereum1Nodes,
   },
   data() {
     return {
@@ -255,6 +279,9 @@ export default {
     showApiBindAddress() {
       this.content = "apiBindAddress";
     },
+    showEth1Nodes() {
+      this.content = "eth1nodes";
+    },
 
     clickHelpItem: function (item) {
       if (item.idx == 2) {
@@ -288,6 +315,13 @@ export default {
       this.ethereum2config.e2dc_graffiti = yaml.e2dc_graffiti;
 
       this.ethereum2config.e2dc_api_bind_address = yaml.e2dc_api_bind_address;
+
+      this.ethereum2config.setup = yaml.setup;
+      this.ethereum2config.override = yaml.setup_override;
+
+      this.ethereum2config.network = yaml.network;
+
+      this.ethereum2config.eth1nodes = yaml.connectivity.eth1_nodes;
     },
 
     readData: function(control, data, ...callbacks) {
