@@ -29,7 +29,21 @@
             >
           </b-nav-item-dropdown>
           <b-nav-item @click="showMiscellaneous()">Miscellaneous</b-nav-item>
-          <b-nav-item href="http://localhost:8082" target=”_blank”>Grafana</b-nav-item>
+
+          <b-nav-item
+            v-if="this.ethereum2config.setup === 'prysm'"
+            href="http://localhost:8083"
+            target=”_blank”
+          >
+            Prysm-UI
+          </b-nav-item>
+          <b-nav-item
+            v-if="this.ethereum2config.override !== 'beacon-validator'"
+            href="http://localhost:8082"
+            target=”_blank”
+          >
+            Grafana
+          </b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -289,6 +303,9 @@ export default {
       this.ethereum2config.e2dc_graffiti = yaml.e2dc_graffiti;
 
       this.ethereum2config.e2dc_api_bind_address = yaml.e2dc_api_bind_address;
+
+      this.ethereum2config.setup = yaml.setup;
+      this.ethereum2config.override = yaml.setup_override;
     },
 
     readData: function(control, data, ...callbacks) {
