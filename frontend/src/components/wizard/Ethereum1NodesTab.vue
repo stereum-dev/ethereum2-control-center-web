@@ -63,7 +63,7 @@ export default {
   components: {},
   data() {
     let defaultItems = [{ url: "http://geth:8545" }];
-    this.model.eth1nodes = defaultItems;
+    this.model.eth1nodes = defaultItems.map(item => item.url);
 
     let eth1network = "mainnet";
     if (this.model.network !== "mainnet") {
