@@ -81,7 +81,9 @@
 
         <div v-if="success === true">
           <div class="alert alert-success" role="alert">
-            Installation Successful! You are good to go!
+            <h4 class="alert-heading">Installation Successful! You are good to go!</h4>
+
+            <b-button variant="primary" block size="lg" href="http://localhost:8081/public/control-center">Open Control Center</b-button>
           </div>
         </div>
         <div v-if="success === false">
