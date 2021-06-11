@@ -3,7 +3,31 @@
     <div class="row pb-3 pt-3">
       <h2>Validators</h2>
     </div>
+
     <div class="row">
+      <div class="alert alert-info" role="alert">
+        <p>
+          For a list of validators please visit the link below! A list with your validators in the Stereum Control Center with various controls will follow soon.
+        </p>
+
+        <b-button
+          v-if="this.ethereum2config.override !== 'beacon-validator'"
+          variant="primary"
+          block
+          size="lg"
+          href="http://localhost:8082"
+        >Open Grafana</b-button>
+        <b-button
+          v-if="this.ethereum2config.setup === 'prysm'"
+          variant="primary"
+          block
+          size="lg"
+          href="http://localhost:8083"
+        >Open Prysm UI</b-button>
+      </div>
+    </div>
+
+    <div class="row" v-if="false">
       <b-table striped hover :items="validators" :fields="fields">
         <template #cell(ste)="row">
           <b-icon-question

@@ -22,10 +22,10 @@
               <span class="text-white">Validator Keys</span>
             </template>
             <b-dropdown-item @click="showImportValidator()"
-              >Import Account</b-dropdown-item
+              >Import Accounts</b-dropdown-item
             >
             <b-dropdown-item @click="showListExitValidator()"
-              >List & Exit Account</b-dropdown-item
+              >List Accounts</b-dropdown-item
             >
           </b-nav-item-dropdown>
           <b-nav-item @click="showMiscellaneous()">Miscellaneous</b-nav-item>
@@ -83,7 +83,7 @@
       <import-validator :processChange="processChange" />
     </div>
     <div v-if="this.content === 'listExitValidator'">
-      <list-exit-validator />
+      <list-exit-validator :ethereum2config="this.ethereum2config" />
     </div>
     <div v-if="this.content === 'miscellaneous'">
       <miscellaneous-overview
