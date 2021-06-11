@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <span> Please enter your Etherum 1 nodes to use </span>
+  <div class="text-left">
+    <h3>Ethereum 1 Node URLs</h3>
     <div class="text-left">
       <div>
         <b-table striped hover :items="items" :fields="fields">

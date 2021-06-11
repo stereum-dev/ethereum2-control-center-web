@@ -16,7 +16,7 @@ export default {
   data() {
     return {
       model: {
-        network: "pyrmont",
+        network: "prater",
         client: "allbeacons",
         installationFolder: "/opt/stereum",
         override: "default",

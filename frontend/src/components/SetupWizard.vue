@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-card
-      img-src="https://picsum.photos/600/50/?grayscale"
+      img-src="/public/setup-banner.png"
       img-alt="Image"
       img-top
       tag="article"
@@ -13,8 +13,8 @@
           <form-wizard
             shape="square"
             color="#336666"
-            title="Guided Beacon Installer"
-            subtitle="Setup your Beacon"
+            title="Stereum Ethereum Node Setup"
+            subtitle=""
             finishButtonText="Start Installation"
             @on-complete="onComplete"
             :hide-buttons="installationRunning || installationSuccess"
@@ -25,7 +25,7 @@
             <tab-content title="Network" icon="faw fas fa-network-wired">
               <network-tab :model="model"></network-tab>
             </tab-content>
-            <tab-content title="Setup" icon="faw fas fa-cogs">
+            <tab-content title="Client" icon="faw fas fa-cogs">
               <setup-tab :model="model"></setup-tab>
             </tab-content>
             <tab-content title="Customize" icon="faw fas fa-wrench">

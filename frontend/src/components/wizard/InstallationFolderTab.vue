@@ -1,8 +1,6 @@
 <template>
-  <div>
-    <span>
-      Please enter the path to use to install Stereum's Etherium 2.0 node
-    </span>
+  <div class="text-left">
+    <h3>Installation Path</h3>
     <div>
       <b-form-input
         v-model="model.installationFolder"
