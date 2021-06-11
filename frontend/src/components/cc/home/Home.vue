@@ -30,7 +30,7 @@ export default {
    margin: auto;
    width: 90%;
    height: 95%;
-   background: url('/public/homepage.gif');
+   background: url('/public/homepage.png');
    background-size: contain;
    background-repeat: no-repeat;
    background-position: center center;
