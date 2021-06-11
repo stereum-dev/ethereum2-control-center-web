@@ -229,7 +229,11 @@ export default {
     },
 
     refreshLogsModel() {
-      this.logs = this.processStatus.logs.tasks[1].message.stdout;
+      if (this.processStatus.logs.tasks[1].message.stdout) {
+        this.logs = this.processStatus.logs.tasks[1].message.stdout;
+      } else {
+        this.logs = this.processStatus.logs.tasks[1].message.stderr;
+      }
 
       this.$refs["service-logs-modal"].show();
     },
