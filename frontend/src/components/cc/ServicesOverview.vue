@@ -1,7 +1,15 @@
 <template>
   <div class="container">
-    <div class="row pb-3 pt-3">
-      <h2>Services</h2>
+    <div class="row pb-3 pt-3 text-left">
+      <div class="col-6">
+        <h2>Services</h2>
+      </div>
+      <div class="col-6 text-right">
+        <b-button variant="success" @click="refreshServices">
+          <b-icon icon="arrow-clockwise" aria-hidden="true"></b-icon>
+          Refresh
+        </b-button>
+      </div>
     </div>
     <div class="row">
       <b-table striped hover :items="Object.keys(containers).sort()" :fields="fields" v-if="Object.entries(containers).length > 0">
@@ -229,7 +237,11 @@ export default {
     },
 
     refreshLogsModel() {
-      this.logs = this.processStatus.logs.tasks[1].message.stdout;
+      if (this.processStatus.logs.tasks[1].message.stdout) {
+        this.logs = this.processStatus.logs.tasks[1].message.stdout;
+      } else {
+        this.logs = this.processStatus.logs.tasks[1].message.stderr;
+      }
 
       this.$refs["service-logs-modal"].show();
     },

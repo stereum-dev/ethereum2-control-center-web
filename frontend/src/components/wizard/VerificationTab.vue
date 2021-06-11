@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="text-left">
+    <h3>Verify &amp; Install</h3>
     <span v-if="!running">
       Please check the entered information and start the installation
     </span>
@@ -124,7 +125,7 @@ export default {
   },
   data() {
     return {
-      max: 100,
+      max: 62,
     };
   },
   methods: {},

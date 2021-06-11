@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <span> Please choose the client you want to use </span>
+  <div class="text-left">
+    <h3>Client(s) Customization</h3>
     <div class="text-left">
       <b-form-radio-group
         :stacked="true"

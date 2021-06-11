@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <span> Please select the Network to connect to </span>
+  <div class="text-left">
+    <h3>Network</h3>
     <div class="text-left">
       <b-form-radio-group
         :stacked="true"
@@ -23,8 +23,8 @@ export default {
       true: true,
       networks: [
         { id: "mainnet", text: "Mainnet", disabled: false },
-        { id: "pyrmont", text: "Pyrmont - oldest testnet", disabled: false },
-        { id: "prater", text: "Prater - newest testnet", disabled: false },
+        { id: "prater", text: "Prater - testnet", disabled: false },
+        { id: "pyrmont", text: "Pyrmont - testnet (will be offline soon)", disabled: false },
       ],
     };
   },
