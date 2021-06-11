@@ -11,7 +11,7 @@
         </p>
 
         <b-button
-          v-if="this.ethereum2config.override !== 'beacon-validator'"
+          v-if="this.ethereum2config.override !== 'beacon-validator' && this.ethereum2config.setup !== 'allbeacons'"
           variant="primary"
           block
           size="lg"

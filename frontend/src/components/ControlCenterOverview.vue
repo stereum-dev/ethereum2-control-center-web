@@ -38,7 +38,7 @@
             Prysm-UI
           </b-nav-item>
           <b-nav-item
-            v-if="this.ethereum2config.override !== 'beacon-validator'"
+            v-if="this.ethereum2config.override !== 'beacon-validator' && this.ethereum2config.setup !== 'allbeacons'"
             href="http://localhost:8082"
             target=”_blank”
           >
