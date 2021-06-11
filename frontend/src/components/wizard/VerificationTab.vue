@@ -124,7 +124,7 @@ export default {
   },
   data() {
     return {
-      max: 100,
+      max: 62,
     };
   },
   methods: {},
