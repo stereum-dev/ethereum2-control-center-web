@@ -77,6 +77,7 @@
       <updates-overview
         :ethereum2config="this.ethereum2config"
         :processChange="processChange"
+        :refreshConfig="refreshConfig"
       />
     </div>
     <div v-if="this.content === 'importValidator'">
@@ -391,7 +392,7 @@ export default {
       }
     },
 
-    processChange: function (control, data) {
+    processChange: function (control, data, ...callbacks) {
       if (this.processStatus.running === false) {
         this.processStatus.running = true;
         this.processStatus.progress = 0;
@@ -411,6 +412,10 @@ export default {
             //console.log(response.data);
             this.processStatus.logs = response.data;
             this.processStatus.progress = response.data.tasks.length;
+
+            if (this.processStatus.done) {
+              callbacks.forEach(cb => cb.apply());
+            }
           });
         };
         let logWatchHandle = setInterval(fetchStatus, 1500);
