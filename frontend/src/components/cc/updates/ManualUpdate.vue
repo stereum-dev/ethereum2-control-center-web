@@ -46,7 +46,7 @@
           aria-labelledby="form-confirm-label"
           class="text-center p-3"
         >
-          <p><strong id="form-confirm-label">Web Control Center will be unresponsive for a few minutes. Are you sure?</strong></p>
+          <p><strong id="form-confirm-label">Web Control Center will be busy for a few minutes. Are you sure?</strong></p>
           <div class="d-flex ml-4 pl-3">
             <b-button variant="outline-danger" class="mr-4" @click="onCancel">
               Cancel

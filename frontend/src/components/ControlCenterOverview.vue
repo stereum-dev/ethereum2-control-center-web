@@ -78,6 +78,7 @@
         :ethereum2config="this.ethereum2config"
         :processChange="processChange"
         :refreshConfig="refreshConfig"
+        :lockControlCenter="lockControlCenter"
       />
     </div>
     <div v-if="this.content === 'importValidator'">
@@ -196,6 +197,15 @@
     </b-modal>
 
     <b-overlay :show="processStatus.running" rounded="sm" no-wrap />
+
+    <b-overlay :show="locked" no-wrap>
+      <template #overlay>
+        <div class="text-center p-4 bg-primary text-light rounded">
+          <b-icon icon="arrow-repeat" font-scale="4"></b-icon>
+          <div class="mb-3">Please close this tab now &amp; restart your launcher to update the control center as well!</div>
+        </div>
+      </template>
+    </b-overlay>
   </div>
 </template>
 
@@ -243,6 +253,7 @@ export default {
         progress: 0,
         success: undefined,
       },
+      locked: false,
     };
   },
   created() {
@@ -292,6 +303,10 @@ export default {
       } else if (item.idx == 0) {
         window.location.href = "mailto:stereum@stereum.net";
       }
+    },
+
+    lockControlCenter: function() {
+      this.locked = true;
     },
 
     refreshConfig: function(callback) {

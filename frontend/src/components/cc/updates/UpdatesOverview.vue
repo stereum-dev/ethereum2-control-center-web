@@ -41,6 +41,7 @@ export default {
     ethereum2config: Object,
     processChange: Function,
     refreshConfig: Function,
+    lockControlCenter: Function,
   },
   methods: {
     saveUpdateConfig() {
@@ -71,7 +72,7 @@ export default {
     },
 
     runUpdate() {
-
+      this.processChange("unattended-update", {}, this.lockControlCenter);
     },
   },
 };
