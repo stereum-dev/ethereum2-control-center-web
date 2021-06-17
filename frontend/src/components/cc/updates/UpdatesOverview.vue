@@ -40,6 +40,8 @@ export default {
   props: {
     ethereum2config: Object,
     processChange: Function,
+    refreshConfig: Function,
+    lockControlCenter: Function,
   },
   methods: {
     saveUpdateConfig() {
@@ -51,22 +53,26 @@ export default {
       ) > -1;
 
       this.processChange("configure-autoupdate", {
-        update: {
-          lane: this.ethereum2config.updates.lane,
-          unattended: {
-            check: unattended_updates_check,
-            install: unattended_updates_install,
+          update: {
+            lane: this.ethereum2config.updates.lane,
+            unattended: {
+              check: unattended_updates_check,
+              install: unattended_updates_install,
+            },
           },
-        },
-      });
+        }, this.checkForUpdatedConfig);
+    },
+
+    checkForUpdatedConfig() {
+      this.refreshConfig(function() {});
     },
 
     checkForUpdates() {
-      this.processChange("update-check", {});
+      this.processChange("update-check", {}, this.checkForUpdatedConfig);
     },
 
     runUpdate() {
-
+      this.processChange("unattended-update", {}, this.lockControlCenter);
     },
   },
 };
