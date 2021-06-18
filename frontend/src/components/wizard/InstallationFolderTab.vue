@@ -5,6 +5,7 @@
       <b-form-input
         v-model="model.installationFolder"
         placeholder="Enter installation path"
+        :state="validation"
       ></b-form-input>
     </div>
   </div>
@@ -16,6 +17,12 @@ export default {
   components: {},
   props: {
     model: Object,
+  },
+
+  computed: {
+    validation() {
+      return this.model.installationFolder.length > 0 && this.model.installationFolder.startsWith("/");
+    },
   },
 };
 </script>
