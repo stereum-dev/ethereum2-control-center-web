@@ -2,7 +2,7 @@
   <div id="app" @dragover.prevent @drop.prevent>
     <div class="container" @drop="fileDragOut">
       <div class="row pb-3 pt-3">
-        <h2>Import</h2>
+        <h2>Import Validators</h2>
       </div>
 
       <div
@@ -60,28 +60,27 @@
 
         <div class="container pb-3 pt-3">
           <p class="text-left">
-            <b-form-group
-              label="Validator password:"
-              label-for="input-1"
-              label-size="m"
-            >
-              <input
+            <b-form inline>
+              <label class="mb-2 mr-sm-2 mb-sm-0" for="inline-new-url">
+                Validators' password:
+              </label>
+              <b-form-input
                 v-model="password"
                 type="password"
-                placeholder="min.8 characters"
-                title="Put key file's password here!"
+                placeholder="Validators' password"
                 align="left"
+                class="mb-2 mr-sm-2 mb-sm-0 w-50"
               />
-            </b-form-group>
 
-            <b-button
-              variant="primary"
-              @click="importValidator"
-              :disabled="files.length === 0 || password.length < 8"
-              title="import accounts"
-            >
-              Import
-            </b-button>
+              <b-button
+                variant="primary"
+                @click="importValidator"
+                :disabled="files.length === 0"
+                title="import accounts"
+              >
+                Import
+              </b-button>
+            </b-form>
           </p>
         </div>
       </div>
