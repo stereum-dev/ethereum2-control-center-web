@@ -7,12 +7,6 @@
         placeholder="Enter installation path"
         :state="validation"
       ></b-form-input>
-      <b-form-invalid-feedback :state="validation">
-        Invalid path!
-      </b-form-invalid-feedback>
-      <b-form-valid-feedback :state="validation">
-        Looks like a valid path.
-      </b-form-valid-feedback>
     </div>
   </div>
 </template>
