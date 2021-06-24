@@ -18,6 +18,7 @@
               @click="moveItemUp(row)"
               variant="success"
               class="mb-2 mr-sm-2 mb-sm-0"
+              :disabled="0 == items.indexOf(row.item)"
             >
               <b-icon icon="caret-up" aria-hidden="true"></b-icon>
             </b-button>
@@ -26,6 +27,7 @@
               @click="moveItemDown(row)"
               variant="success"
               class="mb-2 mr-sm-2 mb-sm-0"
+              :disabled="items.length - 1 == items.indexOf(row.item)"
             >
               <b-icon icon="caret-down" aria-hidden="true"></b-icon>
             </b-button>
