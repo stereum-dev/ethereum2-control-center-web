@@ -21,6 +21,7 @@
               @click="moveItemUp(row)"
               variant="success"
               class="mb-2 mr-sm-2 mb-sm-0"
+              :disabled="0 == items.indexOf(row.item)"
             >
               <b-icon icon="caret-up" aria-hidden="true"></b-icon>
             </b-button>
@@ -29,6 +30,7 @@
               @click="moveItemDown(row)"
               variant="success"
               class="mb-2 mr-sm-2 mb-sm-0"
+              :disabled="items.length - 1 == items.indexOf(row.item)"
             >
               <b-icon icon="caret-down" aria-hidden="true"></b-icon>
             </b-button>
@@ -143,7 +145,7 @@ export default {
     },
 
     saveConfig() {
-      this.processChange("set-eth1-nodes", {
+      this.processChange("set-eth1-nodes", 13, {
         eth1_nodes_updated: this.ethereum2config.eth1nodes,
       });
     },

@@ -185,7 +185,7 @@ export default {
       console.log(jsonFiles[0].content);
       console.log(jsonFiles[0].content.value);
 
-      this.processChange("import-validator-accounts", {
+      this.processChange("import-validator-accounts", 100, {
         validator_password: this.password,
         validator_keys: jsonFiles,
       });

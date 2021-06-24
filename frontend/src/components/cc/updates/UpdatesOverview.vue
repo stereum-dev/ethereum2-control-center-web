@@ -52,7 +52,7 @@ export default {
         "install"
       ) > -1;
 
-      this.processChange("configure-autoupdate", {
+      this.processChange("configure-autoupdate", 6, {
           update: {
             lane: this.ethereum2config.updates.lane,
             unattended: {
@@ -68,11 +68,11 @@ export default {
     },
 
     checkForUpdates() {
-      this.processChange("update-check", {}, this.checkForUpdatedConfig);
+      this.processChange("update-check", 3, {}, this.checkForUpdatedConfig);
     },
 
     runUpdate() {
-      this.processChange("unattended-update", {}, this.lockControlCenter);
+      this.processChange("unattended-update", 1, {}, this.lockControlCenter);
     },
   },
 };

@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     runOsUpdates() {
-      this.processChange("update-host-os", {});
+      this.processChange("update-host-os", 5, {});
     },
   },
 };

@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     saveApiBindAddress() {
-      this.processChange("set-api-bind-address", {
+      this.processChange("set-api-bind-address", 6, {
         e2dc_api_bind_address_updated: this.apiBindAddress,
       });
     },

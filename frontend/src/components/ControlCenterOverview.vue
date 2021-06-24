@@ -377,9 +377,6 @@ export default {
               this.processStatus.success = false;
             }
             if (response.data.status == 0) {
-              this.$toasted.success("date read successful!", {
-                duration: 5000,
-              });
               this.processStatus.progress = 100;
               this.processStatus.success = true;
             }
@@ -407,7 +404,7 @@ export default {
       }
     },
 
-    processChange: function (control, data, ...callbacks) {
+    processChange: function (control, maxTasks, data, ...callbacks) {
       if (this.processStatus.running === false) {
         this.processStatus.running = true;
         this.processStatus.progress = 0;
@@ -426,7 +423,7 @@ export default {
           axios.get("/api/setup/status").then((response) => {
             //console.log(response.data);
             this.processStatus.logs = response.data;
-            this.processStatus.progress = response.data.tasks.length;
+            this.processStatus.progress = response.data.tasks.length / maxTasks * 100;
 
             if (this.processStatus.done) {
               callbacks.forEach(cb => cb.apply());
