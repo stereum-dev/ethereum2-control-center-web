@@ -155,7 +155,7 @@ export default {
         axios.get("/api/setup/status").then((response) => {
           console.log(response.data);
           this.logs = response.data;
-          this.installationProgress = response.data.tasks.length;
+          this.installationProgress = response.data.tasks.length / 62 * 100;
         });
       };
       let logWatchHandle = setInterval(fetchStatus, 5000);
