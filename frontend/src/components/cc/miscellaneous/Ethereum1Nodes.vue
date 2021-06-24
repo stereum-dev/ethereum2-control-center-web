@@ -145,7 +145,7 @@ export default {
     },
 
     saveConfig() {
-      this.processChange("set-eth1-nodes", {
+      this.processChange("set-eth1-nodes", 13, {
         eth1_nodes_updated: this.ethereum2config.eth1nodes,
       });
     },

@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     gethPrune() {
-      this.processChange("geth-prune", {});
+      this.processChange("geth-prune", 3, {});
     },
   },
 };

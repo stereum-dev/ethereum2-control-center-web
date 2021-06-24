@@ -404,7 +404,7 @@ export default {
       }
     },
 
-    processChange: function (control, data, ...callbacks) {
+    processChange: function (control, maxTasks, data, ...callbacks) {
       if (this.processStatus.running === false) {
         this.processStatus.running = true;
         this.processStatus.progress = 0;
@@ -423,7 +423,7 @@ export default {
           axios.get("/api/setup/status").then((response) => {
             //console.log(response.data);
             this.processStatus.logs = response.data;
-            this.processStatus.progress = response.data.tasks.length;
+            this.processStatus.progress = response.data.tasks.length / maxTasks * 100;
 
             if (this.processStatus.done) {
               callbacks.forEach(cb => cb.apply());

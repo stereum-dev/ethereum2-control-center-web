@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     saveGraffiti() {
-      this.processChange("set-graffiti", {
+      this.processChange("set-graffiti", 6, {
         e2dc_graffiti_updated: this.graffiti,
       });
     },

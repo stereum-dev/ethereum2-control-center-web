@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     restartHost() {
-      this.processChange("restart-host", {});
+      this.processChange("restart-host", 1, {});
     },
   },
 };
