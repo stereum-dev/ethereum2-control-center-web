@@ -377,9 +377,6 @@ export default {
               this.processStatus.success = false;
             }
             if (response.data.status == 0) {
-              this.$toasted.success("date read successful!", {
-                duration: 5000,
-              });
               this.processStatus.progress = 100;
               this.processStatus.success = true;
             }
