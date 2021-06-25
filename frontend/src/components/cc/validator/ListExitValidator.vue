@@ -16,6 +16,7 @@
           block
           size="lg"
           href="http://localhost:8082"
+          target=”_blank”  
         >Open Grafana</b-button>
         <b-button
           v-if="this.ethereum2config.setup === 'prysm'"
