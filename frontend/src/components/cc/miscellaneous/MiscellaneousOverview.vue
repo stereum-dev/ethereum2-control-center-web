@@ -45,7 +45,7 @@
         <b-card title="Geth Prune" style="max-width: 20rem">
           <b-card-text>
             Geth is the Ethereum 1 client. It's collecting lots of data and some
-            of it can be deleted again after some days. Run this to fee up some
+            of it can be deleted again after some days. Run this to free up
             storage space again!
           </b-card-text>
 
