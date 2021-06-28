@@ -338,6 +338,8 @@ export default {
       this.ethereum2config.network = yaml.network;
 
       this.ethereum2config.eth1nodes = yaml.connectivity.eth1_nodes;
+
+      this.ethereum2config.stereum_version_tag = yaml.stereum_version_tag;
     },
 
     readData: function(control, data, ...callbacks) {

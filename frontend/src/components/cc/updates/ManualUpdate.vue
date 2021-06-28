@@ -3,7 +3,12 @@
     <h3>Update manually</h3>
 
     <div class="mt-3">
-      Update vailable:
+      Stereum Node Version:
+      <strong>{{ this.ethereum2config.stereum_version_tag }}</strong>
+    </div>
+
+    <div class="mt-3">
+      Update available:
       <strong v-if="ethereum2config.updates.available.length > 0"
         >Yes ({{ this.ethereum2config.updates.available }})</strong
       >
