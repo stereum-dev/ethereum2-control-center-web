@@ -233,7 +233,19 @@ export default {
     },
 
     refreshServicesModel() {
-      this.containers = this.processStatus.logs.tasks[1].message.services;
+      const allServices = this.processStatus.logs.tasks[1].message.services;
+      const allContainers = Object.keys(allServices).sort();
+
+      const filteredContainers = [];
+      for (const container of allContainers) {
+        if (allServices[container][Object.keys(allServices[container])[0]].image != "tianon/true" && Object.entries(allServices[container]).length > 0) {
+          console.log("keeping " + container);
+        } else {
+          delete allServices[container];
+        }
+      }
+
+      this.containers = allServices
     },
 
     refreshLogsModel() {
