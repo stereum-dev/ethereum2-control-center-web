@@ -442,18 +442,39 @@ export default {
             //console.log("Response data: " + response.data);
             if (response.data.status > 0) {
               this.$toasted.error(
-                "Unfortunately the changes seems to have failed",
+                "Unfortunately the changes seem to have failed",
                 { duration: 5000 }
               );
               this.processStatus.progress = 0;
               this.processStatus.success = false;
             }
+
+            // check all tasks for success
+            let allTasksSuccessful = true;
+            for (const task of this.processStatus.logs.tasks) {
+              if (task.status != 0) {
+                allTasksSuccessful = false;
+                break;
+              }
+            }
+
+            // overall status
             if (response.data.status == 0) {
-              this.$toasted.success("Changes done successfully!", {
-                duration: 5000,
-              });
-              this.processStatus.progress = 100;
-              this.processStatus.success = true;
+              // all task status
+              if (allTasksSuccessful) {
+                this.$toasted.success("Changes done successfully!", {
+                  duration: 5000,
+                });
+                this.processStatus.progress = 100;
+                this.processStatus.success = true;
+              } else {
+                this.$toasted.error(
+                  "Unfortunately the changes seem to have failed",
+                  { duration: 5000 }
+                );
+                this.processStatus.progress = 0;
+                this.processStatus.success = false;
+              }
             }
             this.processStatus.running = false;
             this.processStatus.done = true;
