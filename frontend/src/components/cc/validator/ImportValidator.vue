@@ -1,8 +1,10 @@
 <template>
   <div id="app" @dragover.prevent @drop.prevent>
     <div class="container" @drop="fileDragOut">
-      <div class="row pb-3 pt-3">
-        <h2>Import Validators</h2>
+      <div class="row pb-3 pt-3 text-left">
+        <div class="col-6">
+          <h2>Import Validators</h2>
+        </div>
       </div>
 
       <div
