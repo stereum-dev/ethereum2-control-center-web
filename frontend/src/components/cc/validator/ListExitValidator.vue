@@ -135,7 +135,12 @@ export default {
 
     refreshAccountsModel() {
       const regex = /0x[a-fA-F0-9]{96}/g;
-      this.accounts = this.processStatus.logs.tasks[3].message.stdout.match(regex);
+      if (this.ethereum2config.setup == 'lighthouse' || this.ethereum2config.setup == 'nimbus') {
+        this.accounts = this.processStatus.logs.tasks[2].message.stdout.match(regex)
+      } 
+      else if (this.ethereum2config.setup == 'lodestar' || this.ethereum2config.setup == 'prysm') { 
+        this.accounts = this.processStatus.logs.tasks[3].message.stdout.match(regex);
+      }  
     },
 
     exitValidator() {},
