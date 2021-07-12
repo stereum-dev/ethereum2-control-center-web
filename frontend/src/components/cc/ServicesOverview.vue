@@ -239,9 +239,12 @@ export default {
       const filteredContainers = [];
       for (const container of allContainers) {
         if (
-          allServices[container][Object.keys(allServices[container])[0]] !== undefined &&
-          allServices[container][Object.keys(allServices[container])[0]].image != "tianon/true" &&
-          Object.entries(allServices[container]).length > 0) {
+          allServices[container][Object.keys(allServices[container])[0]] === undefined ||
+          (
+            allServices[container][Object.keys(allServices[container])[0]].image != "tianon/true" &&
+            Object.entries(allServices[container]).length > 0
+          )
+          ) {
           console.log("keeping " + container);
         } else {
           delete allServices[container];
