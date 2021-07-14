@@ -17,7 +17,7 @@
           <b-icon-question
             font-scale="2"
             v-if="
-              row.item.length == 0
+              row.item.pubkey.length == 0
             "
           />
           <b-img src="/public/ste_favicon.png" width="32" height="32" v-else />
@@ -25,46 +25,66 @@
 
         <template #cell(pubkey)="row">
           <div>
-            {{ row.item }}
+            {{ row.item.pubkey.substring(0,10) }}...{{ row.item.pubkey.substring(row.item.pubkey.length - 4, row.item.pubkey.length) }}
           </div>
         </template>
 
         <template #cell(balance)="row">
-          <p>{{ row.item.Balance }}</p>
+          <div>
+            <div v-if="row.item.balance">
+              &Xi; {{ row.item.balance / 1000000000 }}
+            </div>
+            <div v-else>
+              (unknown)
+            </div>
+          </div>
         </template>
 
         <template #cell(state)="row">
-          <b-icon-check-square
-            variant="success"
-            font-scale="2"
-            v-b-icon-check-square.hover
-            title="Active"
-            v-if="row.item.State === 'Active'"
-          />
-          <b-icon-dash-square
-            variant="danger"
-            font-scale="2"
-            v-b-icon-dash-square.hover
-            title="Inactive"
-            v-else-if="row.item.State === 'Inactive'"
-          />
-          <b-icon-box-arrow-right
-            variant="secondary"
-            font-scale="2"
-            v-icon-box-arrow-right.hover
-            title="Exited"
-            v-else-if="row.item.State === 'Exited'"
-          />
-          <b-icon-question-square
-            variant="warning"
-            font-scale="2"
-            v-icon-question-square.hover
-            title="Unknown state"
-            v-else
-          />
+          <div>
+            <div v-if="row.item.status">
+              <b-icon 
+                v-if="row.item.status == 'active_online'"
+                icon="minecart-loaded"
+                variant="success"
+                font-scale="2"
+                v-b-tooltip.hover
+                title="Staking - online" />
+              <b-icon
+                v-if="row.item.status == 'active_offline'"
+                icon="minecart"
+                variant="warning"
+                font-scale="2"
+                v-b-tooltip.hover
+                title="Staking - but offline" />
+              <b-icon
+                v-if="row.item.status == 'slashed'"
+                icon="exclamation-triangle"
+                variant="danger"
+                font-scale="2"
+                v-b-tooltip.hover
+                title="Slashed" />
+              <b-icon
+                v-if="row.item.status == 'pending'"
+                icon="clock"
+                variant="success"
+                font-scale="2"
+                v-b-tooltip.hover
+                title="Pending - waiting for activation" />
+            </div>
+            <div v-else>
+              <b-icon icon="question" 
+                variant="info"
+                font-scale="2"
+                v-b-tooltip.hover
+                title="No deposit observed yet" />
+            </div>
+          </div>
         </template>
 
+<!--
         <template #cell(actions)="row">
+
           <b-button
             size="sm"
             @click="exitValidator(row)"
@@ -75,18 +95,6 @@
           >
             <b-icon icon="door-open" aria-hidden="true"></b-icon>
           </b-button>
-
-          <b-button
-            size="sm"
-            @click="openBeaconcha()"
-            variant="primary"
-            class="mb-2 mr-sm-2 mb-sm-0"
-            v-b-link.hover
-            title="go to https://beaconcha.in"
-          >
-            <b-icon icon="link" aria-hidden="true"></b-icon>
-          </b-button>
-
           <b-button
             size="sm"
             @click="removeValidator(row)"
@@ -98,12 +106,18 @@
             <b-icon icon="dash-circle" aria-hidden="true"></b-icon>
           </b-button>
         </template>
+        -->
       </b-table>
+    </div>
+    <div>
+      Balance &amp; State data provided by beaconcha.in
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "ListValidator",
   components: {},
@@ -115,7 +129,6 @@ export default {
         { key: "pubkey", sortable: false, label: "Validator public key" },
         { key: "balance", sortable: false, label: "Balance" },
         { key: "state", sortable: false, label: "State" },
-        { key: "actions", sortable: false },
       ],
     };
   },
@@ -125,22 +138,59 @@ export default {
     readData: Function,
   },
   methods: {
-    openBeaconcha: function () {
-      window.open("https://beaconcha.in/", "_blank");
-    },
-
     refreshAccounts: function() {
       this.readData("list-validator-accounts", {}, this.refreshAccountsModel);
     },
 
     refreshAccountsModel() {
       const regex = /0x[a-fA-F0-9]{96}/g;
+      let validatorKeys;
       if (this.ethereum2config.setup == 'lighthouse' || this.ethereum2config.setup == 'nimbus') {
-        this.accounts = this.processStatus.logs.tasks[2].message.stdout.match(regex)
-      } 
-      else if (this.ethereum2config.setup == 'lodestar' || this.ethereum2config.setup == 'prysm') { 
-        this.accounts = this.processStatus.logs.tasks[3].message.stdout.match(regex);
-      }  
+        validatorKeys = this.processStatus.logs.tasks[2].message.stdout.match(regex)
+      }
+      else if (this.ethereum2config.setup == 'lodestar' || this.ethereum2config.setup == 'prysm') {
+        validatorKeys = this.processStatus.logs.tasks[3].message.stdout.match(regex);
+      }
+
+      let pubKeys = "";
+      for (let validatorKey of validatorKeys) {
+        pubKeys = pubKeys + validatorKey + ",";
+      }
+
+      this.accounts = [];
+
+      // cut last ','
+      if (pubKeys.length > 0) {
+        pubKeys = pubKeys.substring(0, pubKeys.length - 1);
+
+        let network = "";
+
+        if (this.ethereum2config.network != "mainnet") {
+          network = this.ethereum2config.network + ".";
+        }
+
+        axios.get("https://" + network + "beaconcha.in/api/v1/validator/" + encodeURIComponent(pubKeys)).then((response) => {
+          let data = response.data.data;
+
+          for (let validatorKey of validatorKeys) {
+            let found = false;
+            for (let dataKey of data) {
+              if (validatorKey == dataKey.pubkey) {
+                this.accounts.push(dataKey);
+
+                found = true;
+                break;
+              }
+            }
+
+            if (!found) {
+              this.accounts.push({pubkey: validatorKey});
+            }
+          }
+
+          console.log(this.accounts);
+        });
+      }
     },
 
     exitValidator() {},
