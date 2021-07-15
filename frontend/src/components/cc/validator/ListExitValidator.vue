@@ -144,12 +144,23 @@ export default {
 
     refreshAccountsModel() {
       const regex = /0x[a-fA-F0-9]{96}/g;
+      const regex_teku = /[a-fA-F0-9]{96}/g;
       let validatorKeys;
+
       if (this.ethereum2config.setup == 'lighthouse' || this.ethereum2config.setup == 'nimbus') {
         validatorKeys = this.processStatus.logs.tasks[2].message.stdout.match(regex)
       }
+
       else if (this.ethereum2config.setup == 'lodestar' || this.ethereum2config.setup == 'prysm') {
         validatorKeys = this.processStatus.logs.tasks[3].message.stdout.match(regex);
+      }
+
+      else if (this.ethereum2config.setup == 'teku' ) { 
+        validatorKeys = this.processStatus.logs.tasks[7].message.stdout.match(regex_teku);
+
+        for(let i = 0; i < validatorKeys.length; i++) {
+          validatorKeys[i] = "0x"+validatorKeys[i];
+        }
       }
 
       let pubKeys = "";
