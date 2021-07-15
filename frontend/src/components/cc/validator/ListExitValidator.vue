@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="row">
-      <b-table striped hover :items="accounts" :fields="fields">
+      <b-table striped hover :items="accounts" :fields="fields" foot-clone>
         <template #cell(ste)="row">
           <b-icon-question
             font-scale="2"
@@ -29,14 +29,26 @@
           </div>
         </template>
 
+        <template #foot(pubkey)="data">
+          <div class="text-right">
+            &nbsp;
+          </div>
+        </template>
+
         <template #cell(balance)="row">
           <div>
-            <div v-if="row.item.balance">
+            <div v-if="row.item.balance" class="text-right">
               &Xi; {{ row.item.balance / 1000000000 }}
             </div>
-            <div v-else>
+            <div v-else class="text-right">
               (unknown)
             </div>
+          </div>
+        </template>
+
+        <template #foot(balance)="data">
+          <div class="text-right">
+            &Xi; {{ balanceTotal / 1000000000 }}
           </div>
         </template>
 
@@ -82,9 +94,15 @@
           </div>
         </template>
 
-<!--
-        <template #cell(actions)="row">
+        <template #foot(state)="data">
+          <div class="text-right">
+            &nbsp;
+          </div>
+        </template>
 
+
+        <template #cell(actions)="row">
+<!--
           <b-button
             size="sm"
             @click="exitValidator(row)"
@@ -105,8 +123,25 @@
           >
             <b-icon icon="dash-circle" aria-hidden="true"></b-icon>
           </b-button>
+-->
+          <b-button
+            size="sm"
+            @click="copyPubKey(row)"
+            variant="info"
+            class="mb-2 mr-sm-2 mb-sm-0"
+            v-b-door-open.hover
+            title="Copy public key to clipboard"
+          >
+            <b-icon icon="clipboard" aria-hidden="true"></b-icon>
+          </b-button>
         </template>
-        -->
+
+        <template #foot(actions)="data">
+          <div class="text-right">
+            &nbsp;
+          </div>
+        </template>
+
       </b-table>
     </div>
     <div>
@@ -124,11 +159,13 @@ export default {
   data() {
     return {
       accounts: [],
+      balanceTotal: 0,
       fields: [
         { key: "ste", sortable: false, label: "" },
         { key: "pubkey", sortable: false, label: "Validator public key" },
         { key: "balance", sortable: false, label: "Balance" },
         { key: "state", sortable: false, label: "State" },
+        { key: "actions", sortable: false, label: "Actions" },
       ],
     };
   },
@@ -138,6 +175,19 @@ export default {
     readData: Function,
   },
   methods: {
+    copyPubKey: function(row) {
+      navigator.clipboard.writeText(row.item.pubkey).then(function() {
+        this.$toasted.success("Copied public key to clipboard", {
+          duration: 5000,
+        });
+      }, function(err) {
+        this.$toasted.error(
+          "Unfortunately there was an error copying the public key to clipboard!",
+          { duration: 5000 }
+        );
+      });
+    },
+
     refreshAccounts: function() {
       this.readData("list-validator-accounts", {}, this.refreshAccountsModel);
     },
@@ -158,6 +208,7 @@ export default {
       }
 
       this.accounts = [];
+      this.balanceTotal = 0;
 
       // cut last ','
       if (pubKeys.length > 0) {
@@ -177,6 +228,7 @@ export default {
             for (let dataKey of data) {
               if (validatorKey == dataKey.pubkey) {
                 this.accounts.push(dataKey);
+                this.balanceTotal = this.balanceTotal + dataKey.balance;
 
                 found = true;
                 break;
