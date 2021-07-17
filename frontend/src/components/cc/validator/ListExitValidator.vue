@@ -193,11 +193,11 @@ export default {
     },
 
     refreshAccountsModel() {
+      let validatorKeys;
       const regex = /0x[a-fA-F0-9]{96}/g;
       const regex_teku = /[a-fA-F0-9]{96}/g;
-      let validatorKeys;
 
-      if (this.ethereum2config.setup == 'lighthouse' || this.ethereum2config.setup == 'nimbus') {
+      if (this.ethereum2config.setup == 'lighthouse' || this.ethereum2config.setup == 'nimbus') {        
         validatorKeys = this.processStatus.logs.tasks[2].message.stdout.match(regex)
       }
 
@@ -205,54 +205,69 @@ export default {
         validatorKeys = this.processStatus.logs.tasks[3].message.stdout.match(regex);
       }
 
-      else if (this.ethereum2config.setup == 'teku' ) { 
-        validatorKeys = this.processStatus.logs.tasks[7].message.stdout.match(regex_teku);
-
-        for(let i = 0; i < validatorKeys.length; i++) {
-          validatorKeys[i] = "0x"+validatorKeys[i];
-        }
-      }
-
-      let pubKeys = "";
-      for (let validatorKey of validatorKeys) {
-        pubKeys = pubKeys + validatorKey + ",";
-      }
-
-      this.accounts = [];
-      this.balanceTotal = 0;
-
-      // cut last ','
-      if (pubKeys.length > 0) {
-        pubKeys = pubKeys.substring(0, pubKeys.length - 1);
-
-        let network = "";
-
-        if (this.ethereum2config.network != "mainnet") {
-          network = this.ethereum2config.network + ".";
+      else if (this.ethereum2config.setup == 'teku' ) {            
+        if (this.processStatus.logs.tasks.length == 9) {
+          validatorKeys = this.processStatus.logs.tasks[7].message.stdout.match(regex_teku);
+            for(let i=0; i<validatorKeys.length; i++) {
+            validatorKeys[i]="0x"+validatorKeys[i];
+          }    
         }
 
-        axios.get("https://" + network + "beaconcha.in/api/v1/validator/" + encodeURIComponent(pubKeys)).then((response) => {
-          let data = response.data.data;
+        else {
+          validatorKeys = this.processStatus.logs.tasks[6].message.stdout.match(regex_teku)
+        } 
+      }
 
-          for (let validatorKey of validatorKeys) {
-            let found = false;
-            for (let dataKey of data) {
-              if (validatorKey == dataKey.pubkey) {
-                this.accounts.push(dataKey);
-                this.balanceTotal = this.balanceTotal + dataKey.balance;
+      if (validatorKeys != null) {
+        let pubKeys = "";
 
-                found = true;
-                break;
-              }
-            }
+        for(let i=0; i<validatorKeys.length; i++) {
+          let validatorKey = validatorKeys[i];
+          pubKeys = pubKeys + validatorKey + ",";
+        }
 
-            if (!found) {
-              this.accounts.push({pubkey: validatorKey});
-            }
+        this.accounts = [];
+
+        // cut last ','
+
+        if (pubKeys.length > 0) {
+          pubKeys = pubKeys.substring(0, pubKeys.length - 1);
+          let network = "";
+          if (this.ethereum2config.network != "mainnet") {
+            network = this.ethereum2config.network + ".";
           }
 
-          console.log(this.accounts);
-        });
+          axios.get("https://" + network + "beaconcha.in/api/v1/validator/" + encodeURIComponent(pubKeys)).then((response) => {
+            let data = response.data.data;
+            for(let i=0; i<validatorKeys.length; i++) {
+              let validatorKey = validatorKeys[i];
+              let found = false;
+              if (data.length > 1) {
+                for (let i=0; i<data.length; i++) {
+                  let dataKey = data[i];
+                  if (validatorKey == dataKey.pubkey) {
+                    this.accounts.push(dataKey);
+                    found = true;
+                    break;
+                  }
+                }
+              }
+
+              else {
+                if (validatorKey == data.pubkey) {
+                  this.accounts.push(data);
+                  found = true;
+                  break;
+                  }
+              }
+
+              if (!found) {
+                this.accounts.push({pubkey: validatorKey});
+              }
+            }
+            console.log(this.accounts);
+          });
+        }  
       }
     },
 
