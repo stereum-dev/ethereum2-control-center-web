@@ -129,7 +129,7 @@
             @click="copyPubKey(row)"
             variant="info"
             class="mb-2 mr-sm-2 mb-sm-0"
-            v-b-door-open.hover
+            v-b-tooltip.hover
             title="Copy public key to clipboard"
           >
             <b-icon icon="clipboard" aria-hidden="true"></b-icon>
