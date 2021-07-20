@@ -129,7 +129,7 @@
             @click="copyPubKey(row)"
             variant="info"
             class="mb-2 mr-sm-2 mb-sm-0"
-            v-b-door-open.hover
+            v-b-tooltip.hover
             title="Copy public key to clipboard"
           >
             <b-icon icon="clipboard" aria-hidden="true"></b-icon>
@@ -227,6 +227,7 @@ export default {
         }
 
         this.accounts = [];
+        this.balanceTotal = 0;
 
         // cut last ','
 
@@ -247,6 +248,7 @@ export default {
                   let dataKey = data[i];
                   if (validatorKey == dataKey.pubkey) {
                     this.accounts.push(dataKey);
+                    this.balanceTotal = this.balanceTotal + dataKey.balance;
                     found = true;
                     break;
                   }
@@ -256,6 +258,7 @@ export default {
               else {
                 if (validatorKey == data.pubkey) {
                   this.accounts.push(data);
+                  this.balanceTotal = this.balanceTotal + dataKey.balance;
                   found = true;
                   break;
                   }
