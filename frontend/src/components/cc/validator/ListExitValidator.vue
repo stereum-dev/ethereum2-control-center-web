@@ -204,7 +204,6 @@ export default {
         if (this.processStatus.logs.tasks.length == 5) {      
           validatorKeys = this.processStatus.logs.tasks[4].message.stdout.match(regex)
           this.lighthouse_validators = this.processStatus.logs.tasks[3].message.results[0].item;
-          console.log(this.processStatus.logs)
         }
         else {
           validatorKeys = this.processStatus.logs.tasks[3].message.stdout.match(regex)
