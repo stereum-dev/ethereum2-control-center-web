@@ -88,7 +88,8 @@
       <list-exit-validator 
         :ethereum2config="this.ethereum2config"
         :processStatus="processStatus"
-        :readData="readData" 
+        :readData="readData"
+        :processChange="processChange" 
       />
     </div>
     <div v-if="this.content === 'miscellaneous'">
