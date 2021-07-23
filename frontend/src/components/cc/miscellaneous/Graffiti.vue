@@ -25,8 +25,6 @@
 </template>
 
 <script>
-import swal from 'sweetalert';
-
 export default {
   name: "Graffiti",
   components: {},
@@ -44,28 +42,24 @@ export default {
   },
   computed: {
     validation() {
-           if (this.graffiti.length < 33)
-      {         
-       return this.graffiti.length, true ;
+      if (this.graffiti.length < 33) {         
+        return this.graffiti.length, true ;
       }
 
-      else 
-      {
+      else {
         return false;
       } 
     }
   },
   methods: {
-       saveGraffiti() {
-      if (this.graffiti.length < 33)
-      {
-      this.processChange("set-graffiti", 6, {
-        e2dc_graffiti_updated: this.graffiti,
-      });
+    saveGraffiti() {
+      if (this.graffiti.length < 33) {
+        this.processChange("set-graffiti", 6, {
+          e2dc_graffiti_updated: this.graffiti,
+        });
       }
-      else if (this.graffiti.length >= 33)
-      {
-        swal("You have entered too many characters.", "Maximum are 32.", "error");
+      else if (this.graffiti.length >= 33) {
+        alert("You have entered too many characters. Maximum are 32.");
       }
     },
 
