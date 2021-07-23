@@ -109,7 +109,6 @@
 
 
         <template #cell(actions)="row">
-<!--
           <b-button
             size="sm"
             @click="exitValidator(row)"
@@ -125,18 +124,17 @@
             @click="removeValidator(row)"
             variant="secondary"
             class="mb-2 mr-sm-2 mb-sm-0"
-            v-b-door-open.hover
+            v-b-dash-circle.hover
             title="remove validator"
           >
             <b-icon icon="dash-circle" aria-hidden="true"></b-icon>
           </b-button>
--->
           <b-button
             size="sm"
             @click="copyPubKey(row)"
             variant="info"
             class="mb-2 mr-sm-2 mb-sm-0"
-            v-b-tooltip.hover
+            v-b-clipboard.hover
             title="Copy public key to clipboard"
           >
             <b-icon icon="clipboard" aria-hidden="true"></b-icon>
@@ -167,6 +165,9 @@ export default {
     return {
       accounts: [],
       balanceTotal: 0,
+      keystoreNames: {},
+      keystoreAndPubkey: {},
+      lighthouse_validators: {},
       fields: [
         { key: "ste", sortable: false, label: "" },
         { key: "pubkey", sortable: false, label: "Validator public key" },
@@ -180,6 +181,7 @@ export default {
     ethereum2config: Object,
     processStatus: Object,
     readData: Function,
+    processChange: Function,
   },
   methods: {
     copyPubKey: function(row) {
@@ -203,8 +205,19 @@ export default {
       let validatorKeys;
       const regex = /0x[a-fA-F0-9]{96}/g;
       const regex_teku = /[a-fA-F0-9]{96}/g;
+      const regex_keystore = /keystore-m.{28}/g;
 
-      if (this.ethereum2config.setup == 'lighthouse' || this.ethereum2config.setup == 'nimbus') {        
+      if (this.ethereum2config.setup == 'lighthouse') {  
+        if (this.processStatus.logs.tasks.length == 5) {      
+          validatorKeys = this.processStatus.logs.tasks[4].message.stdout.match(regex)
+          this.lighthouse_validators = this.processStatus.logs.tasks[3].message.results[0].item;
+        }
+        else {
+          validatorKeys = this.processStatus.logs.tasks[3].message.stdout.match(regex)
+        }
+      }
+
+      else if (this.ethereum2config.setup == 'nimbus') {        
         validatorKeys = this.processStatus.logs.tasks[2].message.stdout.match(regex)
       }
 
@@ -217,9 +230,10 @@ export default {
           validatorKeys = this.processStatus.logs.tasks[7].message.stdout.match(regex_teku);
             for(let i=0; i<validatorKeys.length; i++) {
             validatorKeys[i]="0x"+validatorKeys[i];
-          }    
+          }
+          this.keystoreNames = this.processStatus.logs.tasks[2].message.stdout.match(regex_keystore);
+          this.keystoreAndPubkey = {name: this.keystoreNames, publicKey: validatorKeys};    
         }
-
         else {
           validatorKeys = this.processStatus.logs.tasks[6].message.stdout.match(regex_teku)
         } 
@@ -281,10 +295,63 @@ export default {
       }
     },
 
-    exitValidator() {},
+    exitValidator: function(row) {      
+      if (this.ethereum2config.setup == 'teku' ) {        
+        let keystoreExitTeku;
+        for (let i=0; i<this.keystoreAndPubkey.publicKey.length; i++) {
+          if (this.keystoreAndPubkey.publicKey[i] == row.item.pubkey ) {
+            keystoreExitTeku = this.keystoreAndPubkey.name[i]
+          }
+        }           
+        this.processChange("exit-validator-accounts", 100, { 
+          validator_keystore: keystoreExitTeku
+        });          
+      }
 
-    removeValidator() {},
+      else if (this.ethereum2config.setup == 'lighthouse' ) {
+        let keystoreExitLighthouse;
+        let validatorPassword;
+        const regex_keystore = /keystore-m.{33}/;
+        for (let j=0; j<this.lighthouse_validators.length; j++) {
+          if (this.lighthouse_validators[j].voting_public_key == row.item.pubkey) {
+            validatorPassword = this.lighthouse_validators[j].voting_keystore_password;
+            keystoreExitLighthouse = this.lighthouse_validators[j].voting_keystore_path.match(regex_keystore);            
+          }
+        }
+        this.processChange("exit-validator-accounts", 100, { 
+          validator_keystore: keystoreExitLighthouse[0],
+          validator_password: validatorPassword,
+        }); 
+      }
+
+      else {
+        this.processChange("exit-validator-accounts", 100, { 
+          validator_pubkey: row.item.pubkey
+        });
+      }
+    },
+
+    removeValidator: function(row) {
+      if (this.ethereum2config.setup == 'teku' ) {        
+        let keystoreFileRemove;
+        for (let i=0; i<this.keystoreAndPubkey.publicKey.length; i++) {
+          if (this.keystoreAndPubkey.publicKey[i] == row.item.pubkey ) {
+            keystoreFileRemove = this.keystoreAndPubkey.name[i]
+          }
+        }           
+        this.processChange("delete-validator-accounts", 100, { 
+          validator_keystore: keystoreFileRemove
+        });          
+      }
+
+      else {
+        this.processChange("delete-validator-accounts", 100, { 
+          validator_pubkey: row.item.pubkey
+        });        
+      }
+    },
   },
+
   beforeMount(){
     this.refreshAccounts()
   },
