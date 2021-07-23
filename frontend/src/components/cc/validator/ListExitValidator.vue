@@ -83,6 +83,13 @@
                 font-scale="2"
                 v-b-tooltip.hover
                 title="Pending - waiting for activation" />
+              <b-icon
+                v-if="row.item.status == 'exited'"
+                icon="stop"
+                variant="dark"
+                font-scale="2"
+                v-b-tooltip.hover
+                title="Stopped, exited" />
             </div>
             <div v-else>
               <b-icon icon="question" 
