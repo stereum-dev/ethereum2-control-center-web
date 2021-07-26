@@ -23,6 +23,7 @@ from datetime import datetime
 
 import pickle
 import logging
+import requests
 logger = logging.getLogger("uvicorn.error")
 
 app = FastAPI(debug = True)
@@ -73,6 +74,12 @@ class PB(BaseModel):
     playbook: str = 'playbook.yaml'
     inventory: str = 'inventory.yaml'
     extra_vars: Any = {}
+
+class EthereumRequest(BaseModel):
+    service: str = 'beacon:3501'
+    uri: str = '/eth/v1/node/syncing'
+    method: str = 'GET'
+    content: Any = {}
 
 @app.get("/health")
 async def health():
@@ -161,6 +168,23 @@ async def launch(item: PB):
         raise HTTPException(status_code=500, detail=str(e))
     finally:
         pickle.dump( None, open( "/var/run/stereum.p", "wb" ) )
+
+@app.post("/api/ethereum")
+async def launch(item: EthereumRequest):
+    try:
+        if item.method == 'GET':
+            r = requests.get("http://" + item.service + uri)
+            if r.status_code == 200:
+                return JSONResponse(content=r.text)
+            else:
+                raise HTTPException(status_code=500, detail=str(r.text))
+        else:
+            raise HTTPException(status_code=501, detail="Unsupported")
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        logger.error(e)
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/.*", status_code=404, include_in_schema=False)
 def invalid_api():
