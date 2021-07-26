@@ -173,7 +173,7 @@ async def launch(item: PB):
 async def launch(item: EthereumRequest):
     try:
         if item.method == 'GET':
-            r = requests.get("http://" + item.service + uri)
+            r = requests.get("http://" + item.service + item.uri)
             if r.status_code == 200:
                 return JSONResponse(content=r.text)
             else:
