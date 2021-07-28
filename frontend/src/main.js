@@ -20,6 +20,9 @@ Vue.use(Toasted);
 import VueFab from "vue-float-action-button";
 Vue.use(VueFab);
 
+import VueEllipseProgress from 'vue-ellipse-progress';
+Vue.use(VueEllipseProgress);
+
 Vue.config.productionTip = false;
 
 new Vue({

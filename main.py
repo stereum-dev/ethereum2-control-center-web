@@ -175,7 +175,7 @@ async def launch(item: EthereumRequest):
         if item.method == 'GET':
             r = requests.get("http://" + item.service + item.uri)
             if r.status_code == 200:
-                return JSONResponse(content=r.text)
+                return JSONResponse(content=jsonable_encoder(json.loads(r.text)))
             else:
                 raise HTTPException(status_code=500, detail=str(r.text))
         else:

@@ -50,6 +50,24 @@
           />
         </template>
 
+        <template #cell(sync)="row">
+          <div>
+            <vue-ellipse-progress 
+              v-if="row.item.includes('beacon')"
+              :size="32"
+              :color="sync_data[row.item].syncColor"
+              :thickness="5"
+              :legend="false"
+              :progress="sync_data[row.item].syncProgress"
+              :loading="sync_data[row.item].syncLoading"
+              :noData="sync_data[row.item].syncNoData"
+              :emptyColor="sync_data[row.item].syncEmptyColor"
+              v-b-tooltip.hover
+              :title="sync_data[row.item].title"
+              />
+          </div>
+        </template>
+
         <template #cell(actions)="row">
           <b-button
             size="sm"
@@ -174,6 +192,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "ServicesOverview",
   components: {},
@@ -185,6 +205,7 @@ export default {
         { key: "name", sortable: false, label: "Service" },
         { key: "image", sortable: false, label: "Image" },
         { key: "state", sortable: false, label: "State" },
+        { key: "sync", sortable: false, label: "Sync" },
         { key: "actions", sortable: false },
       ],
       logs: "",
@@ -197,6 +218,15 @@ export default {
         { key: "external", sortable: false, label: "Port on Host" },
         { key: "tcpudp", sortable: false, label: "Type" },
       ],
+      sync_data: {},
+      sync_port_map: {
+        "lighthouse_beacon": 5052,
+        "lodestar_beacon": 9596,
+        "nimbus_beacon": 9190,
+        "prysm_beacon": 3501,
+        "prysm_beacon_slasher": 3501,
+        "teku_beacon": 5051,
+      },
     };
   },
   created() {
@@ -246,12 +276,76 @@ export default {
           )
           ) {
           console.log("keeping " + container);
+
+          if (container.includes('beacon')) {
+            const service = allServices[container][Object.keys(allServices[container])[0]];
+
+            if (this.ethereum2config.setup == 'prysm') {
+              this.refreshSyncModel(container, 3501);
+            } else if (this.ethereum2config.setup == 'lighthouse') {
+              this.refreshSyncModel(container, 5052);
+            } else if (this.ethereum2config.setup == 'nimbus') {
+              this.refreshSyncModel(container, 9190);
+            } else if (this.ethereum2config.setup == 'lodestar') {
+              this.refreshSyncModel(container, 9596);
+            } else if (this.ethereum2config.setup == 'teku' ) {
+              this.refreshSyncModel(container, 5051);
+            } else if (this.ethereum2config.setup == 'allbeacons' ) {
+              this.refreshSyncModel(container, sync_port_map[container]);
+            } else if (this.ethereum2config.setup == 'multiclient' ) {
+              this.refreshSyncModel(container, sync_port_map[container]);
+            }
+            
+          }
         } else {
           delete allServices[container];
         }
       }
 
       this.containers = allServices
+    },
+
+    refreshSyncModel(container, port) {
+      this.sync_data[container] = {
+        syncLoading: true,
+        syncNoData: false,
+        syncEmptyColor: "#8ec5fc",
+        syncProgress: 60,
+        syncColor: "lightblue",
+        title: "Loading..."
+      };
+
+      axios
+        .post("/api/ethereum", {
+          "service": container + ":" + port,
+          "uri": "/eth/v1/node/syncing",
+          "method": "GET",
+          "content": {}
+        })
+        .then((response) => {
+          console.log(response.data);
+          this.sync_data[container].syncLoading = false;
+          console.log(service);
+          if (!response.data.data.is_syncing) {
+            this.sync_data[container].syncProgress = 100;
+            this.sync_data[container].syncColor = "ForestGreen";
+            this.sync_data[container].title = "Fully synced";
+          } else {
+            const progress = parseInt(response.data.data.head_slot) / (parseInt(response.data.data.head_slot) + parseInt(response.data.data.sync_distance)) * 100;
+            console.log("progress for " + container + ": " + progress);
+            this.sync_data[container].syncProgress = progress;
+            this.sync_data[container].syncColor = "SteelBlue";
+            this.sync_data[container].title = "Syncing " + parseInt(response.data.data.head_slot) + "/" + (parseInt(response.data.data.head_slot) + parseInt(response.data.data.sync_distance)) + " (" + Math.round(progress) + " %)";
+          }
+          this.$forceUpdate();
+        })
+        .catch((error) => {
+          this.sync_data[container].syncLoading = false;
+          this.sync_data[container].syncNoData = true;
+          this.sync_data[container].syncEmptyColor = "red";
+          this.sync_data[container].title = "Can't read sync status";
+          this.$forceUpdate();
+        });
     },
 
     refreshLogsModel() {
