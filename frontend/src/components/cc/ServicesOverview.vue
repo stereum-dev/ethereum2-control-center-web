@@ -222,7 +222,7 @@ export default {
       sync_port_map: {
         "lighthouse_beacon": 5052,
         "lodestar_beacon": 9596,
-        "nimbus_beacon": 9190,
+        "nimbus_beacon": 5052,
         "prysm_beacon": 3501,
         "prysm_beacon_slasher": 3501,
         "teku_beacon": 5051,
@@ -285,15 +285,15 @@ export default {
             } else if (this.ethereum2config.setup == 'lighthouse') {
               this.refreshSyncModel(container, 5052);
             } else if (this.ethereum2config.setup == 'nimbus') {
-              this.refreshSyncModel(container, 9190);
+              this.refreshSyncModel(container, 5052);
             } else if (this.ethereum2config.setup == 'lodestar') {
               this.refreshSyncModel(container, 9596);
             } else if (this.ethereum2config.setup == 'teku' ) {
               this.refreshSyncModel(container, 5051);
             } else if (this.ethereum2config.setup == 'allbeacons' ) {
-              this.refreshSyncModel(container, sync_port_map[container]);
+              this.refreshSyncModel(container, this.sync_port_map[container]);
             } else if (this.ethereum2config.setup == 'multiclient' ) {
-              this.refreshSyncModel(container, sync_port_map[container]);
+              this.refreshSyncModel(container, this.sync_port_map[container]);
             }
           }
         } else {
@@ -330,7 +330,7 @@ export default {
           if (!response.data.data.is_syncing) {
             this.sync_data[container].syncProgress = 100;
             this.sync_data[container].syncColor = "ForestGreen";
-            this.sync_data[container].title = "Fully synced";
+            this.sync_data[container].title = "Fully synced at block " + parseInt(response.data.data.head_slot);
           } else {
             const progress = parseInt(response.data.data.head_slot) / (parseInt(response.data.data.head_slot) + parseInt(response.data.data.sync_distance)) * 100;
             console.log("progress for " + container + ": " + progress);
