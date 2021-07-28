@@ -295,7 +295,6 @@ export default {
             } else if (this.ethereum2config.setup == 'multiclient' ) {
               this.refreshSyncModel(container, sync_port_map[container]);
             }
-            
           }
         } else {
           delete allServices[container];
@@ -315,9 +314,12 @@ export default {
         title: "Loading..."
       };
 
+      const beaconServiceHost = container + ":" + port;
+      console.log("query with service: " + beaconServiceHost);
+
       axios
         .post("/api/ethereum", {
-          "service": container + ":" + port,
+          "service": beaconServiceHost,
           "uri": "/eth/v1/node/syncing",
           "method": "GET",
           "content": {}
@@ -325,7 +327,6 @@ export default {
         .then((response) => {
           console.log(response.data);
           this.sync_data[container].syncLoading = false;
-          console.log(service);
           if (!response.data.data.is_syncing) {
             this.sync_data[container].syncProgress = 100;
             this.sync_data[container].syncColor = "ForestGreen";
@@ -340,6 +341,7 @@ export default {
           this.$forceUpdate();
         })
         .catch((error) => {
+          console.log(error);
           this.sync_data[container].syncLoading = false;
           this.sync_data[container].syncNoData = true;
           this.sync_data[container].syncEmptyColor = "red";
