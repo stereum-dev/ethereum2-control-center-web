@@ -43,14 +43,25 @@ export default {
   computed: {
     validation() {
       let regex = new RegExp("^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
-      return regex.test(this.apiBindAddress);
+      if (regex.test(this.apiBindAddress)) {
+        return this.apiBindAddress, true;
+      }
+      else {
+        return false;
+      }
     },
   },
   methods: {
     saveApiBindAddress() {
-      this.processChange("set-api-bind-address", 6, {
-        e2dc_api_bind_address_updated: this.apiBindAddress,
-      });
+      let regex = new RegExp("^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
+      if (regex.test(this.apiBindAddress)){
+        this.processChange("set-api-bind-address", 6, {
+          e2dc_api_bind_address_updated: this.apiBindAddress,
+        });
+      }
+      else {
+        alert ("The entered Ip is not correct.");
+      }   
     },
     resetToDefault() {
       this.apiBindAddress = "127.0.0.1";
