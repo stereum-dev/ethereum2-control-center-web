@@ -296,58 +296,67 @@ export default {
     },
 
     exitValidator: function(row) {      
-      if (this.ethereum2config.setup == 'teku' ) {        
-        let keystoreExitTeku;
-        for (let i=0; i<this.keystoreAndPubkey.publicKey.length; i++) {
-          if (this.keystoreAndPubkey.publicKey[i] == row.item.pubkey ) {
-            keystoreExitTeku = this.keystoreAndPubkey.name[i]
-          }
-        }           
-        this.processChange("exit-validator-accounts", 100, { 
-          validator_keystore: keystoreExitTeku
-        });          
+      if (this.ethereum2config.setup == 'teku' ) {  
+        if (confirm("Do you really want to remove EXIT this validator")) {       
+          let keystoreExitTeku;
+          for (let i=0; i<this.keystoreAndPubkey.publicKey.length; i++) {
+            if (this.keystoreAndPubkey.publicKey[i] == row.item.pubkey ) {
+              keystoreExitTeku = this.keystoreAndPubkey.name[i]
+            }
+          }           
+          this.processChange("exit-validator-accounts", 100, { 
+            validator_keystore: keystoreExitTeku
+          });          
+        }
       }
 
       else if (this.ethereum2config.setup == 'lighthouse' ) {
-        let keystoreExitLighthouse;
-        let validatorPassword;
-        const regex_keystore = /keystore-m.{33}/;
-        for (let j=0; j<this.lighthouse_validators.length; j++) {
-          if (this.lighthouse_validators[j].voting_public_key == row.item.pubkey) {
-            validatorPassword = this.lighthouse_validators[j].voting_keystore_password;
-            keystoreExitLighthouse = this.lighthouse_validators[j].voting_keystore_path.match(regex_keystore);            
+        if (confirm("Do you really want to remove EXIT this validator")) {
+          let keystoreExitLighthouse;
+          let validatorPassword;
+          const regex_keystore = /keystore-m.{33}/;
+          for (let j=0; j<this.lighthouse_validators.length; j++) {
+            if (this.lighthouse_validators[j].voting_public_key == row.item.pubkey) {
+              validatorPassword = this.lighthouse_validators[j].voting_keystore_password;
+              keystoreExitLighthouse = this.lighthouse_validators[j].voting_keystore_path.match(regex_keystore);            
+            }
           }
+          this.processChange("exit-validator-accounts", 100, { 
+            validator_keystore: keystoreExitLighthouse[0],
+            validator_password: validatorPassword,
+          }); 
         }
-        this.processChange("exit-validator-accounts", 100, { 
-          validator_keystore: keystoreExitLighthouse[0],
-          validator_password: validatorPassword,
-        }); 
       }
 
       else {
-        this.processChange("exit-validator-accounts", 100, { 
-          validator_pubkey: row.item.pubkey
-        });
+          if (confirm("Do you really want to remove EXIT this validator")) {
+            this.processChange("exit-validator-accounts", 100, { 
+              validator_pubkey: row.item.pubkey
+          });
+        }
       }
     },
 
     removeValidator: function(row) {
-      if (this.ethereum2config.setup == 'teku' ) {        
-        let keystoreFileRemove;
-        for (let i=0; i<this.keystoreAndPubkey.publicKey.length; i++) {
-          if (this.keystoreAndPubkey.publicKey[i] == row.item.pubkey ) {
-            keystoreFileRemove = this.keystoreAndPubkey.name[i]
-          }
-        }           
-        this.processChange("delete-validator-accounts", 100, { 
-          validator_keystore: keystoreFileRemove
-        });          
+      if (this.ethereum2config.setup == 'teku' ) {  
+        if (confirm("Do you really want to REMOVE this validator")) {      
+          let keystoreFileRemove;
+          for (let i=0; i<this.keystoreAndPubkey.publicKey.length; i++) {
+            if (this.keystoreAndPubkey.publicKey[i] == row.item.pubkey ) {
+              keystoreFileRemove = this.keystoreAndPubkey.name[i]
+            }
+          }           
+          this.processChange("delete-validator-accounts", 100, { 
+            validator_keystore: keystoreFileRemove
+          });          
+        }
       }
-
       else {
-        this.processChange("delete-validator-accounts", 100, { 
-          validator_pubkey: row.item.pubkey
-        });        
+        if (confirm("Do you really want to REMOVE this validator")) {
+          this.processChange("delete-validator-accounts", 100, { 
+            validator_pubkey: row.item.pubkey
+          });        
+        }
       }
     },
   },
