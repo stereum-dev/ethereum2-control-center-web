@@ -327,7 +327,13 @@ export default {
         .then((response) => {
           console.log(response.data);
           this.sync_data[container].syncLoading = false;
-          if (!response.data.data.is_syncing) {
+          let is_syncing = false;
+          if (response.data.data.is_syncing === undefined) {
+            is_syncing = response.data.data.sync_distance !== undefined || response.data.data.sync_distance > 0;
+          } else {
+            is_syncing = response.data.data.is_syncing;
+          }
+          if (!is_syncing) {
             this.sync_data[container].syncProgress = 100;
             this.sync_data[container].syncColor = "ForestGreen";
             this.sync_data[container].title = "Fully synced at block " + parseInt(response.data.data.head_slot);
