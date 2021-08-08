@@ -49,7 +49,7 @@
             storage space again!
           </b-card-text>
 
-          <b-button @click="showPruneGeth()" variant="primary">Prune Geth Now</b-button>
+          <b-button @click="this.showPruneGeth" variant="primary">Prune Geth Now</b-button>
         </b-card>
         <b-card title="Restart Host" style="max-width: 20rem">
           <b-card-text>
@@ -58,7 +58,7 @@
             it might take a couple of minutes.
           </b-card-text>
 
-          <b-button @click="showRestart()" variant="primary">Restart Now</b-button>
+          <b-button @click="this.showRestart" variant="primary">Restart Now</b-button>
         </b-card>
         <b-card title="OS Update" style="max-width: 20rem;">
           <b-card-text>
@@ -67,31 +67,23 @@
             the update process!
           </b-card-text>
 
-          <b-button @click="showOSUpdate()" variant="primary">OS Update</b-button>
+          <b-button @click="this.showOSUpdate" variant="primary">OS Update</b-button>
+        </b-card>
+        <b-card title="Export Configuration" style="max-width: 20rem;">
+          <b-card-text>
+            Currently running "Configuration" will be exported and stored  
+            in "/tmp/exported-config" directory. It could be then used to 
+            setup other/new device.  
+          </b-card-text>
+
+          <b-button @click="this.showExportConfig" variant="primary">Export Configuration</b-button>
         </b-card>
       </b-card-group>
     </div>
-
-    <div v-if="this.content === 'os-update'">
-      <OSUpdate :processChange="processChange" />
-    </div>
-
-    <div v-if="this.content === 'prune-geth'">
-      <PruneGeth :processChange="processChange" />
-    </div>
-
-    <div v-if="this.content === 'restart'">
-      <Restart :processChange="processChange" />
-    </div>
-  </div>
+      </div>
 </template>
 
 <script>
-
-import OSUpdate from "./OSUpdate.vue";
-import PruneGeth from "./PruneGeth.vue";
-import Restart from "./Restart.vue";
-
 export default {
   name: "MiscellaneousOverview",
   data() {
@@ -99,29 +91,19 @@ export default {
       content: "miscellaneousOverview",
     };
   },
-  components: {
-    OSUpdate,
-    PruneGeth,
-    Restart,
-  },
+  components: {},
   props: {
     ethereum2config: Object,
     showGraffiti: Function,
     showApiBindAddress: Function,
     showEth1Nodes: Function,
+    showOSUpdate: Function,
+    showPruneGeth: Function,
+    showRestart: Function,
+    showExportConfig: Function,
     processChange: Function,
   },
-  methods: {
-    showOSUpdate() {
-      this.content = "os-update";
-    },
-    showPruneGeth() {
-      this.content = "prune-geth";
-    },
-    showRestart() {
-      this.content = "restart";
-    },
-  },
+  methods: {},
 };
 </script>
 
@@ -132,3 +114,4 @@ export default {
   margin-bottom: 10px; /* Added */
 }
 </style>
+
