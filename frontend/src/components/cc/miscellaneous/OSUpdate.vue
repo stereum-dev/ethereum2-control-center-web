@@ -8,7 +8,7 @@
     </div>
     <div class="row">
       <div class="col-12 text-right">
-        <b-button @click="runOsUpdates()" variant="primary">Update OS</b-button>
+        <b-button @click="runOsUpdates" variant="primary">Update OS</b-button>
       </div>
     </div>
   </div>
