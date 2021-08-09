@@ -98,6 +98,10 @@
         :showGraffiti="showGraffiti"
         :showApiBindAddress="showApiBindAddress"
         :showEth1Nodes="showEth1Nodes"
+        :showOSUpdate="showOSUpdate"
+        :showPruneGeth="showPruneGeth"
+        :showRestart="showRestart"
+        :showExportConfig="showExportConfig"
         :processChange="processChange"
       />
     </div>
@@ -118,8 +122,27 @@
         :ethereum2config="this.ethereum2config"
         :processChange="processChange"
       />
+    </div>    
+    <div v-if="this.content === 'pruneGeth'">
+      <prune-geth
+        :processChange="processChange"
+      />
     </div>
-
+    <div v-if="this.content === 'osUpdate'">
+      <os-update
+        :processChange="processChange"
+      />
+    </div>
+    <div v-if="this.content === 'restart'">
+      <restart
+        :processChange="processChange"
+      />
+    </div>
+    <div v-if="this.content === 'exportConfig'">
+      <export-config
+        :processChange="processChange"
+      />
+    </div> 
     <vue-fab mainBtnColor="#336666" icon="help_outline">
       <!-- Icons from here: https://fonts.google.com/icons -->
       <fab-item
@@ -230,6 +253,10 @@ import ApiBindAddress from "./cc/miscellaneous/ApiBindAddress.vue";
 import Ethereum1Nodes from "./cc/miscellaneous/Ethereum1Nodes.vue";
 import axios from "axios";
 import YAML from 'yaml';
+import PruneGeth from './cc/miscellaneous/PruneGeth.vue';
+import Restart from './cc/miscellaneous/Restart.vue';
+import ExportConfig from './cc/miscellaneous/ExportConfig.vue';
+import OSUpdate from './cc/miscellaneous/OSUpdate.vue';
 
 export default {
   name: "ControlCenterOverview",
@@ -244,6 +271,10 @@ export default {
     Graffiti,
     ApiBindAddress,
     Ethereum1Nodes,
+    PruneGeth,
+    Restart,
+    ExportConfig,
+    'os-update': OSUpdate,
   },
   data() {
     return {
@@ -299,7 +330,19 @@ export default {
     showEth1Nodes() {
       this.content = "eth1nodes";
     },
-
+    showOSUpdate() {
+      this.content = "osUpdate";
+    },
+    showPruneGeth() {
+      this.content = "pruneGeth";
+    },
+    showRestart() {
+      this.content = "restart";
+    },
+    showExportConfig() {
+      this.content = "exportConfig";
+    },
+    
     clickHelpItem: function (item) {
       if (item.idx == 2) {
         window.open("https://discord.gg/8Znj8K6GjN", "_blank");
