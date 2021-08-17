@@ -68,6 +68,28 @@
           </div>
         </template>
 
+        <template #cell(peers)="row">
+        <!--
+          <p v-if="peers_data[row.item] === undefined">?</p>
+          <p v-else>{{ peers_data[row.item].count }}</p>
+          -->
+          <div>
+            <vue-ellipse-progress 
+              v-if="row.item.includes('beacon')"
+              :size="32"
+              :color="peers_data[row.item].color"
+              :thickness="5"
+              :legend="false"
+              :progress="peers_data[row.item].progress"
+              :loading="peers_data[row.item].loading"
+              :noData="peers_data[row.item].noData"
+              :emptyColor="peers_data[row.item].emptyColor"
+              v-b-tooltip.hover
+              :title="peers_data[row.item].title"
+              />
+          </div>
+        </template>
+
         <template #cell(actions)="row">
           <b-button
             size="sm"
@@ -206,6 +228,7 @@ export default {
         { key: "image", sortable: false, label: "Image" },
         { key: "state", sortable: false, label: "State" },
         { key: "sync", sortable: false, label: "Sync" },
+        { key: "peers", sortable: false, label: "Peers" },
         { key: "actions", sortable: false },
       ],
       logs: "",
@@ -226,6 +249,15 @@ export default {
         "prysm_beacon": 3501,
         "prysm_beacon_slasher": 3501,
         "teku_beacon": 5051,
+      },
+      peers_data: {},
+      max_peers_map: {
+        "lighthouse_beacon": 50,
+        "lodestar_beacon": 100,
+        "nimbus_beacon": 100,
+        "prysm_beacon": 100,
+        "prysm_beacon_slasher": 100,
+        "teku_beacon": 74,
       },
     };
   },
@@ -282,18 +314,25 @@ export default {
 
             if (this.ethereum2config.setup == 'prysm') {
               this.refreshSyncModel(container, 3501);
+              this.refreshPeersModel(container, 3501, 100);
             } else if (this.ethereum2config.setup == 'lighthouse') {
               this.refreshSyncModel(container, 5052);
+              this.refreshPeersModel(container, 5052, 50);
             } else if (this.ethereum2config.setup == 'nimbus') {
               this.refreshSyncModel(container, 5052);
+              this.refreshPeersModel(container, 5052, 100);
             } else if (this.ethereum2config.setup == 'lodestar') {
               this.refreshSyncModel(container, 9596);
+              this.refreshPeersModel(container, 9596, 100);
             } else if (this.ethereum2config.setup == 'teku' ) {
               this.refreshSyncModel(container, 5051);
+              this.refreshPeersModel(container, 5051, 74);
             } else if (this.ethereum2config.setup == 'allbeacons' ) {
               this.refreshSyncModel(container, this.sync_port_map[container]);
+              this.refreshPeersModel(container, this.sync_port_map[container], this.max_peers_map[container]);
             } else if (this.ethereum2config.setup == 'multiclient' ) {
               this.refreshSyncModel(container, this.sync_port_map[container]);
+              this.refreshPeersModel(container, this.sync_port_map[container], this.max_peers_map[container]);
             }
           }
         } else {
@@ -352,6 +391,60 @@ export default {
           this.sync_data[container].syncNoData = true;
           this.sync_data[container].syncEmptyColor = "red";
           this.sync_data[container].title = "Can't read sync status";
+          this.$forceUpdate();
+        });
+    },
+
+
+    refreshPeersModel(container, port, maxPeers) {
+      this.peers_data[container] = {
+        count: 0,
+        loading: true,
+        noData: false,
+        emptyColor: "#8ec5fc",
+        progress: 0,
+        color: "lightblue",
+        title: "Loading..."
+      };
+
+      const beaconServiceHost = container + ":" + port;
+
+      axios
+        .post("/api/ethereum", {
+          "service": beaconServiceHost,
+          "uri": "/eth/v1/node/peer_count",
+          "method": "GET",
+          "content": {}
+        })
+        .then((response) => {
+          if (response.data.data === undefined || response.data.data.connected === undefined) {
+            this.peers_data[container].count = 0;
+          } else {
+            this.peers_data[container].count = response.data.data.connected;
+          }
+
+          let progress = parseInt(this.peers_data[container].count) / maxPeers * 100;
+
+          this.peers_data[container].loading = false;
+          this.peers_data[container].progress = progress;
+          console.log(this.peers_data[container].progress);
+          if (progress >= 66) {
+            this.peers_data[container].color = "ForestGreen";
+          } else if (progress >= 33) {
+            this.peers_data[container].color = "SteelBlue";
+          } else {
+            this.peers_data[container].emptyColor = "red";
+          }
+          this.peers_data[container].title = this.peers_data[container].count + "/" + maxPeers;
+
+          this.$forceUpdate();
+        })
+        .catch((error) => {
+          console.log(error);
+          this.peers_data[container].loading = false;
+          this.peers_data[container].noData = true;
+          this.peers_data[container].emptyColor = "red";
+          this.peers_data[container].title = "Can't read peers count";
           this.$forceUpdate();
         });
     },
