@@ -114,7 +114,7 @@
             @click="exitValidator(row)"
             variant="info"
             class="mb-2 mr-sm-2 mb-sm-0"
-            v-b-door-open.hover
+            v-b-tooltip.hover
             title="exit validator"
           >
             <b-icon icon="door-open" aria-hidden="true"></b-icon>
@@ -124,7 +124,7 @@
             @click="removeValidator(row)"
             variant="secondary"
             class="mb-2 mr-sm-2 mb-sm-0"
-            v-b-dash-circle.hover
+            v-b-tooltip.hover
             title="remove validator"
           >
             <b-icon icon="dash-circle" aria-hidden="true"></b-icon>
@@ -134,7 +134,7 @@
             @click="copyPubKey(row)"
             variant="info"
             class="mb-2 mr-sm-2 mb-sm-0"
-            v-b-clipboard.hover
+            v-b-tooltip.hover
             title="Copy public key to clipboard"
           >
             <b-icon icon="clipboard" aria-hidden="true"></b-icon>
@@ -221,8 +221,13 @@ export default {
         validatorKeys = this.processStatus.logs.tasks[2].message.stdout.match(regex)
       }
 
-      else if (this.ethereum2config.setup == 'lodestar' || this.ethereum2config.setup == 'prysm') {
+      else if (this.ethereum2config.setup == 'lodestar') {
         validatorKeys = this.processStatus.logs.tasks[3].message.stdout.match(regex);
+      }
+      else if (this.ethereum2config.setup == 'prysm') {
+        if (validatorKeys = this.processStatus.logs.tasks[4].message.msg !== undefined) {
+          validatorKeys = this.processStatus.logs.tasks[4].message.msg.match(regex);
+        }
       }
 
       else if (this.ethereum2config.setup == 'teku' ) {            
