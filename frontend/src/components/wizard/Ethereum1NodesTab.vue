@@ -1,6 +1,11 @@
 <template>
   <div class="text-left">
     <h3>Ethereum 1 Node URLs</h3>
+    <b-alert show variant="info">
+      In this step you can clarify additional Ethereum 1 Node URLs and sort them by priority (this useful, if for example you are using a backup on infura.io).
+      <br/>
+      If you are not planning to use external fallback mechanisms for your ETH1 Node, you can just press &ldquo;Next&rdquo;.
+    </b-alert>
     <div class="text-left">
       <div>
         <b-table striped hover :items="items" :fields="fields">

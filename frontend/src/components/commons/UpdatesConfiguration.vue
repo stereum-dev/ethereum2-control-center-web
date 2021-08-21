@@ -1,6 +1,9 @@
 <template>
   <div class="text-left">
     <h3>Configure unattended updates</h3>
+    <b-alert show variant="info">
+      On this page you can configure on how you want to handle the updating process of the setup &amp; your node.
+    </b-alert>
     <div class="mt-3">
       <b-form>
         <b-form-group>
