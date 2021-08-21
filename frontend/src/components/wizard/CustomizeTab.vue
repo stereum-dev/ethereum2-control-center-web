@@ -1,6 +1,9 @@
 <template>
   <div class="text-left">
     <h3>Client(s) Customization</h3>
+    <b-alert show variant="info">
+      In this step, you can choose between the following Customization Option for your installation.
+    </b-alert>
     <div class="text-left">
       <b-form-radio-group
         :stacked="true"
@@ -33,7 +36,7 @@ export default {
       this.addChoice(
         choices,
         "default",
-        "No changes to the chosen setup apply"
+        "Default (install with Geth ETH1 Client)"
       );
     },
     addChoice(choices, id, text) {

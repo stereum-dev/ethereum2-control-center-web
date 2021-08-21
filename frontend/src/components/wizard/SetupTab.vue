@@ -1,6 +1,11 @@
 <template>
   <div class="text-left">
     <h3>Client(s)</h3>
+    <b-alert show variant="info">
+      The Ethereum upgrade is being implemented by many independent teams, each developing independent clients. They all make different decisions in their development process. Our Setup currently supports the following clients:
+      <br/><br/>
+      If you want to know more about the different configurations of the clients, we recommend you to visit the developers websites.
+    </b-alert>
     <div class="text-left">
       <b-form-radio-group
         :stacked="true"
