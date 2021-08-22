@@ -2,7 +2,7 @@
   <div class="text-left">
     <h3>Network</h3>
     <b-alert show variant="info">
-      Here you can choose on which network your beacon node should run. The mainnet is the main Ethereum network that uses ETH for staking. For testing purposes you can either choose the recommended Prater testnet or the Pyrmont testnet, both using their own brand of G&ouml;ETH. If you plan on staking with your ETH, be careful: Do not send real ETH to the testnet deposit contract! They will be lost!
+      Here you can choose on which network your beacon node should run. The mainnet is the main Ethereum network that uses ETH for staking. For testing purposes choose the recommended Prater testnet, using its own brand of G&ouml;ETH. If you plan on staking with your ETH, be careful: Do not send real ETH to the testnet deposit contract! They will be lost!
     </b-alert>
     <div class="text-left">
       <b-form-radio-group
