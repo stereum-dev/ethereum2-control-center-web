@@ -26,8 +26,7 @@ export default {
       true: true,
       networks: [
         { id: "mainnet", text: "Mainnet", disabled: false },
-        { id: "prater", text: "Prater - testnet", disabled: false },
-        { id: "pyrmont", text: "Pyrmont - testnet (will be offline soon)", disabled: false },
+        { id: "prater", text: "Prater - long term testnet", disabled: false },
       ],
     };
   },
