@@ -6,13 +6,15 @@
       <br/><br/>
       If you want to know more about the different configurations of the clients, we recommend you to visit the developers websites.
     </b-alert>
-    <div class="text-left">
+    <div class="text-center">
       <b-form-radio-group
         :stacked="true"
         label="Available Client Setups"
         :options="clients"
         v-model="model.client"
         value-field="id"
+        buttons
+        button-variant="outline-dark"
       >
       </b-form-radio-group>
     </div>
