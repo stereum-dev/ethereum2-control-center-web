@@ -11,6 +11,21 @@
         :state="validation"
       ></b-form-input>
     </div>
+
+    <b-alert 
+      v-if="spaceLeft >= 900"
+      show
+      variant="success"
+      class="mt-3"
+      >Space left on the partition of this path: {{ spaceLeft }} gb (recommended: 900 gb)
+    </b-alert>
+    <b-alert 
+      v-else
+      show
+      variant="danger"
+      class="mt-3"
+      >Space left on the partition of this path: {{ spaceLeft }} gb (recommended: 900 gb)
+    </b-alert>
   </div>
 </template>
 
@@ -18,13 +33,35 @@
 export default {
   name: "InstallationFolderTab",
   components: {},
+  data() {
+    return {
+      spaceLeft: 0,
+    };
+  },
   props: {
     model: Object,
+    ansibleFacts: Object,
   },
-
   computed: {
     validation() {
+      this.spaceLeft = 0;
+      var pathLength = 0;
+
+      if (this.ansibleFacts !== undefined) {
+        for (let mount of this.ansibleFacts.mounts) {
+          if (this.model.installationFolder.startsWith(mount.mount) && pathLength < mount.mount.length) {
+            pathLength = mount.mount.length;
+            this.spaceLeft = Math.round(mount.size_available / 1024 / 1024 / 1024);
+          }
+        }
+      }
+
       return this.model.installationFolder.length > 0 && this.model.installationFolder.startsWith("/");
+    },
+  },
+  watch: {
+    "model.installationFolder": function(n) {
+      
     },
   },
 };

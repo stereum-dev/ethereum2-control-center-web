@@ -20,7 +20,7 @@
             :hide-buttons="installationRunning || installationSuccess"
           >
             <tab-content title="Welcome" icon="faw fas fa-compass">
-              <welcome-tab></welcome-tab>
+              <welcome-tab :setAnsibleFacts="setAnsibleFacts"></welcome-tab>
             </tab-content>
             <tab-content title="Network" icon="faw fas fa-network-wired">
               <network-tab :model="model"></network-tab>
@@ -29,7 +29,7 @@
               <setup-tab :model="model"></setup-tab>
             </tab-content>
             <tab-content title="Customize" icon="faw fas fa-wrench">
-              <customize-tab :model="model"></customize-tab>
+              <customize-tab :model="model" :ansibleFacts="ansibleFacts"></customize-tab>
             </tab-content>
             <tab-content title="Ethereum 1 Nodes" icon="faw fas fa-database">
               <ethereum-1-nodes-tab :model="model"></ethereum-1-nodes-tab>
@@ -42,7 +42,7 @@
               icon="faw far fa-folder-open"
               :before-change="() => validateInstallationFolder()"
             >
-              <installation-folder-tab :model="model"></installation-folder-tab>
+              <installation-folder-tab :model="model" :ansibleFacts="ansibleFacts"></installation-folder-tab>
             </tab-content>
             <tab-content title="Verify" icon="faw fas fa-check-double">
               <verification-tab
@@ -52,6 +52,7 @@
                 :running="installationRunning"
                 :success="installationSuccess"
                 :done="installationDone"
+                :ansibleFacts="ansibleFacts"
               ></verification-tab>
             </tab-content>
           </form-wizard>
@@ -100,12 +101,17 @@ export default {
       installationDone: false,
       installationProgress: 0,
       installationSuccess: undefined,
+      ansibleFacts: undefined,
     };
   },
   props: {
     model: Object,
   },
   methods: {
+    setAnsibleFacts: function(newAnsibleFacts) {
+      this.ansibleFacts = newAnsibleFacts;
+    },
+
     validateInstallationFolder() {
       return (
         this.model.installationFolder &&

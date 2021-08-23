@@ -4,13 +4,15 @@
     <b-alert show variant="info">
       Here you can choose on which network your beacon node should run. The mainnet is the main Ethereum network that uses ETH for staking. For testing purposes choose the recommended Prater testnet, using its own brand of G&ouml;ETH. If you plan on staking with your ETH, be careful: Do not send real ETH to the testnet deposit contract! They will be lost!
     </b-alert>
-    <div class="text-left">
+    <div class="text-center">
       <b-form-radio-group
         :stacked="true"
         label="Available ETH2 Networks"
         :options="networks"
         v-model="model.network"
         value-field="id"
+        buttons
+        button-variant="outline-dark"
       >
       </b-form-radio-group>
     </div>
