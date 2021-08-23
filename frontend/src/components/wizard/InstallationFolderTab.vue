@@ -59,11 +59,6 @@ export default {
       return this.model.installationFolder.length > 0 && this.model.installationFolder.startsWith("/");
     },
   },
-  watch: {
-    "model.installationFolder": function(n) {
-      
-    },
-  },
 };
 </script>
 
