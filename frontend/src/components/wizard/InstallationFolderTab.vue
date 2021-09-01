@@ -3,6 +3,8 @@
     <h3>Installation Path</h3>
     <b-alert show variant="info">
       In this step, you can change the installation path of the Setup.
+      <br/>
+      By enabling Fast-Sync a blockchain database snapshot will be downloaded from Stereum cloud services and installed. This shortens the synchronization time significantly but is less secure than loading each block from genesis until now.
     </b-alert>
     <div>
       <b-form-input
@@ -11,6 +13,10 @@
         :state="validation"
       ></b-form-input>
     </div>
+
+    <b-form-checkbox v-model="model.fastSync" name="fastSync" switch>
+      Fast-Sync
+    </b-form-checkbox>
 
     <b-alert 
       v-if="spaceLeft >= 900"

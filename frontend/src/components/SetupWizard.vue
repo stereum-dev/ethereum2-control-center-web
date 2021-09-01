@@ -146,6 +146,7 @@ export default {
         },
         install_path: this.model.installationFolder,
         stereum_version_tag: window.STEREUM_VERSION_TAG,
+        load_blockchain_db: this.model.fastSync,
       };
 
       const payload = {
