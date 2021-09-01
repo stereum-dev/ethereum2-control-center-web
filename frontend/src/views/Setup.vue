@@ -22,6 +22,7 @@ export default {
         override: "default",
         eth1nodes: [],
         updates: {},
+        fastSync: false,
       },
     };
   },

@@ -51,7 +51,11 @@
           </tr>
           <tr>
             <td class="table-label">Installation Folder:</td>
-            <td class="table-data">{{ model.installationFolder }}</td>
+            <td class="table-data">
+              {{ model.installationFolder }}
+              <br/>
+              Fast-Sync: <strong v-if="model.fastSync">Yes</strong><strong v-else>No</strong>
+            </td>
           </tr>
         </table>
       </div>
