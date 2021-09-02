@@ -158,14 +158,33 @@ export default {
 
       this.installationDone = false;
 
+      const finishInstallation = () => {
+        this.$toasted.success(
+          "Installation done successfully, have fun using Stereum",
+          { duration: 5000 }
+        );
+        this.installationProgress = 100;
+        this.installationSuccess = true;
+
+        this.installationRunning = false;
+        this.installationDone = true;
+      };
+
+      let logWatchHandle;
       const fetchStatus = () => {
         axios.get("/api/setup/status").then((response) => {
           console.log(response.data);
           this.logs = response.data;
           this.installationProgress = response.data.tasks.length / 62 * 100;
+
+          const lastTask = response.data.tasks[response.data.tasks.length - 1];
+          if (lastTask.name == 'Start services' && lastTask.status == 0) {
+            finishInstallation();
+            clearInterval(logWatchHandle);
+          }
         });
       };
-      let logWatchHandle = setInterval(fetchStatus, 5000);
+      logWatchHandle = setInterval(fetchStatus, 30000);
 
       axios
         .post("/api/setup/start", payload)
@@ -179,18 +198,20 @@ export default {
             this.installationProgress = 0;
             this.installationSuccess = false;
           }
-          if (response.data.status == 0) {
-            this.$toasted.success(
-              "Installation done successfully, have fun using Stereum",
-              { duration: 5000 }
-            );
-            this.installationProgress = 100;
-            this.installationSuccess = true;
+          if (this.installationRunning) {
+            if (response.data.status == 0) {
+              this.$toasted.success(
+                "Installation done successfully, have fun using Stereum",
+                { duration: 5000 }
+              );
+              this.installationProgress = 100;
+              this.installationSuccess = true;
+            }
+            this.installationRunning = false;
+            this.installationDone = true;
+            fetchStatus(); // do a final status fetch
+            clearInterval(logWatchHandle);
           }
-          this.installationRunning = false;
-          this.installationDone = true;
-          fetchStatus(); // do a final status fetch
-          clearInterval(logWatchHandle);
         })
         .catch((error) => {
           this.$toasted.error(
