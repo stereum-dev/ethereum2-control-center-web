@@ -175,7 +175,13 @@ export default {
         axios.get("/api/setup/status").then((response) => {
           console.log(response.data);
           this.logs = response.data;
-          this.installationProgress = response.data.tasks.length / 62 * 100;
+
+          let maxTasks = 63;
+          if (this.model.fastSync) {
+            maxTasks = maxTasks + 6;
+          }
+
+          this.installationProgress = response.data.tasks.length / maxTasks * 100;
 
           const lastTask = response.data.tasks[response.data.tasks.length - 1];
           if (lastTask.name == 'Start services' && lastTask.status == 0) {
