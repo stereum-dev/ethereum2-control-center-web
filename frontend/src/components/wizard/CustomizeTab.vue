@@ -115,7 +115,7 @@ export default {
           3500,
           2
         );
-        if (model.network == "prater") {
+        if (this.model.network == "prater") {
           this.addChoice(
             this.overrides,
             "ssv-no-geth",
