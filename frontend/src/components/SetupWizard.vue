@@ -147,6 +147,11 @@ export default {
         install_path: this.model.installationFolder,
         stereum_version_tag: window.STEREUM_VERSION_TAG,
         load_blockchain_db: this.model.fastSync,
+        ssv: {
+          enabled: this.model.override == "ssv-no-geth",
+          pk: "",
+          sk: "",
+        },
       };
 
       const payload = {
@@ -176,7 +181,7 @@ export default {
           console.log(response.data);
           this.logs = response.data;
 
-          let maxTasks = 63;
+          let maxTasks = 65;
           if (this.model.fastSync) {
             maxTasks = maxTasks + 6;
           }
