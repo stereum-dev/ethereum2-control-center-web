@@ -401,9 +401,9 @@ export default {
       this.ethereum2config.stereum_version_tag = yaml.stereum_version_tag;
 
       this.ethereum2config.ssv = {
-        enabled = yaml.ssv.enabled,
-        pk = yaml.ssv.pk,
-        sk = yaml.ssv.sk,
+        enabled: yaml.ssv.enabled,
+        pk: yaml.ssv.pk,
+        sk: yaml.ssv.sk,
       };
     },
 
