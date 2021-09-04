@@ -400,9 +400,11 @@ export default {
 
       this.ethereum2config.stereum_version_tag = yaml.stereum_version_tag;
 
-      this.ethereum2config.ssv.enabled = yaml.ssv.enabled;
-      this.ethereum2config.ssv.pk = yaml.ssv.pk;
-      this.ethereum2config.ssv.sk = yaml.ssv.sk;
+      this.ethereum2config.ssv = {
+        enabled = yaml.ssv.enabled,
+        pk = yaml.ssv.pk,
+        sk = yaml.ssv.sk,
+      };
     },
 
     readData: function(control, data, ...callbacks) {
