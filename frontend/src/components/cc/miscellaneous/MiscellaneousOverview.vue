@@ -78,6 +78,13 @@
 
           <b-button @click="this.showExportConfig" variant="primary">Export Configuration</b-button>
         </b-card>
+        <b-card title="SSV Overview" style="max-width: 20rem;" v-if="this.ethereum2config.ssv.enabled">
+          <b-card-text>
+            SSV is an inovative way to make decentralized non-custodial staking happen!
+          </b-card-text>
+
+          <b-button @click="this.showSsvOverview" variant="primary">SSV Overview</b-button>
+        </b-card>
       </b-card-group>
     </div>
       </div>
@@ -101,6 +108,7 @@ export default {
     showPruneGeth: Function,
     showRestart: Function,
     showExportConfig: Function,
+    showSsvOverview: Function,
     processChange: Function,
   },
   methods: {},

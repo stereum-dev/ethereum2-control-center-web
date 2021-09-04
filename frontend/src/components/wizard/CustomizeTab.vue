@@ -115,6 +115,15 @@ export default {
           3500,
           2
         );
+        if (model.network == "prater") {
+          this.addChoice(
+            this.overrides,
+            "ssv-no-geth",
+            "SSV and no local geth",
+            3500,
+            2
+          );
+        }
       } else if (n === "allbeacons") {
         this.addDefaultChoice(this.overrides, 15000, 8, true);
       } else if (n === "lodestar") {

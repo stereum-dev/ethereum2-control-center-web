@@ -102,6 +102,7 @@
         :showPruneGeth="showPruneGeth"
         :showRestart="showRestart"
         :showExportConfig="showExportConfig"
+        :showSsvOverview="showSsvOverview"
         :processChange="processChange"
       />
     </div>
@@ -141,6 +142,11 @@
     <div v-if="this.content === 'exportConfig'">
       <export-config
         :processChange="processChange"
+      />
+    </div> 
+    <div v-if="this.content === 'ssvOverview'">
+      <ssv-overview 
+        :ethereum2config="this.ethereum2config"
       />
     </div> 
     <vue-fab mainBtnColor="#336666" icon="help_outline">
@@ -249,6 +255,7 @@ import ImportValidator from "./cc/validator/ImportValidator.vue";
 import ListExitValidator from "./cc/validator/ListExitValidator.vue";
 import MiscellaneousOverview from "./cc/miscellaneous/MiscellaneousOverview.vue";
 import Graffiti from "./cc/miscellaneous/Graffiti.vue";
+import SsvOverview from "./cc/miscellaneous/SsvOverview.vue";
 import ApiBindAddress from "./cc/miscellaneous/ApiBindAddress.vue";
 import Ethereum1Nodes from "./cc/miscellaneous/Ethereum1Nodes.vue";
 import axios from "axios";
@@ -275,6 +282,7 @@ export default {
     Restart,
     ExportConfig,
     'os-update': OSUpdate,
+    SsvOverview,
   },
   data() {
     return {
@@ -342,6 +350,9 @@ export default {
     showExportConfig() {
       this.content = "exportConfig";
     },
+    showSsvOverview() {
+      this.content = "ssvOverview";
+    },
     
     clickHelpItem: function (item) {
       if (item.idx == 2) {
@@ -388,6 +399,10 @@ export default {
       this.ethereum2config.eth1nodes = yaml.connectivity.eth1_nodes;
 
       this.ethereum2config.stereum_version_tag = yaml.stereum_version_tag;
+
+      this.ethereum2config.ssv.enabled = yaml.ssv.enabled;
+      this.ethereum2config.ssv.pk = yaml.ssv.pk;
+      this.ethereum2config.ssv.sk = yaml.ssv.sk;
     },
 
     readData: function(control, data, ...callbacks) {
