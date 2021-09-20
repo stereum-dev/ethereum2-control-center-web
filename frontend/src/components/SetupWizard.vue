@@ -22,19 +22,28 @@
             <tab-content title="Welcome" icon="faw fas fa-compass">
               <welcome-tab :setAnsibleFacts="setAnsibleFacts"></welcome-tab>
             </tab-content>
-            <tab-content title="Network" icon="faw fas fa-network-wired">
-              <network-tab :model="model"></network-tab>
+
+            <tab-content 
+              title="Import-Config" 
+              icon="faw fas fa-file-import"
+              :before-change="() => validateConfigFolder()"
+            >
+              <import-config-tab :model="model" :ansibleFacts="ansibleFacts"></import-config-tab>
             </tab-content>
-            <tab-content title="Client" icon="faw fas fa-cogs">
+
+            <tab-content v-if="this.model.importConfig == false" title="Network" icon="faw fas fa-network-wired">
+              <network-tab :model="model" :disabled="model.importConfig === false"></network-tab>
+            </tab-content>
+            <tab-content v-if="this.model.importConfig == false" title="Client" icon="faw fas fa-cogs">
               <setup-tab :model="model"></setup-tab>
             </tab-content>
-            <tab-content title="Customize" icon="faw fas fa-wrench">
+            <tab-content v-if="this.model.importConfig == false" title="Customize" icon="faw fas fa-wrench">
               <customize-tab :model="model" :ansibleFacts="ansibleFacts"></customize-tab>
             </tab-content>
-            <tab-content title="Ethereum 1 Nodes" icon="faw fas fa-database">
+            <tab-content v-if="this.model.importConfig == false" title="Ethereum 1 Nodes" icon="faw fas fa-database">
               <ethereum-1-nodes-tab :model="model"></ethereum-1-nodes-tab>
             </tab-content>
-            <tab-content title="Updates" icon="faw fas fa-sync">
+            <tab-content v-if="this.model.importConfig == false" title="Updates" icon="faw fas fa-sync">
               <updates-tab :model="model"></updates-tab>
             </tab-content>
             <tab-content
@@ -68,6 +77,7 @@ import { FormWizard, TabContent } from "vue-form-wizard";
 import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import "@fortawesome/fontawesome-free/css/all.css";
 import WelcomeTab from "@/components/wizard/WelcomeTab.vue";
+import ImportConfigTab from "@/components/wizard/ImportConfigTab.vue";
 import NetworkTab from "@/components/wizard/NetworkTab.vue";
 import SetupTab from "@/components/wizard/SetupTab.vue";
 import CustomizeTab from "@/components/wizard/CustomizeTab.vue";
@@ -83,6 +93,7 @@ export default {
     FormWizard,
     TabContent,
     WelcomeTab,
+    ImportConfigTab,
     NetworkTab,
     SetupTab,
     CustomizeTab,
@@ -118,6 +129,33 @@ export default {
         this.model.installationFolder.startsWith("/")
       );
     },
+
+    validateConfigFolder() {
+      if (this.model.importConfig == false) {
+        return (
+          this.model.exportedConfigFolder.length == 0 &&
+          this.model.configPassword.length == 0 &&
+          this.model.validatorPassword == "" 
+        );  
+      } else if (this.model.importConfig == true && this.model.importValidator == false) {
+          return (
+            this.model.exportedConfigFolder.length > 0 &&
+            this.model.exportedConfigFolder.startsWith("/") &&
+            this.model.exportedConfigFolder.endsWith(".zip") &&
+            this.model.configPassword.length > 0 &&
+            this.model.validatorPassword == ""
+          );  
+        } else if (this.model.importConfig == true && this.model.importValidator == true) {
+            return (
+              this.model.exportedConfigFolder.length > 0 &&
+              this.model.exportedConfigFolder.startsWith("/") &&
+              this.model.exportedConfigFolder.endsWith(".zip") &&
+              this.model.configPassword.length > 0 &&
+              this.model.validatorPassword.length > 0
+            );  
+          }
+    },
+
     onComplete: function () {
       this.installationRunning = true;
       this.installationProgress = 0;
@@ -130,24 +168,43 @@ export default {
       ) > -1;
 
       // write variables for the ansible call
-      const extraVars = {
-        network: this.model.network,
-        setup: this.model.client,
-        setup_override: this.model.override || "default",
-        connectivity: {
-          eth1_nodes: this.model.eth1nodes,
-        },
-        update: {
-          lane: this.model.updates.lane,
-          unattended: {
-            check: unattended_updates_check,
-            install: unattended_updates_install,
+      
+      let extraVars;
+      if (this.model.importConfig == false && this.model.importValidator == false) {
+        extraVars = {
+          network: this.model.network,
+          setup: this.model.client,
+          setup_override: this.model.override || "default",
+          connectivity: {
+            eth1_nodes: this.model.eth1nodes,
           },
-        },
-        install_path: this.model.installationFolder,
-        stereum_version_tag: window.STEREUM_VERSION_TAG,
-        load_blockchain_db: this.model.fastSync,
-      };
+          update: {
+            lane: this.model.updates.lane,
+            unattended: {
+              check: unattended_updates_check,
+              install: unattended_updates_install,
+            },
+          },
+          install_path: this.model.installationFolder,
+          stereum_version_tag: window.STEREUM_VERSION_TAG,
+          load_blockchain_db: this.model.fastSync,
+        }; 
+      } 
+      else if (this.model.importConfig == true && this.model.importValidator == false) {
+        extraVars = {
+          exported_config_path: this.model.exportedConfigFolder,
+          exported_config_password: this.model.configPassword,
+          install_path: this.model.installationFolder,
+        };
+      }
+      else if (this.model.importConfig == true && this.model.importValidator == true) {
+        extraVars = {
+          exported_config_path: this.model.exportedConfigFolder,
+          exported_config_password: this.model.configPassword,
+          exported_validator_password: this.model.validatorPassword,
+          install_path: this.model.installationFolder,
+        };
+      }
 
       const payload = {
         inventory: "inventory.yaml",
