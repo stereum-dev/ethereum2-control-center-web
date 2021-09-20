@@ -7,19 +7,19 @@
     <data>
       <div v-if="!running || done">
         <table class="text-left table">
-          <tr>
+          <tr v-if="this.model.importConfig == false">
             <td class="table-label">Network:</td>
             <td class="table-data">{{ model.network }}</td>
           </tr>
-          <tr>
+          <tr v-if="this.model.importConfig == false">
             <td class="table-label">Setup:</td>
             <td class="table-data">{{ model.client }}</td>
           </tr>
-          <tr>
+          <tr v-if="this.model.importConfig == false">
             <td class="table-label">Customization:</td>
             <td class="table-data">{{ model.override }}</td>
           </tr>
-          <tr>
+          <tr v-if="this.model.importConfig == false">
             <td class="table-label">Ethereum 1 nodes:</td>
             <td class="table-data">
               <!--
@@ -30,7 +30,7 @@
               </li>
             </td>
           </tr>
-          <tr>
+          <tr v-if="this.model.importConfig == false">
             <td class="table-label">Updates:</td>
             <td class="table-data">
               <div
@@ -53,8 +53,24 @@
             <td class="table-label">Installation Folder:</td>
             <td class="table-data">
               {{ model.installationFolder }}
-              <br/>
+            </td>
+          </tr>
+          <tr v-if="this.model.importConfig == false">  
+            <td class="table-label"></td>
+            <td class="table-data">                            
               Fast-Sync: <strong v-if="model.fastSync">Yes</strong><strong v-else>No</strong>
+            </td>
+          </tr>
+          <tr>  
+            <td class="table-label">Import Configuration:</td>
+            <td class="table-data">                            
+              <strong v-if="model.importConfig">Yes</strong><strong v-else>No</strong>
+            </td>
+          </tr>
+          <tr v-if="this.model.importConfig == true">  
+            <td class="table-label">Import Validator:</td>
+            <td class="table-data">                            
+              <strong v-if="model.importValidator">Yes</strong><strong v-else>No</strong>
             </td>
           </tr>
         </table>
@@ -143,3 +159,4 @@ export default {
   border-color: rgb(51, 102, 102);
 }
 </style>
+
