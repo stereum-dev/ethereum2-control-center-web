@@ -23,6 +23,11 @@ export default {
         eth1nodes: [],
         updates: {},
         fastSync: false,
+        exportedConfigFolder: "",
+        importConfig: false,
+        importValidator: false,
+        configPassword: "",
+        validatorPassword: "",
       },
     };
   },

@@ -4,7 +4,7 @@
       <h2>Export Configuration</h2>
     </div>
     <div class="col-12 text-left">
-      <span>The configuration which is currently running on your device will be exported and stored in "/tmp/exported-config"</span>
+      <span>The configuration which is currently running on your device will be exported and stored in "/tmp/exported-config.zip"</span>
     </div>
     <div class="container pb-3 pt-3">
       <p class="text-left">
