@@ -47,6 +47,7 @@
               <updates-tab :model="model"></updates-tab>
             </tab-content>
             <tab-content
+              v-if="this.model.importConfig == false" 
               title="Path"
               icon="faw far fa-folder-open"
               :before-change="() => validateInstallationFolder()"
@@ -194,15 +195,13 @@ export default {
         extraVars = {
           exported_config_path: this.model.exportedConfigFolder,
           exported_config_password: this.model.configPassword,
-          install_path: this.model.installationFolder,
         };
       }
       else if (this.model.importConfig == true && this.model.importValidator == true) {
         extraVars = {
           exported_config_path: this.model.exportedConfigFolder,
           exported_config_password: this.model.configPassword,
-          exported_validator_password: this.model.validatorPassword,
-          install_path: this.model.installationFolder,
+          validator_password: this.model.validatorPassword,
         };
       }
 
