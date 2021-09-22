@@ -49,16 +49,12 @@
               <div v-else>Check for updates: <strong>No</strong></div>
             </td>
           </tr>
-          <tr>
+          <tr v-if="this.model.importConfig == false">
             <td class="table-label">Installation Folder:</td>
             <td class="table-data">
               {{ model.installationFolder }}
-            </td>
-          </tr>
-          <tr v-if="this.model.importConfig == false">  
-            <td class="table-label"></td>
-            <td class="table-data">                            
-              Fast-Sync: <strong v-if="model.fastSync">Yes</strong><strong v-else>No</strong>
+              <br/>
+              Fast-Sync: <strong v-if="model.fastSync">Yes</strong><strong v-else>No</strong> 
             </td>
           </tr>
           <tr>  
@@ -68,7 +64,7 @@
             </td>
           </tr>
           <tr v-if="this.model.importConfig == true">  
-            <td class="table-label">Import Validator:</td>
+            <td class="table-label">Import Validators:</td>
             <td class="table-data">                            
               <strong v-if="model.importValidator">Yes</strong><strong v-else>No</strong>
             </td>

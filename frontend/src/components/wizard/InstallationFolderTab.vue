@@ -14,7 +14,7 @@
       ></b-form-input>
     </div>
 
-    <b-form-checkbox v-if="this.model.importConfig == false" v-model="model.fastSync" name="fastSync" switch>
+    <b-form-checkbox v-model="model.fastSync" name="fastSync" switch>
       Fast-Sync
     </b-form-checkbox>
 
