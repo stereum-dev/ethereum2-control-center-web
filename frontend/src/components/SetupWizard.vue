@@ -207,7 +207,7 @@ export default {
 
       const payload = {
         inventory: "inventory.yaml",
-        playbook: "playbook.yaml",
+        playbook: "playbook",
         extra_vars: extraVars,
         extraVars: extraVars,
       };
@@ -232,7 +232,7 @@ export default {
           console.log(response.data);
           this.logs = response.data;
 
-          let maxTasks = 65;
+          let maxTasks = 76;
           if (this.model.fastSync) {
             maxTasks = maxTasks + 6;
           }
