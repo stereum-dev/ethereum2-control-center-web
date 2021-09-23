@@ -32,13 +32,15 @@
 
           <b-nav-item
             v-if="this.ethereum2config.setup === 'prysm'"
-            @click="openExternalBrowser('http://localhost:8083')"
+            href="http://localhost:8083"
+            target=”_blank”
           >
             Prysm-UI
           </b-nav-item>
           <b-nav-item
             v-if="this.ethereum2config.override !== 'beacon-validator' && this.ethereum2config.setup !== 'allbeacons'"
-            @click="openExternalBrowser('http://localhost:8082')"
+            href="http://localhost:8082"
+            target=”_blank”
           >
             Grafana
           </b-nav-item>
@@ -263,8 +265,6 @@ import Restart from './cc/miscellaneous/Restart.vue';
 import ExportConfig from './cc/miscellaneous/ExportConfig.vue';
 import OSUpdate from './cc/miscellaneous/OSUpdate.vue';
 
-const { remote } = require('electron');
-
 export default {
   name: "ControlCenterOverview",
   components: {
@@ -353,16 +353,12 @@ export default {
     showSsvOverview() {
       this.content = "ssvOverview";
     },
-
-    openExternalBrowser(href) {
-      remote.shell.openExternal(href);
-    },
     
     clickHelpItem: function (item) {
       if (item.idx == 2) {
-        remote.shell.openExternal("https://discord.gg/8Znj8K6GjN");
+        window.open("https://discord.gg/8Znj8K6GjN", "_blank");
       } else if (item.idx == 1) {
-        remote.shell.openExternal("https://stereum.net");
+        window.open("https://stereum.net", "_blank");
       } else if (item.idx == 0) {
         window.location.href = "mailto:stereum@stereum.net";
       }
