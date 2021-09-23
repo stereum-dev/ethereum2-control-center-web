@@ -1,0 +1,26 @@
+#
+# List of well-known playbooks with assigned IDs
+# can be mounted from outside the container as .//opt/app/playbook-mapping.yaml
+#
+- id: playbook
+  playbook: playbook.yaml
+- id: read-config
+  playbook: read-config.yaml
+- id: read-ports
+  playbook: read-ports.yaml
+- id: read-services
+  playbook: read-services.yaml
+- id: restart-host
+  playbook: restart-host.yaml
+- id: restart-service
+  playbook: restart-host.yaml
+- id: service-logs
+  playbook: service-logs.yaml
+- id: set-eth1-nodes
+  playbook: set-eth1-nodes.yaml
+- id: start-service
+  playbook: start-service.yaml
+- id: stop-service
+  playbook: stop-service.yaml
+- id: update-host-os
+  playbook: update-host-os.yaml

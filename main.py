@@ -20,6 +20,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from logging.config import dictConfig
 from datetime import datetime
+import yaml
 
 import pickle
 import logging
@@ -95,10 +96,25 @@ async def status():
     except Exception as e:
         raise HTTPException(status_code=409, detail="No action running")
 
-
 @app.post("/api/setup/start")
 async def launch(item: PB):
     try:
+        playbook_mapping_file = "/opt/app/playbook-mapping.yaml"
+        try:                    
+            with open(playbook_mapping_file, "r") as stream:
+                playbook_mappings = yaml.safe_load(stream)
+                matching_playbooks = list(filter(lambda x: (x.get('id') == item.playbook), playbook_mappings))
+                if len(matching_playbooks) == 0:
+                    logger.info('Unable to find playbook name for playbook-id %s' %item.playbook)
+                    raise HTTPException(status_code=400, detail=str('Unable to find playbook name for playbook-id %s' %item.playbook))
+                if len(matching_playbooks) > 1:
+                    logger.info('Multiple playbook names found for playbook-id %s' %item.playbook)
+                    raise HTTPException(status_code=400, detail=str('Multiple playbook names found for playbook-id %s' %item.playbook))
+                item.playbook = matching_playbooks[0]['playbook']
+        except yaml.YAMLError as exc:
+            logger.warn('Unable to parse playbook-mapping file %s: %s' %(playbook_mapping_file, exc))    
+            raise HTTPException(status_code=400, detail=str('Unable to parse playbook-mapping'))
+
         try:
             pid = pickle.load( open( "/var/run/stereum.p", "rb" ) )
             if pid:
@@ -161,6 +177,8 @@ async def launch(item: PB):
         er = ER(return_code, callback.task_results)
         json_compatible_item_data = jsonable_encoder(ER(return_code, callback.task_results))
         return JSONResponse(content=json_compatible_item_data)
+    except HTTPException as e:        
+        raise e
     except Exception as e:
         import traceback
         traceback.print_exc()

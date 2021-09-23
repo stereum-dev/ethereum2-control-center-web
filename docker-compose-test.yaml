@@ -1,0 +1,17 @@
+version: '3.6'
+
+services:  
+  control-center-web:
+    image: ethereum2-control-center-web
+    build: .
+    container_name: control-center-web
+    ports:
+      - 8001:80
+    environment: []      
+    volumes: 
+    - ./playbook-mapping.yaml:/opt/app/playbook-mapping.yaml:ro
+    networks:        
+    - web  
+
+networks:
+  web:
