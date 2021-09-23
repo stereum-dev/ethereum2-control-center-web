@@ -417,7 +417,7 @@ export default {
 
         const payload = {
           inventory: "inventory.yaml",
-          playbook: control + ".yaml",
+          playbook: control,
           extra_vars: data,
           extraVars: data,
         };
@@ -481,7 +481,7 @@ export default {
 
         const payload = {
           inventory: "inventory.yaml",
-          playbook: control + ".yaml",
+          playbook: control,
           extra_vars: data,
           extraVars: data,
         };
