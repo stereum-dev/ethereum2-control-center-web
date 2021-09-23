@@ -55,7 +55,7 @@ export default {
     saveApiBindAddress() {
       let regex = new RegExp("^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
       if (regex.test(this.apiBindAddress)){
-        this.processChange("set-api-bind-address", 6, {
+        this.processChange("set-api-bind-address", 19, {
           e2dc_api_bind_address_updated: this.apiBindAddress,
         });
       }
