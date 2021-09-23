@@ -18,9 +18,33 @@
   playbook: service-logs.yaml
 - id: set-eth1-nodes
   playbook: set-eth1-nodes.yaml
+- id: set-api-bind-address
+  playbook: set-api-bind-address.yaml
 - id: start-service
   playbook: start-service.yaml
 - id: stop-service
   playbook: stop-service.yaml
 - id: update-host-os
   playbook: update-host-os.yaml
+- id: configure-autoupdate
+  playbook: configure-autoupdate.yaml
+- id: delete-validator-accounts
+  playbook: delete-validator-accounts.yaml
+- id: exit-validator-accounts
+  playbook: exit-validator-accounts.yaml
+- id: export-config
+  playbook: export-config.yaml
+- id: geth-prune
+  playbook: geth-prune.yaml
+- id: import-validator-accounts
+  playbook: import-validator-accounts.yaml
+- id: list-validator-accounts
+  playbook: list-validator-accounts.yaml
+- id: read-ansible-facts
+  playbook: read-ansible-facts.yaml
+- id: set-graffiti
+  playbook: set-graffiti.yaml
+- id: unattended-update
+  playbook: unattended-update.yaml
+- id: update-check
+  playbook: update-check.yaml
