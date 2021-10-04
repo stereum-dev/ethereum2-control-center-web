@@ -8,7 +8,7 @@
       </div>
 
       <div
-        v-if="this.ethereum2config.setup != 'multiclient'"
+        v-if="this.ethereum2config.setup !== 'multiclient'"
         class="file-wrapper"
         @dragleave="fileDragOut"
         @dragover="fileDragIn"
@@ -27,7 +27,7 @@
       </div>
 
       <div>
-        <table class="table table-striped table-hover" v-if="this.ethereum2config.setup != 'multiclient'">
+        <table class="table table-striped table-hover" v-if="this.ethereum2config.setup !== 'multiclient'">
           <thead>
             <tr>
               <th>Number</th>
@@ -61,7 +61,7 @@
           </tbody>
         </table>
 
-        <div class="container pb-3 pt-3" v-if="this.ethereum2config.setup != 'multiclient'">
+        <div class="container pb-3 pt-3" v-if="this.ethereum2config.setup !== 'multiclient'">
           <p class="text-left">
             <b-form inline>
               <label class="mb-2 mr-sm-2 mb-sm-0" for="inline-new-url">
@@ -87,26 +87,26 @@
           </p>
         </div>
 
-        <div class="container pb-3 pt-3" v-if="this.ethereum2config.setup == 'multiclient'">
+        <div class="container pb-3 pt-3" v-if="this.ethereum2config.setup === 'multiclient'">
           <p class="text-left">
             <b-form inline>
-              <label class="mb-2 mr-sm-2 mb-sm-0" for="inline-new-url">
+              <label class="mr-2" for="inline-new-url">
                 Validators' mnemonic:  
               </label>
               <b-form-input
                 v-model="validatorMnemonic"
                 placeholder="Validators' mnemonic"
                 align="left"
-                class="mb-2 mr-sm-2 mb-sm-0 w-50"
+                class="col-md-8"
               />
             </b-form>
           </p>
         </div>
                 
-        <div class="container pb-3 pt-3" v-if="this.ethereum2config.setup == 'multiclient'">
+        <div class="container pb-3 pt-3" v-if="this.ethereum2config.setup === 'multiclient'">
           <p class="text-left">
             <b-form inline>
-              <label class="mb-2 mr-sm-2 mb-sm-0" for="inline-new-url">
+              <label class="mr-3" for="inline-new-url">
                 Validators' numbers:
               </label>
               <b-form-input
@@ -116,10 +116,11 @@
                 v-model="validatorNumber"
                 placeholder="Validators' number"
                 align="left"
-                class="mb-2 mr-sm-2 mb-sm-0 w-50"
+                class="col-md-auto"
               />
 
               <b-button
+                class="ml-4"
                 variant="primary"
                 @click="importValidator"
                 :disabled="!validateData"
