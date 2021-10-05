@@ -82,7 +82,10 @@
       />
     </div>
     <div v-if="this.content === 'importValidator'">
-      <import-validator :processChange="processChange" />
+      <import-validator 
+        :processChange="processChange"
+        :ethereum2config="this.ethereum2config" 
+      />
     </div>
     <div v-if="this.content === 'listExitValidator'">
       <list-exit-validator 

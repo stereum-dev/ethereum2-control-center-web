@@ -8,6 +8,7 @@
       </div>
 
       <div
+        v-if="this.ethereum2config.setup !== 'multiclient'"
         class="file-wrapper"
         @dragleave="fileDragOut"
         @dragover="fileDragIn"
@@ -26,7 +27,7 @@
       </div>
 
       <div>
-        <table class="table table-striped table-hover">
+        <table class="table table-striped table-hover" v-if="this.ethereum2config.setup !== 'multiclient'">
           <thead>
             <tr>
               <th>Number</th>
@@ -60,7 +61,7 @@
           </tbody>
         </table>
 
-        <div class="container pb-3 pt-3">
+        <div class="container pb-3 pt-3" v-if="this.ethereum2config.setup !== 'multiclient'">
           <p class="text-left">
             <b-form inline>
               <label class="mb-2 mr-sm-2 mb-sm-0" for="inline-new-url">
@@ -85,6 +86,52 @@
             </b-form>
           </p>
         </div>
+
+        <div class="container pb-3 pt-3" v-if="this.ethereum2config.setup === 'multiclient'">
+          <p class="text-left">
+            <b-form inline>
+              <label class="mr-2" for="inline-new-url">
+                Validators' mnemonic:  
+              </label>
+              <b-form-input
+                v-model="validatorMnemonic"
+                placeholder="Validators' mnemonic"
+                align="left"
+                class="col-md-8"
+              />
+            </b-form>
+          </p>
+        </div>
+                
+        <div class="container pb-3 pt-3" v-if="this.ethereum2config.setup === 'multiclient'">
+          <p class="text-left">
+            <b-form inline>
+              <label class="mr-3" for="inline-new-url">
+                Validators' numbers:
+              </label>
+              <b-form-input
+                type="number"
+                min="0" 
+                step="1"
+                v-model="validatorNumber"
+                placeholder="Validators' number"
+                align="left"
+                class="col-md-auto"
+              />
+
+              <b-button
+                class="ml-4"
+                variant="primary"
+                @click="importValidator"
+                :disabled="!validateData"
+                title="import accounts"
+              >
+                Import
+              </b-button>
+            </b-form>
+          </p>
+        </div>
+
       </div>
     </div>
   </div>
@@ -99,6 +146,8 @@ export default {
       files: [],
       color: "#87cefa",
       password: "",
+      validatorMnemonic: "",
+      validatorNumber: "0",
     };
   },
   props: {
@@ -118,7 +167,15 @@ export default {
         }
       });
     },
+    
+    validateData: function() {
+      return (
+        this.validatorNumber > 0 && 
+        this.validatorMnemonic.length > 0
+      ); 
+    },
   },
+  
   methods: {
     handleFileDrop(e) {
       let droppedFiles = e.dataTransfer.files;
@@ -173,24 +230,32 @@ export default {
       this.color = "#87cefa";
     },
     async importValidator() {
-      let jsonFiles = [];
-      let i = 0;
-      for (i = 0; i < this.files.length; i++){
-        let jsonContent = await this.readFile(this.files[i]);
-        jsonFiles.push({
-          name: this.files[i].name,
-          content: jsonContent,
+      if (this.ethereum2config.setup != 'multiclient') {
+        let jsonFiles = [];
+        let i = 0;
+        for (i = 0; i < this.files.length; i++){
+          let jsonContent = await this.readFile(this.files[i]);
+          jsonFiles.push({
+            name: this.files[i].name,
+            content: jsonContent,
+          });
+        }
+
+        console.log(jsonFiles);
+        console.log(jsonFiles[0].content);
+        console.log(jsonFiles[0].content.value);
+
+        this.processChange("import-validator-accounts", 100, {
+          validator_password: this.password,
+          validator_keys: jsonFiles,
         });
       }
-
-      console.log(jsonFiles);
-      console.log(jsonFiles[0].content);
-      console.log(jsonFiles[0].content.value);
-
-      this.processChange("import-validator-accounts", 100, {
-        validator_password: this.password,
-        validator_keys: jsonFiles,
-      });
+      else if (this.ethereum2config.setup == 'multiclient') {
+        this.processChange("import-validator-accounts", 100, {
+          validator_mnemonic: this.validatorMnemonic,
+          validator_number: this.validatorNumber,
+        });
+      }
     },
 
     readFile: async function(file) {
