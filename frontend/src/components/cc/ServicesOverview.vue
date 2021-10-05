@@ -247,7 +247,6 @@ export default {
         "lodestar_beacon": 9596,
         "nimbus_beacon": 5052,
         "prysm_beacon": 3501,
-        "prysm_beacon_slasher": 3501,
         "teku_beacon": 5051,
       },
       peers_data: {},
@@ -256,7 +255,6 @@ export default {
         "lodestar_beacon": 100,
         "nimbus_beacon": 100,
         "prysm_beacon": 100,
-        "prysm_beacon_slasher": 100,
         "teku_beacon": 74,
       },
     };
