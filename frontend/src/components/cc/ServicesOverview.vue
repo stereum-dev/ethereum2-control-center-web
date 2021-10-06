@@ -246,7 +246,7 @@ export default {
         "lighthouse_beacon": 5052,
         "lodestar_beacon": 9596,
         "nimbus_beacon": 5052,
-        "prysm_beacon": 3501,
+        "prysm_beacon": 3500,
         "teku_beacon": 5051,
       },
       peers_data: {},
@@ -311,8 +311,8 @@ export default {
             const service = allServices[container][Object.keys(allServices[container])[0]];
 
             if (this.ethereum2config.setup == 'prysm') {
-              this.refreshSyncModel(container, 3501);
-              this.refreshPeersModel(container, 3501, 100);
+              this.refreshSyncModel(container, 3500);
+              this.refreshPeersModel(container, 3500, 100);
             } else if (this.ethereum2config.setup == 'lighthouse') {
               this.refreshSyncModel(container, 5052);
               this.refreshPeersModel(container, 5052, 50);
