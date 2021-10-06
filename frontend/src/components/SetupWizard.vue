@@ -243,17 +243,9 @@ export default {
           this.installationProgress = response.data.tasks.length / maxTasks * 100;
 
           const lastTask = response.data.tasks[response.data.tasks.length - 1];
-          if (this.model.importConfig == false && this.model.importValidator == false) {
-            if (lastTask.name == 'Start services' && lastTask.status == 0) {
-              finishInstallation();
-              clearInterval(logWatchHandle);
-            }
-          }
-          else if (this.model.importConfig == true && this.model.importValidator == true) {
-            if (lastTask.name == 'Remove exported-config directory' && lastTask.status == 0) {
-              finishInstallation();
-              clearInterval(logWatchHandle);
-            }
+          if (lastTask.name == 'All done' && lastTask.status == 0) {
+            finishInstallation();
+            clearInterval(logWatchHandle);
           } 
         });
       };
