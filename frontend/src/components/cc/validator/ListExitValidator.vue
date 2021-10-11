@@ -139,6 +139,16 @@
             title="Copy public key to clipboard"
           >
             <b-icon icon="clipboard" aria-hidden="true"></b-icon>
+          </b-button>
+          <b-button
+            size="sm"
+            @click="OpenBeaconcha(row)"
+            variant="primary"
+            class="mb-2 mr-sm-2 mb-sm-0"
+            v-b-tooltip.hover
+            title="Open beaconcha.in"
+          >
+            <b-icon icon="link" aria-hidden="true"></b-icon>
           </b-button>        
         </template>        
 
@@ -186,6 +196,10 @@ export default {
     processChange: Function,
   },
   methods: {
+    OpenBeaconcha: function(row) {
+      window.open("https://" + this.ethereum2config.network + ".beaconcha.in/validator/" + row.item.pubkey, "_blank");
+    },        
+
     copyPubKey: function(row) {
       navigator.clipboard.writeText(row.item.pubkey).then(function() {
         this.$toasted.success("Copied public key to clipboard", {
@@ -385,4 +399,5 @@ export default {
 </script>
 
 <style scoped></style>
+
 
