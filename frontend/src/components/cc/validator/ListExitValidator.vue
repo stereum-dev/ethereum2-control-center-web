@@ -37,7 +37,7 @@
 
         <template #cell(balance)="row">
           <div>
-            <div v-if="row.item.balance" class="text-right">
+            <div v-if="row.item.balance" class="text-center">
               &Xi; {{ row.item.balance / 1000000000 }}
             </div>
             <div v-else class="text-right">
@@ -47,7 +47,7 @@
         </template>
 
         <template #foot(balance)="data">
-          <div class="text-right">
+          <div class="text-center">
             &Xi; {{ balanceTotal / 1000000000 }}
           </div>
         </template>
@@ -106,10 +106,10 @@
             &nbsp;
           </div>
         </template>
-
-
+       
         <template #cell(actions)="row">
           <b-button
+            v-show="!HideButton"
             size="sm"
             @click="exitValidator(row)"
             variant="info"
@@ -120,6 +120,7 @@
             <b-icon icon="door-open" aria-hidden="true"></b-icon>
           </b-button>
           <b-button
+            v-show="!HideButton"
             size="sm"
             @click="removeValidator(row)"
             variant="secondary"
@@ -138,8 +139,8 @@
             title="Copy public key to clipboard"
           >
             <b-icon icon="clipboard" aria-hidden="true"></b-icon>
-          </b-button>
-        </template>
+          </b-button>        
+        </template>        
 
         <template #foot(actions)="data">
           <div class="text-right">
@@ -168,6 +169,7 @@ export default {
       keystoreNames: {},
       keystoreAndPubkey: {},
       lighthouse_validators: {},
+      HideButton: false,
       fields: [
         { key: "ste", sortable: false, label: "" },
         { key: "pubkey", sortable: false, label: "Validator public key" },
@@ -225,7 +227,7 @@ export default {
         validatorKeys = this.processStatus.logs.tasks[3].message.stdout.match(regex);
       }
       else if (this.ethereum2config.setup == 'prysm') {
-        if (validatorKeys = this.processStatus.logs.tasks[4].message.msg !== undefined) {
+        if (this.processStatus.logs.tasks[4].message.msg !== undefined) {
           validatorKeys = this.processStatus.logs.tasks[4].message.msg.match(regex);
         }
       }
@@ -234,8 +236,8 @@ export default {
         if (this.processStatus.logs.tasks.length == 9) {
           validatorKeys = this.processStatus.logs.tasks[7].message.stdout.match(regex_teku);
             for(let i=0; i<validatorKeys.length; i++) {
-            validatorKeys[i]="0x"+validatorKeys[i];
-          }
+              validatorKeys[i]="0x"+validatorKeys[i];
+            }
           this.keystoreNames = this.processStatus.logs.tasks[2].message.stdout.match(regex_keystore);
           this.keystoreAndPubkey = {name: this.keystoreNames, publicKey: validatorKeys};    
         }
@@ -243,6 +245,16 @@ export default {
           validatorKeys = this.processStatus.logs.tasks[6].message.stdout.match(regex_teku)
         } 
       }
+
+      else if (this.ethereum2config.setup == 'multiclient' ) {
+        this.HideButton = true;
+        if (this.processStatus.logs.tasks.length == 14) {
+          validatorKeys = this.processStatus.logs.tasks[10].message.stdout.match(regex_teku);
+          for(let i=0; i<validatorKeys.length; i++) {
+            validatorKeys[i]="0x"+validatorKeys[i];
+          }    
+        }
+      }  
 
       if (validatorKeys != null) {
         let pubKeys = "";
@@ -284,7 +296,7 @@ export default {
               else {
                 if (validatorKey == data.pubkey) {
                   this.accounts.push(data);
-                  this.balanceTotal = this.balanceTotal + dataKey.balance;
+                  this.balanceTotal = this.balanceTotal + data.balance;
                   found = true;
                   break;
                   }
@@ -373,3 +385,4 @@ export default {
 </script>
 
 <style scoped></style>
+
