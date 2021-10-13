@@ -226,18 +226,18 @@ def check_api_key(apikey: str):
 
 # Serve installer
 @app.get("/setup")
-async def serve_setup(request: Request, apikey: str = Header(None)):
+async def serve_setup(request: Request, apikey: str = ""):
     return templates.TemplateResponse("index.html", {"request": request, "apikey": apikey, "entry": "/setup"})
 @app.get("/public/setup")
-async def serve_setup(request: Request, apikey: str = Header(None)):
+async def serve_setup(request: Request, apikey: str = ""):
     return templates.TemplateResponse("index.html", {"request": request, "apikey": apikey, "entry": "/setup"})
 
 # Server controlcenter
 @app.get("/control-center")
-async def serve_setup(request: Request, apikey: str = Header(None)):
+async def serve_setup(request: Request, apikey: str = ""):
     return templates.TemplateResponse("index.html", {"request": request, "apikey": apikey, "entry": "/control-center"})
 @app.get("/public/control-center")
-async def serve_setup(request: Request, apikey: str = Header(None)):
+async def serve_setup(request: Request, apikey: str = ""):
     return templates.TemplateResponse("index.html", {"request": request, "apikey": apikey, "entry": "/control-center"})
 
 # serve static assets etc, 
@@ -245,7 +245,7 @@ app.mount("/public", StaticFiles(directory=os.path.join(os.getcwd(),"public")), 
 
 # serve default route. if file exists redirect on controlcenter
 @app.get("/")
-async def serve_home(request: Request, apikey: str = Header(None)):
+async def serve_home(request: Request, apikey: str = ""):
     if os.path.exists("/etc/stereum/ethereum2.yaml"):
         return templates.TemplateResponse("index.html", {"request": request, "apikey": apikey, "entry": "/control-center"})
     else:
