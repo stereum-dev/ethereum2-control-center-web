@@ -87,7 +87,7 @@ export default {
         };
 
         const fetchStatus = () => {
-          axios.get("/api/setup/status").then((response) => {
+          axios.get("/api/setup/status", {"apikey": window.APIKEY}).then((response) => {
             //console.log(response.data);
             this.processStatus.logs = response.data;
             this.processStatus.progress = response.data.tasks.length;
@@ -96,7 +96,7 @@ export default {
         };
 
         axios
-          .post("/api/setup/start", payload)
+          .post("/api/setup/start", payload, {"apikey": window.APIKEY})
           .then((response) => {
             if (response.data.status > 0) {
               this.$toasted.error(

@@ -1,5 +1,5 @@
 import os
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, Request, HTTPException, Header
 from fastapi.responses import JSONResponse, RedirectResponse
 from pydantic import BaseModel
 from typing import List, Any
@@ -87,8 +87,10 @@ async def health():
     return {"status": "OK"}
 
 @app.get("/api/setup/status")
-async def status():
+async def status(apikey: str = Header(None)):
     try:
+        check_api_key(apikey)
+
         logger.debug('/api/setup/status called')
         task_state = pickle.load( open( "/tmp/state.p", "rb" ) )
         json_compatible_item_data = jsonable_encoder(ER(-1, task_state))
@@ -97,10 +99,12 @@ async def status():
         raise HTTPException(status_code=409, detail="No action running")
 
 @app.post("/api/setup/start")
-async def launch(item: PB):
+async def launch(item: PB, apikey: str = Header(None)):
     try:
+        check_api_key(apikey)
+
         playbook_mapping_file = "/opt/app/playbook-mapping.yaml"
-        try:                    
+        try:
             with open(playbook_mapping_file, "r") as stream:
                 playbook_mappings = yaml.safe_load(stream)
                 matching_playbooks = list(filter(lambda x: (x.get('id') == item.playbook), playbook_mappings))
@@ -112,7 +116,7 @@ async def launch(item: PB):
                     raise HTTPException(status_code=400, detail=str('Multiple playbook names found for playbook-id %s' %item.playbook))
                 item.playbook = matching_playbooks[0]['playbook']
         except yaml.YAMLError as exc:
-            logger.warn('Unable to parse playbook-mapping file %s: %s' %(playbook_mapping_file, exc))    
+            logger.warn('Unable to parse playbook-mapping file %s: %s' %(playbook_mapping_file, exc))
             raise HTTPException(status_code=400, detail=str('Unable to parse playbook-mapping'))
 
         try:
@@ -122,7 +126,7 @@ async def launch(item: PB):
         except pickle.PickleError as e:
             pass
         except FileNotFoundError as e:
-            pass        
+            pass
 
         pickle.dump( datetime.now(), open( "/var/run/stereum.p", "wb" ) )
         logger.debug('/api/setup/start got payload: %s' %item)
@@ -210,29 +214,39 @@ def invalid_api():
 
 templates = Jinja2Templates(directory="public")
 
+def check_api_key(apikey: str):
+    if os.path.exists("/etc/stereum/cc-apikey"):
+        with open('/etc/stereum/cc-apikey', 'r') as file:
+            cc_apikey = file.read().replace('\n', '')
+
+        if apikey != cc_apikey:
+            raise HTTPException(status_code=403, detail="api key incorrect")
+    else:
+        raise HTTPException(status_code=403, detail="no api key set")
+
 # Serve installer
 @app.get("/setup")
-async def serve_setup(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request, "entry": "/setup"})
+async def serve_setup(request: Request, apikey: str = Header(None)):
+    return templates.TemplateResponse("index.html", {"request": request, "apikey": apikey, "entry": "/setup"})
 @app.get("/public/setup")
-async def serve_setup(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request, "entry": "/setup"})
+async def serve_setup(request: Request, apikey: str = Header(None)):
+    return templates.TemplateResponse("index.html", {"request": request, "apikey": apikey, "entry": "/setup"})
 
 # Server controlcenter
 @app.get("/control-center")
-async def serve_setup(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request, "entry": "/control-center"})
+async def serve_setup(request: Request, apikey: str = Header(None)):
+    return templates.TemplateResponse("index.html", {"request": request, "apikey": apikey, "entry": "/control-center"})
 @app.get("/public/control-center")
-async def serve_setup(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request, "entry": "/control-center"})
+async def serve_setup(request: Request, apikey: str = Header(None)):
+    return templates.TemplateResponse("index.html", {"request": request, "apikey": apikey, "entry": "/control-center"})
 
 # serve static assets etc, 
 app.mount("/public", StaticFiles(directory=os.path.join(os.getcwd(),"public")), name="public")
 
 # serve default route. if file exists redirect on controlcenter
 @app.get("/")
-async def serve_home(request: Request):
+async def serve_home(request: Request, apikey: str = Header(None)):
     if os.path.exists("/etc/stereum/ethereum2.yaml"):
-        return templates.TemplateResponse("index.html", {"request": request, "entry": "/control-center"})
+        return templates.TemplateResponse("index.html", {"request": request, "apikey": apikey, "entry": "/control-center"})
     else:
-        return templates.TemplateResponse("index.html", {"request": request, "entry": "/setup"})
+        return templates.TemplateResponse("index.html", {"request": request, "apikey": apikey, "entry": "/setup"})

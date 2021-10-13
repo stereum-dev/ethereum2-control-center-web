@@ -426,7 +426,7 @@ export default {
         };
 
         const fetchStatus = () => {
-          axios.get("/api/setup/status").then((response) => {
+          axios.get("/api/setup/status", {"apikey": window.APIKEY}).then((response) => {
             //console.log(response.data);
             this.processStatus.logs = response.data;
             this.processStatus.progress = response.data.tasks.length;
@@ -435,7 +435,7 @@ export default {
         };
 
         axios
-          .post("/api/setup/start", payload)
+          .post("/api/setup/start", payload, {"apikey": window.APIKEY})
           .then((response) => {
             //console.log("Response data: " + response.data);
             if (response.data.status > 0) {
@@ -490,7 +490,7 @@ export default {
         };
 
         const fetchStatus = () => {
-          axios.get("/api/setup/status").then((response) => {
+          axios.get("/api/setup/status", {"apikey": window.APIKEY}).then((response) => {
             //console.log(response.data);
             this.processStatus.logs = response.data;
             this.processStatus.progress = response.data.tasks.length / maxTasks * 100;
@@ -505,7 +505,7 @@ export default {
         this.$refs["control-changes-window"].show();
 
         axios
-          .post("/api/setup/start", payload)
+          .post("/api/setup/start", payload, {"apikey": window.APIKEY})
           .then((response) => {
             //console.log("Response data: " + response.data);
             if (response.data.status > 0) {
