@@ -236,14 +236,17 @@ export default {
           if (this.model.fastSync) {
             maxTasks = maxTasks + 6;
           }
+          else if (this.model.importConfig == true && this.model.importValidator == true) {
+            maxTasks = maxTasks + 18;
+          }
 
           this.installationProgress = response.data.tasks.length / maxTasks * 100;
 
           const lastTask = response.data.tasks[response.data.tasks.length - 1];
-          if (lastTask.name == 'Start services' && lastTask.status == 0) {
+          if (lastTask.name == 'All done' && lastTask.status == 0) {
             finishInstallation();
             clearInterval(logWatchHandle);
-          }
+          } 
         });
       };
       logWatchHandle = setInterval(fetchStatus, 30000);
