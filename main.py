@@ -95,6 +95,8 @@ async def status(apikey: str = Header(None)):
         task_state = pickle.load( open( "/tmp/state.p", "rb" ) )
         json_compatible_item_data = jsonable_encoder(ER(-1, task_state))
         return JSONResponse(content=json_compatible_item_data)
+    except HTTPException as e:
+        raise e
     except Exception as e:
         raise HTTPException(status_code=409, detail="No action running")
 
@@ -181,7 +183,7 @@ async def launch(item: PB, apikey: str = Header(None)):
         er = ER(return_code, callback.task_results)
         json_compatible_item_data = jsonable_encoder(ER(return_code, callback.task_results))
         return JSONResponse(content=json_compatible_item_data)
-    except HTTPException as e:        
+    except HTTPException as e:
         raise e
     except Exception as e:
         import traceback
