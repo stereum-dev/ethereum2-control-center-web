@@ -228,7 +228,7 @@ export default {
 
       let logWatchHandle;
       const fetchStatus = () => {
-        axios.get("/api/setup/status").then((response) => {
+        axios.get("/api/setup/status", {"apikey": window.APIKEY}).then((response) => {
           console.log(response.data);
           this.logs = response.data;
 
@@ -252,7 +252,7 @@ export default {
       logWatchHandle = setInterval(fetchStatus, 30000);
 
       axios
-        .post("/api/setup/start", payload)
+        .post("/api/setup/start", payload, {"apikey": window.APIKEY})
         .then((response) => {
           console.log(response.data);
           if (response.data.status > 0) {
