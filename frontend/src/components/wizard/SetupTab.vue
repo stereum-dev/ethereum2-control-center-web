@@ -40,7 +40,7 @@ export default {
           text: "Lighthouse by Sigma Prime",
           disabled: false,
         },
-        //{ id: "lodestar", text: "Lodestar by Chainsafe", disabled: false },
+        { id: "lodestar", text: "Lodestar by Chainsafe", disabled: false },
         {
           id: "multiclient",
           text: "Multiclient using Lighthouse, Prysm, Teku with Vouch, Dirk",
