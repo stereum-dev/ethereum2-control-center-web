@@ -123,6 +123,13 @@ export default {
             3500,
             2
           );
+          this.addChoice(
+            this.overrides,
+            "notifications",
+            "No local geth, enables support for Stereum Monitor mobile app",
+            3500,
+            2
+          );
         }
       } else if (n === "allbeacons") {
         this.addDefaultChoice(this.overrides, 15000, 8, true);
